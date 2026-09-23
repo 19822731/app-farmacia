@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Farmacia San Martín | Catálogo & Pedidos por WhatsApp</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .badge-receta { background-color: #fee2e2; color: #b91c1c; }
+    .badge-libre { background-color: #dcfce7; color: #15803d; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-emerald-600 text-white shadow-md sticky top-0 z-40">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <i data-lucide="cross" class="w-7 h-7 text-white fill-white"></i>
+        <div>
+          <h1 class="text-xl font-bold leading-tight">Farmacia San Martín</h1>
+          <p class="text-xs text-emerald-100">Catálogo interactivo & Pedidos directos</p>
+        </div>
+      </div>
+      
+      <div class="flex items-center space-x-3">
+        <!-- Botón Ver Mostrador / Admin -->
+        <a href="/admin" target="_blank" class="text-xs bg-emerald-800 hover:bg-emerald-900 text-emerald-100 px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition">
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Panel Mostrador</span>
+        </a>
+
+        <!-- Botón Ver Simulador de Bot -->
+        <button onclick="toggleModalSimulador()" class="text-xs bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition">
+          <i data-lucide="bot" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Simulador Bot</span>
+        </button>
+
+        <!-- Carrito Badge -->
+        <button onclick="toggleDrawerCarrito()" class="relative bg-white text-emerald-700 p-2 rounded-xl shadow font-semibold hover:bg-emerald-50 transition flex items-center space-x-1">
+          <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+          <span id="badge-cart-count" class="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full font-bold hidden">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-5xl mx-auto px-4 py-6 flex-1 w-full">
+    
+    <!-- Banner Informativo -->
+    <div class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-2xl p-5 mb-6 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <h2 class="text-lg font-bold">¿Buscás un remedio o precio específico?</h2>
+        <p class="text-sm text-emerald-100">Consultá por nombre o droga (ej. Ibuprofeno, Paracetamol, Amoxicilina). Armá tu pedido y envialo a WhatsApp con 1 click.</p>
+      </div>
+      <a href="https://wa.me/?text=Hola%20Farmacia%2C%20quisiera%20hacer%20una%20consulta" target="_blank" class="whitespace-nowrap bg-white text-emerald-800 font-semibold px-4 py-2 rounded-xl text-sm shadow hover:bg-emerald-50 flex items-center space-x-1.5">
+        <i data-lucide="message-circle" class="w-4 h-4 text-emerald-600"></i>
+        <span>Chat Directo</span>
+      </a>
+    </div>
+
+    <!-- Buscador y Filtros -->
+    <div class="mb-6 space-y-3">
+      <div class="relative">
+        <i data-lucide="search" class="w-5 h-5 absolute left-3.5 top-3.5 text-slate-400"></i>
+        <input 
+          id="input-busqueda" 
+          type="text" 
+          placeholder="Buscar por medicamento, droga o síntoma (ej. Tafirol, Paracetamol, Acidez)..." 
+          class="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
+          oninput="ejecutarBusqueda(this.value)"
+        />
+      </div>
+
+      <!-- Filtro Categorías -->
+      <div id="categorias-container" class="flex gap-2 overflow-x-auto pb-2 text-xs">
+        <button onclick="filtrarCategoria('todas')" class="cat-btn px-3 py-1.5 rounded-full bg-emerald-600 text-white font-medium whitespace-nowrap shadow-sm">Todas</button>
+        <button onclick="filtrarCategoria('genericos')" class="cat-btn px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold whitespace-nowrap hover:bg-emerald-200">🟢 Genéricos / Ahorro</button>
+        <button onclick="filtrarCategoria('Analgésicos y Antifebriles')" class="cat-btn px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 whitespace-nowrap">Analgésicos</button>
+        <button onclick="filtrarCategoria('Antiinflamatorios y Analgésicos')" class="cat-btn px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 whitespace-nowrap">Antiinflamatorios</button>
+        <button onclick="filtrarCategoria('Antibióticos')" class="cat-btn px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 whitespace-nowrap">Antibióticos</button>
+        <button onclick="filtrarCategoria('Antiespasmódicos / Digestivos')" class="cat-btn px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 whitespace-nowrap">Digestivos</button>
+        <button onclick="filtrarCategoria('Cardiovascular / Presión')" class="cat-btn px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 whitespace-nowrap">Cardiovascular</button>
+      </div>
+    </div>
+
+    <!-- Lista de Medicamentos -->
+    <div id="grid-medicamentos" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div class="col-span-full text-center py-10 text-slate-400">
+        <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2 text-emerald-600"></i>
+        Cargando medicamentos...
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal / Drawer de Carrito -->
+  <div id="drawer-carrito" class="fixed inset-y-0 right-0 w-full sm:w-96 bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
+    <div class="p-4 bg-emerald-600 text-white flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+        <h3 class="font-bold text-lg">Tu Pedido</h3>
+      </div>
+      <button onclick="toggleDrawerCarrito()" class="text-white hover:text-emerald-200">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+    </div>
+
+    <div id="lista-carrito" class="flex-1 overflow-y-auto p-4 space-y-3">
+      <!-- Se llena con JS -->
+    </div>
+
+    <!-- Resumen y Checkout -->
+    <div class="p-4 border-t border-slate-100 bg-slate-50 space-y-3">
+      <!-- Obra Social / Prepaga -->
+      <div>
+        <label class="block text-[11px] font-bold text-slate-700 mb-1">🏥 Obra Social / Prepaga:</label>
+        <select id="cart-obra-social" onchange="actualizarCarritoUI()" class="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs font-semibold text-slate-700">
+          <option value="Particular" data-desc="0">Particular (Sin Cobertura) - 0%</option>
+          <option value="OSDE" data-desc="40">OSDE - 40% desc. en recetados</option>
+          <option value="Swiss Medical" data-desc="40">Swiss Medical - 40% desc. en recetados</option>
+          <option value="PAMI" data-desc="50">PAMI - 50% desc. en recetados</option>
+          <option value="Galeno" data-desc="40">Galeno - 40% desc. en recetados</option>
+          <option value="Medicación Crónica" data-desc="70">Medicación Crónica - 70% desc.</option>
+        </select>
+      </div>
+
+      <!-- Datos del Cliente -->
+      <div class="grid grid-cols-2 gap-2 text-xs">
+        <input id="cart-nombre" type="text" placeholder="Tu Nombre..." class="border border-slate-200 rounded-lg p-2 text-xs bg-white" />
+        <input id="cart-telefono" type="tel" placeholder="WhatsApp (ej: 54911...)" class="border border-slate-200 rounded-lg p-2 text-xs bg-white" />
+      </div>
+
+      <div class="space-y-1 text-xs text-slate-600 pt-1">
+        <div class="flex justify-between items-center">
+          <span>Subtotal lista:</span>
+          <span id="cart-subtotal" class="font-bold text-slate-800">$0</span>
+        </div>
+        <div id="fila-descuento-os" class="flex justify-between items-center text-emerald-700 font-semibold hidden">
+          <span>Descuento Obra Social:</span>
+          <span id="cart-descuento">-$0</span>
+        </div>
+        <div class="flex justify-between items-center text-sm font-extrabold text-slate-900 pt-1 border-t">
+          <span>Total a abonar:</span>
+          <span id="cart-total" class="text-emerald-700 text-lg">$0</span>
+        </div>
+      </div>
+
+      <div id="alerta-receta-cart" class="hidden bg-amber-50 border border-amber-200 text-amber-800 text-xs p-2 rounded-lg flex items-start space-x-1.5">
+        <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600 shrink-0 mt-0.5"></i>
+        <span>Incluye medicamentos <b>bajo receta</b>. Envía la foto de la receta médica por WhatsApp.</span>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <button onclick="enviarPedidoWhatsApp(false)" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-3 rounded-xl shadow flex items-center justify-center space-x-1.5 transition text-[11px]">
+          <i data-lucide="bot" class="w-4 h-4 text-emerald-400"></i>
+          <span>Probar en Pantalla</span>
+        </button>
+        <button onclick="enviarPedidoWhatsApp(true)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-3 rounded-xl shadow flex items-center justify-center space-x-1.5 transition text-[11px]">
+          <i data-lucide="message-square" class="w-4 h-4"></i>
+          <span>Abrir WhatsApp</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón Flotante para Abrir Simulador de WhatsApp -->
+  <button onclick="toggleModalSimulador()" class="fixed bottom-6 right-6 z-40 bg-emerald-600 hover:bg-emerald-700 text-white p-3.5 rounded-full shadow-2xl flex items-center space-x-2 transition transform hover:scale-105 border-2 border-white">
+    <i data-lucide="message-circle" class="w-6 h-6"></i>
+    <span class="font-bold text-xs pr-1 hidden sm:inline">Probar Chat WhatsApp</span>
+  </button>
+
+  <!-- Modal de Simulador de Bot WhatsApp -->
+  <div id="modal-simulador" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col h-[560px]">
+      <div class="bg-emerald-700 p-3.5 text-white flex items-center justify-between shadow">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center font-bold text-white shadow-inner">🏥</div>
+          <div>
+            <h4 class="font-semibold text-xs leading-tight">Farmacia San Martín (Bot)</h4>
+            <p class="text-[10px] text-emerald-200">En línea • Responde automático</p>
+          </div>
+        </div>
+        <button onclick="toggleModalSimulador()" class="text-white hover:text-emerald-200">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Barra de pruebas rápidas (atajos) -->
+      <div class="bg-emerald-50/80 px-2.5 py-1.5 border-b border-emerald-100 flex gap-1.5 overflow-x-auto text-[10px]">
+        <button onclick="enviarSimulacionChat('Hola')" class="bg-white border border-emerald-200 text-emerald-800 px-2 py-0.5 rounded-full whitespace-nowrap hover:bg-emerald-100">👋 Menú</button>
+        <button onclick="enviarSimulacionChat('Tafirol 1g')" class="bg-white border border-emerald-200 text-emerald-800 px-2 py-0.5 rounded-full whitespace-nowrap hover:bg-emerald-100">💊 Tafirol</button>
+        <button onclick="enviarSimulacionChat('Ibuprofeno 600')" class="bg-white border border-emerald-200 text-emerald-800 px-2 py-0.5 rounded-full whitespace-nowrap hover:bg-emerald-100">💊 Ibuprofeno</button>
+        <button onclick="enviarSimulacionChat('Amoxidal')" class="bg-white border border-emerald-200 text-emerald-800 px-2 py-0.5 rounded-full whitespace-nowrap hover:bg-emerald-100">💊 Amoxidal</button>
+        <button onclick="enviarSimulacionChat('Horarios')" class="bg-white border border-emerald-200 text-emerald-800 px-2 py-0.5 rounded-full whitespace-nowrap hover:bg-emerald-100">⏰ Horarios</button>
+        <button onclick="simularEnvioReceta()" class="bg-white border border-emerald-200 text-emerald-800 px-2 py-0.5 rounded-full whitespace-nowrap hover:bg-emerald-100">📸 Enviar Receta</button>
+      </div>
+
+      <!-- Área de mensajes -->
+      <div id="chat-messages" class="flex-1 p-3 overflow-y-auto bg-slate-100 space-y-2 text-xs">
+        <div class="bg-white p-2.5 rounded-xl shadow-sm max-w-[85%] text-slate-700 leading-relaxed">
+          ¡Hola! Soy el asistente virtual de Farmacia San Martín. 🏥<br><br>
+          Puedes escribir como si fueras un cliente desde tu celular (ej: <b>Tafirol</b>, <b>Ibuprofeno</b> o <b>Horarios</b>).
+        </div>
+      </div>
+
+      <!-- Input de chat -->
+      <div class="p-2.5 bg-white border-t border-slate-200 flex items-center space-x-2">
+        <input 
+          id="chat-input" 
+          type="text" 
+          placeholder="Escribe un mensaje de WhatsApp..." 
+          class="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500" 
+          onkeydown="if(event.key === 'Enter') enviarSimulacionChat()"
+        />
+        <button onclick="enviarSimulacionChat()" class="bg-emerald-600 hover:bg-emerald-700 text-white p-2 rounded-lg transition">
+          <i data-lucide="send" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    let medicamentos = [];
+    let carrito = {};
+
+    // Cargar productos
+    async function cargarMedicamentos() {
+      try {
+        const res = await fetch('/api/medicamentos');
+        medicamentos = await res.json();
+        renderMedicamentos(medicamentos);
+      } catch (err) {
+        document.getElementById('grid-medicamentos').innerHTML = `<p class="col-span-full text-center text-red-500">Error al cargar medicamentos.</p>`;
+      }
+    }
+
+    function renderMedicamentos(lista) {
+      const container = document.getElementById('grid-medicamentos');
+      if (lista.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full text-center py-10 text-slate-400">
+            <i data-lucide="package-x" class="w-10 h-10 mx-auto mb-2 text-slate-300"></i>
+            No se encontraron medicamentos con esa búsqueda.
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = lista.map(m => {
+        const badgeRecetaClass = m.requiere_receta ? 'badge-receta' : 'badge-libre';
+        const badgeRecetaText = m.requiere_receta ? 'Bajo Receta' : 'Venta Libre';
+        const stockColor = m.stock > 10 ? 'text-emerald-600' : 'text-amber-600';
+        
+        const badgeTipo = m.es_generico 
+          ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">🟢 Genérico Ahorro</span>`
+          : `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">🏷️ Marca Líder</span>`;
+
+        // Buscar si hay genérico equivalente más económico
+        let avisoGenerico = '';
+        if (!m.es_generico) {
+          const genEquiv = medicamentos.find(g => g.es_generico && g.principio_activo === m.principio_activo && g.precio < m.precio);
+          if (genEquiv) {
+            const ahorro = m.precio - genEquiv.precio;
+            avisoGenerico = `
+              <div class="mt-2.5 bg-emerald-50 border border-emerald-200/80 rounded-xl p-2 flex items-center justify-between text-[11px]">
+                <div class="leading-tight">
+                  <span class="text-emerald-800 font-bold block">💡 Opción genérica:</span>
+                  <span class="text-slate-600 text-[10px]">${genEquiv.nombre_comercial} (Ahorras $${ahorro.toLocaleString('es-AR')})</span>
+                </div>
+                <button onclick="agregarAlCarrito('${genEquiv.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2 py-1 rounded-lg text-[10px] shadow-sm whitespace-nowrap">
+                  Ver $${genEquiv.precio.toLocaleString('es-AR')}
+                </button>
+              </div>
+            `;
+          }
+        }
+
+        return `
+          <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between gap-1.5 mb-2 flex-wrap">
+                <div class="flex gap-1">
+                  ${badgeTipo}
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${badgeRecetaClass}">
+                    ${badgeRecetaText}
+                  </span>
+                </div>
+                <span class="text-[11px] ${stockColor} font-medium">
+                  Stock: ${m.stock} u.
+                </span>
+              </div>
+              <h3 class="font-bold text-slate-900 text-base leading-snug">${m.nombre_comercial}</h3>
+              <p class="text-xs text-slate-500 font-medium mb-0.5">Droga: <span class="text-slate-800 font-semibold">${m.principio_activo} ${m.concentracion ? `(${m.concentracion})` : ''}</span></p>
+              <p class="text-[11px] text-slate-400">${m.presentacion} • ${m.laboratorio}</p>
+              ${m.indicacion ? `<p class="text-[11px] text-slate-500 mt-2 bg-slate-50 p-1.5 rounded-lg line-clamp-2">${m.indicacion}</p>` : ''}
+              ${avisoGenerico}
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+              <div>
+                <span class="text-xs text-slate-400 block leading-none">Precio</span>
+                <span class="text-lg font-extrabold text-slate-900">$${m.precio.toLocaleString('es-AR')}</span>
+              </div>
+              <button onclick="agregarAlCarrito('${m.id}')" class="bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white px-3 py-1.5 rounded-xl font-semibold text-xs transition flex items-center space-x-1">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Agregar</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        window.lucide.createIcons();
+      }
+    }
+
+    // Buscador
+    let timerBusqueda;
+    function ejecutarBusqueda(query) {
+      clearTimeout(timerBusqueda);
+      if (!query || query.length < 2) {
+        renderMedicamentos(medicamentos);
+        return;
+      }
+      timerBusqueda = setTimeout(async () => {
+        try {
+          const res = await fetch(`/api/medicamentos/buscar?q=${encodeURIComponent(query)}`);
+          const data = await res.json();
+          renderMedicamentos(data);
+        } catch (e) {
+          console.error(e);
+        }
+      }, 250);
+    }
+
+    // Filtros de categoría
+    function filtrarCategoria(cat) {
+      document.querySelectorAll('.cat-btn').forEach(b => {
+        b.classList.remove('bg-emerald-600', 'text-white');
+        b.classList.add('bg-white', 'text-slate-600');
+      });
+      event.target.classList.remove('bg-white', 'text-slate-600');
+      event.target.classList.add('bg-emerald-600', 'text-white');
+
+      if (cat === 'todas') {
+        renderMedicamentos(medicamentos);
+      } else if (cat === 'genericos') {
+        const filtrados = medicamentos.filter(m => m.es_generico);
+        renderMedicamentos(filtrados);
+      } else {
+        const filtrados = medicamentos.filter(m => m.categoria === cat);
+        renderMedicamentos(filtrados);
+      }
+    }
+
+    // Carrito
+    function agregarAlCarrito(id) {
+      carrito[id] = (carrito[id] || 0) + 1;
+      actualizarCarritoUI();
+    }
+
+    function cambiarCantidad(id, delta) {
+      carrito[id] = (carrito[id] || 0) + delta;
+      if (carrito[id] <= 0) delete carrito[id];
+      actualizarCarritoUI();
+    }
+
+    function actualizarCarritoUI() {
+      const itemsContainer = document.getElementById('lista-carrito');
+      const badgeCount = document.getElementById('badge-cart-count');
+      const subtotalSpan = document.getElementById('cart-subtotal');
+      const totalSpan = document.getElementById('cart-total');
+      const descuentoSpan = document.getElementById('cart-descuento');
+      const filaDescuento = document.getElementById('fila-descuento-os');
+      const alertaReceta = document.getElementById('alerta-receta-cart');
+      const selectOS = document.getElementById('cart-obra-social');
+      let pctDesc = 0;
+      if (selectOS && selectOS.selectedOptions && selectOS.selectedOptions.length > 0) {
+        pctDesc = parseInt(selectOS.selectedOptions[0].getAttribute('data-desc') || '0', 10);
+      }
+
+      const keys = Object.keys(carrito);
+      const totalItems = Object.values(carrito).reduce((a, b) => a + b, 0);
+
+      if (totalItems > 0) {
+        badgeCount.innerText = totalItems;
+        badgeCount.classList.remove('hidden');
+      } else {
+        badgeCount.classList.add('hidden');
+      }
+
+      if (keys.length === 0) {
+        itemsContainer.innerHTML = `<p class="text-center py-10 text-slate-400 text-sm">Tu carrito está vacío.</p>`;
+        if (subtotalSpan) subtotalSpan.innerText = "$0";
+        if (totalSpan) totalSpan.innerText = "$0";
+        if (filaDescuento) filaDescuento.classList.add('hidden');
+        alertaReceta.classList.add('hidden');
+        return;
+      }
+
+      let subtotalTotal = 0;
+      let descuentoTotal = 0;
+      let hayReceta = false;
+
+      itemsContainer.innerHTML = keys.map(id => {
+        const med = medicamentos.find(m => m.id === id);
+        if (!med) return '';
+        const subtotalItem = med.precio * carrito[id];
+        subtotalTotal += subtotalItem;
+        
+        if (med.requiere_receta) {
+          hayReceta = true;
+          if (pctDesc > 0) {
+            descuentoTotal += subtotalItem * (pctDesc / 100);
+          }
+        }
+
+        return `
+          <div class="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-100 rounded-xl">
+            <div class="flex-1 pr-2">
+              <h4 class="font-bold text-xs text-slate-800">${med.nombre_comercial}</h4>
+              <p class="text-[11px] text-slate-400">$${med.precio.toLocaleString('es-AR')} c/u ${med.requiere_receta ? '<span class="text-red-600 font-bold">(Receta)</span>' : ''}</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <button onclick="cambiarCantidad('${id}', -1)" class="w-6 h-6 rounded bg-white border border-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs">-</button>
+              <span class="text-xs font-bold w-4 text-center">${carrito[id]}</span>
+              <button onclick="cambiarCantidad('${id}', 1)" class="w-6 h-6 rounded bg-white border border-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs">+</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const totalFinal = Math.max(0, subtotalTotal - descuentoTotal);
+
+      if (subtotalSpan) subtotalSpan.innerText = `$${subtotalTotal.toLocaleString('es-AR')}`;
+      if (totalSpan) totalSpan.innerText = `$${totalFinal.toLocaleString('es-AR')}`;
+
+      if (descuentoTotal > 0 && filaDescuento) {
+        filaDescuento.classList.remove('hidden');
+        descuentoSpan.innerText = `-$${descuentoTotal.toLocaleString('es-AR')}`;
+      } else if (filaDescuento) {
+        filaDescuento.classList.add('hidden');
+      }
+
+      if (hayReceta) alertaReceta.classList.remove('hidden');
+      else alertaReceta.classList.add('hidden');
+    }
+
+    function toggleDrawerCarrito() {
+      const drawer = document.getElementById('drawer-carrito');
+      drawer.classList.toggle('translate-x-full');
+    }
+
+    async function enviarPedidoWhatsApp(abrirWhatsAppReal = true) {
+      const keys = Object.keys(carrito);
+      if (keys.length === 0) return alert('El carrito está vacío');
+
+      const selectOS = document.getElementById('cart-obra-social');
+      const obraSocial = selectOS ? selectOS.value : 'Particular';
+      let pctDesc = 0;
+      if (selectOS && selectOS.selectedOptions && selectOS.selectedOptions.length > 0) {
+        pctDesc = parseInt(selectOS.selectedOptions[0].getAttribute('data-desc') || '0', 10);
+      }
+      const clienteNombre = document.getElementById('cart-nombre').value.trim() || 'Cliente Web';
+      const clienteTelefono = document.getElementById('cart-telefono').value.trim() || '';
+
+      const items = keys.map(id => ({ id, cantidad: carrito[id] }));
+
+      try {
+        const res = await fetch('/api/pedidos/crear', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            cliente_nombre: clienteNombre,
+            cliente_telefono: clienteTelefono,
+            obra_social: obraSocial,
+            descuento_pct: pctDesc,
+            items: items
+          })
+        });
+        const data = await res.json();
+        
+        // Reset carrito
+        carrito = {};
+        actualizarCarritoUI();
+        toggleDrawerCarrito();
+
+        if (abrirWhatsAppReal) {
+          // Abrir WhatsApp Web real con el pedido
+          const textoEncoded = encodeURIComponent(data.mensaje_whatsapp);
+          window.open(`https://wa.me/?text=${textoEncoded}`, '_blank');
+        } else {
+          // Probar directamente en pantalla en el Simulador de WhatsApp
+          const modal = document.getElementById('modal-simulador');
+          modal.classList.remove('hidden');
+
+          const chatBox = document.getElementById('chat-messages');
+          chatBox.innerHTML += `
+            <div class="bg-emerald-600 text-white p-2.5 rounded-xl ml-auto max-w-[85%] text-right whitespace-pre-line text-xs font-mono">
+              ${data.mensaje_whatsapp}
+            </div>
+          `;
+          
+          setTimeout(() => {
+            const respuestaBot = 
+              `🎉 *¡Muchas gracias por tu pedido, ${clienteNombre}!* 📦\n\n` +
+              `Hemos registrado tu pedido *#${data.pedido_id}* en el sistema de mostrador.\n` +
+              `Total: *$${data.total_final.toLocaleString('es-AR')}*.\n\n` +
+              (data.requiere_receta ? `⚠️ *Recuerda adjuntar la foto de la receta médica* por este chat.\n\n` : '') +
+              `Puedes ver tu pedido entrando al Panel de Mostrador: http://localhost:8000/admin`;
+
+            chatBox.innerHTML += `
+              <div class="bg-white p-2.5 rounded-xl shadow-sm max-w-[85%] text-slate-800 whitespace-pre-line leading-relaxed">
+                ${respuestaBot}
+              </div>
+            `;
+            chatBox.scrollTop = chatBox.scrollHeight;
+          }, 600);
+        }
+      } catch (err) {
+        alert('Error al generar el pedido');
+      }
+    }
+
+    // Modal Simulador de Bot
+    function toggleModalSimulador() {
+      const modal = document.getElementById('modal-simulador');
+      modal.classList.toggle('hidden');
+    }
+
+    function simularEnvioReceta() {
+      const chatBox = document.getElementById('chat-messages');
+      chatBox.innerHTML += `
+        <div class="bg-emerald-600 text-white p-2.5 rounded-xl ml-auto max-w-[85%] text-right text-xs">
+          📷 <i>[Foto de Receta Médica adjunta - Dr. Martínez]</i><br>
+          <b>#farmacia Aquí adjunto mi receta médica</b>
+        </div>
+      `;
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      setTimeout(() => {
+        chatBox.innerHTML += `
+          <div class="bg-white p-2.5 rounded-xl shadow-sm max-w-[85%] text-slate-800 whitespace-pre-line text-xs">
+            👋 ¡Hola!<br><br>
+            📸 <b>Recibimos la foto de tu orden/receta médica.</b><br>
+            Un farmacéutico la está revisando en este momento para verificar:<br>
+            • Cobertura de tu obra social / prepaga<br>
+            • Stock de la dosis indicada<br><br>
+            En breves minutos te confirmamos por este mismo chat. ¡Gracias por tu paciencia!
+          </div>
+        `;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }, 700);
+    }
+
+    async function enviarSimulacionChat(textoManual = null) {
+      const input = document.getElementById('chat-input');
+      const texto = textoManual || input.value.trim();
+      if (!texto) return;
+
+      const chatBox = document.getElementById('chat-messages');
+      chatBox.innerHTML += `
+        <div class="bg-emerald-600 text-white p-2.5 rounded-xl ml-auto max-w-[85%] text-right">
+          ${texto}
+        </div>
+      `;
+      if (!textoManual) input.value = '';
+      chatBox.scrollTop = chatBox.scrollHeight;
+
+      // Llamar al endpoint de webhook simulado
+      try {
+        const res = await fetch('/api/webhook/whatsapp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            data: {
+              key: { remoteJid: '5491112345678@s.whatsapp.net' },
+              message: { conversation: texto }
+            }
+          })
+        });
+        const data = await res.json();
+        
+        chatBox.innerHTML += `
+          <div class="bg-white p-2.5 rounded-xl shadow-sm max-w-[85%] text-slate-700 whitespace-pre-line">
+            ${data.response_text}
+          </div>
+        `;
+        chatBox.scrollTop = chatBox.scrollHeight;
+      } catch (e) {
+        chatBox.innerHTML += `<div class="text-red-500 text-[10px]">Error al conectar con el bot.</div>`;
+      }
+    }
+
+    // Iniciar
+    window.addEventListener('DOMContentLoaded', () => {
+      cargarMedicamentos();
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        window.lucide.createIcons();
+      }
+    });
+  </script>
+</body>
+</html>

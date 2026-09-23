@@ -1,0 +1,19 @@
+{
+  "name": "farmacia-whatsapp-bot",
+  "version": "1.0.0",
+  "description": "Solución integral de código abierto para automatizar la atención al cliente, consultas de precios/stock y pedidos en farmacias mediante **WhatsApp** y un **Catálogo Web Híbrido**.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@whiskeysockets/baileys": "^7.0.0-rc14",
+    "axios": "^1.20.0",
+    "pino": "^10.3.1",
+    "qrcode-terminal": "^0.12.0"
+  }
+}

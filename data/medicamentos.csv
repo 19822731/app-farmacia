@@ -1,0 +1,25 @@
+id,nombre_comercial,principio_activo,concentracion,presentacion,laboratorio,precio,stock,requiere_receta,es_generico,categoria
+MED-001,Tafirol 1g,Paracetamol,1g,Caja x 50 comp,Genomma Lab (Marca Líder),4500.0,35,NO,NO,Analgésicos y Antifebriles
+MED-002,Paracetamol 1g Genérico,Paracetamol,1g,Caja x 50 comp,Klonal (Genérico Ahorro),1800.0,60,NO,SI,Analgésicos y Antifebriles
+MED-003,Tafirol 500mg,Paracetamol,500mg,Caja x 24 comp,Genomma Lab (Marca Líder),2800.0,45,NO,NO,Analgésicos y Antifebriles
+MED-004,Paracetamol 500mg Genérico,Paracetamol,500mg,Blister x 10 comp,Klonal (Genérico Ahorro),1100.0,80,NO,SI,Analgésicos y Antifebriles
+MED-005,Ibupirac 600mg,Ibuprofeno,600mg,Caja x 20 comp,Pfizer (Marca Líder),4200.0,38,NO,NO,Antiinflamatorios y Analgésicos
+MED-006,Ibuprofeno 600mg Genérico,Ibuprofeno,600mg,Caja x 20 comp,Klonal / Fabra (Genérico Ahorro),1900.0,70,NO,SI,Antiinflamatorios y Analgésicos
+MED-007,Actron 600mg Rápida Acción,Ibuprofeno,600mg,Caja x 10 cápsulas,Bayer (Marca Líder),3900.0,25,NO,NO,Antiinflamatorios y Analgésicos
+MED-008,Ibuprofeno 400mg Genérico,Ibuprofeno,400mg,Blister x 10 comp,Vannier (Genérico Ahorro),1300.0,65,NO,SI,Antiinflamatorios y Analgésicos
+MED-009,Amoxidal 500mg,Amoxicilina,500mg,Caja x 16 comp,Roemmers (Marca Líder),6500.0,18,SI,NO,Antibióticos
+MED-010,Amoxicilina 500mg Genérica,Amoxicilina,500mg,Caja x 16 comp,Klonal (Genérico Ahorro),3400.0,35,SI,SI,Antibióticos
+MED-011,Amoxidal Dúo 875mg,Amoxicilina,875mg,Caja x 14 comp,Roemmers (Marca Líder),8900.0,15,SI,NO,Antibióticos
+MED-012,Amoxicilina 875mg Genérica,Amoxicilina,875mg,Caja x 14 comp,Denver Farma (Genérico Ahorro),4800.0,28,SI,SI,Antibióticos
+MED-013,Lotrial 10mg,Enalapril,10mg,Caja x 30 comp,Roemmers (Marca Líder),5100.0,30,SI,NO,Cardiovascular / Presión
+MED-014,Enalapril 10mg Genérico,Enalapril,10mg,Caja x 30 comp,Klonal (Genérico Ahorro),2200.0,50,SI,SI,Cardiovascular / Presión
+MED-015,Losacor 50mg,Losartan,50mg,Caja x 30 comp,Roemmers (Marca Líder),7200.0,20,SI,NO,Cardiovascular / Presión
+MED-016,Losartan 50mg Genérico,Losartan,50mg,Caja x 30 comp,Bagó / Klonal (Genérico Ahorro),3100.0,42,SI,SI,Cardiovascular / Presión
+MED-017,Gastrotem 20mg,Omeprazol,20mg,Caja x 28 cápsulas,Temis Lostalo (Marca Líder),4600.0,28,NO,NO,Gastroenterología
+MED-018,Omeprazol 20mg Genérico,Omeprazol,20mg,Caja x 28 cápsulas,Vannier (Genérico Ahorro),1950.0,55,NO,SI,Gastroenterología
+MED-019,Aerotina 10mg,Loratadina,10mg,Caja x 10 comp,Raffo (Marca Líder),3100.0,33,NO,NO,Antialérgicos
+MED-020,Loratadina 10mg Genérica,Loratadina,10mg,Caja x 10 comp,Klonal (Genérico Ahorro),1400.0,48,NO,SI,Antialérgicos
+MED-021,Ventolin Aerosol 100mcg,Salbutamol,100mcg,Inhalador 200 dosis,GSK (Marca Líder),9400.0,15,SI,NO,Respiratorio
+MED-022,Salbutamol Aerosol 100mcg Genérico,Salbutamol,100mcg,Inhalador 200 dosis,Denver Farma (Genérico Ahorro),4600.0,30,SI,SI,Respiratorio
+MED-023,Sertal Compuesto,Propinox + Lisina,Compuesto,Caja x 20 comp,Roemmers,5600.0,40,NO,NO,Antiespasmódicos / Digestivos
+MED-024,Alcohol en Gel 70% 250ml,Alcohol Etílico 70%,70%,Botella 250ml,Farmacia Propia,1500.0,55,NO,SI,Primeros Auxilios e Higiene

@@ -1,0 +1,141 @@
+[
+  {
+    "id": "PED-1001",
+    "cliente_nombre": "Carlos Gómez",
+    "cliente_telefono": "5491145678901",
+    "fecha": "2026-09-22 19:30",
+    "estado": "preparando",
+    "obra_social": "OSDE (40% desc.)",
+    "requiere_receta": true,
+    "items": [
+      {
+        "id": "MED-007",
+        "nombre": "Amoxidal 500mg",
+        "cantidad": 1,
+        "precio_unitario": 6500.0,
+        "subtotal": 6500.0,
+        "requiere_receta": true
+      },
+      {
+        "id": "MED-001",
+        "nombre": "Tafirol 1g",
+        "cantidad": 1,
+        "precio_unitario": 4500.0,
+        "subtotal": 4500.0,
+        "requiere_receta": false
+      }
+    ],
+    "total_bruto": 11000.0,
+    "descuento_obra_social": 2600.0,
+    "total_final": 8400.0,
+    "observaciones": "Paso a retirar a las 20:30 hs. Llevo la receta física."
+  },
+  {
+    "id": "PED-1002",
+    "cliente_nombre": "María Laura Fernández",
+    "cliente_telefono": "5491198765432",
+    "fecha": "2026-09-22 20:10",
+    "estado": "pendiente",
+    "obra_social": "Particular (Sin cobertura)",
+    "requiere_receta": false,
+    "items": [
+      {
+        "id": "MED-004",
+        "nombre": "Ibupirac 600mg",
+        "cantidad": 2,
+        "precio_unitario": 4200.0,
+        "subtotal": 8400.0,
+        "requiere_receta": false
+      },
+      {
+        "id": "MED-018",
+        "nombre": "Alcohol en Gel 70% 250ml",
+        "cantidad": 1,
+        "precio_unitario": 1500.0,
+        "subtotal": 1500.0,
+        "requiere_receta": false
+      }
+    ],
+    "total_bruto": 9900.0,
+    "descuento_obra_social": 0.0,
+    "total_final": 9900.0,
+    "observaciones": "Envío a domicilio en San Martín 520."
+  },
+  {
+    "id": "PED-7035",
+    "cliente_nombre": "Roberto Gómez",
+    "cliente_telefono": "5491122334455",
+    "fecha": "2026-09-22 20:42",
+    "estado": "pendiente",
+    "obra_social": "OSDE",
+    "requiere_receta": true,
+    "items": [
+      {
+        "id": "MED-007",
+        "nombre": "Amoxidal 500mg",
+        "cantidad": 1,
+        "precio_unitario": 6500.0,
+        "subtotal": 6500.0,
+        "requiere_receta": true
+      },
+      {
+        "id": "MED-001",
+        "nombre": "Tafirol 1g",
+        "cantidad": 1,
+        "precio_unitario": 4500.0,
+        "subtotal": 4500.0,
+        "requiere_receta": false
+      }
+    ],
+    "total_bruto": 11000.0,
+    "descuento_obra_social": 2600.0,
+    "total_final": 8400.0,
+    "observaciones": "Retiro por la tarde"
+  },
+  {
+    "id": "PED-2410",
+    "cliente_nombre": "Cliente Web",
+    "cliente_telefono": "",
+    "fecha": "2026-09-22 21:10",
+    "estado": "pendiente",
+    "obra_social": "Particular",
+    "requiere_receta": false,
+    "items": [
+      {
+        "id": "MED-001",
+        "nombre": "Tafirol 1g",
+        "cantidad": 1,
+        "precio_unitario": 4500.0,
+        "subtotal": 4500.0,
+        "requiere_receta": false
+      }
+    ],
+    "total_bruto": 4500.0,
+    "descuento_obra_social": 0.0,
+    "total_final": 4500.0,
+    "observaciones": ""
+  },
+  {
+    "id": "PED-3108",
+    "cliente_nombre": "Cliente Web",
+    "cliente_telefono": "",
+    "fecha": "2026-09-22 21:59",
+    "estado": "pendiente",
+    "obra_social": "Swiss Medical",
+    "requiere_receta": true,
+    "items": [
+      {
+        "id": "MED-010",
+        "nombre": "Amoxicilina 500mg Genérica",
+        "cantidad": 1,
+        "precio_unitario": 3400.0,
+        "subtotal": 3400.0,
+        "requiere_receta": true
+      }
+    ],
+    "total_bruto": 3400.0,
+    "descuento_obra_social": 1360.0,
+    "total_final": 2040.0,
+    "observaciones": ""
+  }
+]
