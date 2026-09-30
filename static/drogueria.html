@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Droguería & Laboratorio Magistral | Farmacia Torres B2B</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    ::-webkit-scrollbar { height: 6px; width: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 9999px; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased selection:bg-emerald-500 selection:text-slate-950">
+
+  <!-- =========================================================================
+       1. TOP BAR INSTITUCIONAL B2B
+       ========================================================================= -->
+  <div class="bg-slate-900/90 border-b border-slate-800 text-[11px] font-medium text-slate-400">
+    <div class="max-w-7xl mx-auto px-4 py-2 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center space-x-3">
+        <span class="inline-flex items-center gap-1.5 text-emerald-400 font-bold">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Canal Exclusivo para Farmacias, Clínicas & Profesionales Habilitados
+        </span>
+        <span class="hidden md:inline text-slate-700">•</span>
+        <span class="hidden md:inline">Habilitación Sanitaria Ministerial Nº 4819/26</span>
+      </div>
+
+      <div class="flex items-center space-x-4 ml-auto">
+        <a href="/" class="text-emerald-400 hover:text-emerald-300 font-bold flex items-center gap-1 transition">
+          <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+          <span>Volver al Catálogo Público (Pacientes)</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       2. HEADER B2B / DROGUERÍA
+       ========================================================================= -->
+  <header class="bg-slate-900/80 border-b border-slate-800 sticky top-0 z-40 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 py-3.5 flex items-center justify-between gap-4">
+      
+      <!-- Brand Droguería -->
+      <a href="/drogueria" class="flex items-center space-x-3 group">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-600 via-teal-600 to-emerald-500 flex items-center justify-center text-white shadow-lg shadow-teal-500/20 group-hover:scale-105 transition-transform">
+          <i data-lucide="flask-conical" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-lg font-black tracking-tight text-white leading-none">DROGUERÍA</span>
+            <span class="text-lg font-black tracking-tight text-emerald-400 leading-none">TORRES</span>
+            <span class="text-[10px] bg-slate-800 text-emerald-300 font-mono font-bold px-2 py-0.5 rounded-md border border-slate-700">PORTAL B2B</span>
+          </div>
+          <p class="text-[10px] font-semibold text-slate-400 tracking-wider uppercase mt-0.5">Laboratorio Magistral • Oncológicos • Quimioterapia • Cosmética</p>
+        </div>
+      </a>
+
+      <!-- Buscador B2B -->
+      <div class="flex-1 max-w-md mx-4 hidden lg:block">
+        <div class="relative">
+          <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-2.5 text-slate-500"></i>
+          <input 
+            id="busqueda-b2b" 
+            type="text" 
+            placeholder="Buscar por formulación, principio activo o lote..." 
+            class="w-full pl-10 pr-4 py-2 bg-slate-950/70 border border-slate-800 rounded-xl text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition"
+            oninput="filtrarProductosB2B()"
+          />
+        </div>
+      </div>
+
+      <!-- Acciones B2B -->
+      <div class="flex items-center space-x-3">
+        <a href="https://wa.me/?text=Hola%20Droguería%20Torres%2C%20nos%20comunicamos%20desde%20Farmacia..." target="_blank" class="hidden sm:flex text-xs bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-2 rounded-xl font-bold items-center gap-1.5 transition">
+          <i data-lucide="message-square" class="w-4 h-4 text-emerald-400"></i>
+          <span>Asesoría Técnica Farmacéutica</span>
+        </a>
+
+        <!-- Botón Orden de Compra -->
+        <button onclick="toggleDrawerB2B()" class="relative bg-emerald-500 hover:bg-emerald-400 text-slate-950 px-4 py-2 rounded-xl font-extrabold text-xs shadow-lg shadow-emerald-500/20 transition flex items-center space-x-2">
+          <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+          <span>Orden B2B</span>
+          <span id="badge-b2b-count" class="bg-slate-950 text-emerald-300 text-[10px] w-4 h-4 rounded-full font-black flex items-center justify-center hidden">0</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Pestañas de Rubros Especializados -->
+    <div class="border-t border-slate-800/80 bg-slate-900/40">
+      <div class="max-w-7xl mx-auto px-4 flex items-center gap-2 overflow-x-auto py-2.5 text-xs font-bold">
+        <button onclick="cambiarRubro('todos')" class="rubro-btn px-4 py-1.5 rounded-xl bg-emerald-500 text-slate-950 transition whitespace-nowrap shadow">
+          Todos los Rubros
+        </button>
+        <button onclick="cambiarRubro('Oncológicos')" class="rubro-btn px-4 py-1.5 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 transition whitespace-nowrap border border-slate-700 flex items-center gap-1.5">
+          <span>🔬</span> Oncológicos
+        </button>
+        <button onclick="cambiarRubro('Cosméticos')" class="rubro-btn px-4 py-1.5 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 transition whitespace-nowrap border border-slate-700 flex items-center gap-1.5">
+          <span>✨</span> Cosméticos Magistrales
+        </button>
+        <button onclick="cambiarRubro('Analgésicos')" class="rubro-btn px-4 py-1.5 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 transition whitespace-nowrap border border-slate-700 flex items-center gap-1.5">
+          <span>💊</span> Analgésicos Especiales
+        </button>
+        <button onclick="cambiarRubro('Quimioterápicos')" class="rubro-btn px-4 py-1.5 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 transition whitespace-nowrap border border-slate-700 flex items-center gap-1.5">
+          <span>❄️</span> Quimioterápicos (Estériles)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       3. BANNER EXPLICATIVO PARA FARMACIAS ASOCIADAS
+       ========================================================================= -->
+  <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full space-y-8">
+    
+    <div class="bg-gradient-to-r from-slate-900 via-slate-850 to-emerald-950/60 border border-slate-800 rounded-3xl p-6 sm:p-8 relative overflow-hidden shadow-xl">
+      <div class="relative z-10 max-w-3xl space-y-3">
+        <div class="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold px-3 py-1 rounded-full">
+          <i data-lucide="building-2" class="w-3.5 h-3.5"></i>
+          RED DE SUMINISTRO INTER-FARMACIAS
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight">
+          Elaboración y provisión de especialidades para tu farmacia.
+        </h1>
+        <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+          Nuestra droguería y laboratorio magistral provee a farmacias de la zona preparados estandarizados de alta complejidad en <strong class="text-emerald-400">Oncología, Quimioterapia, Cosmética y Manejo del Dolor</strong>, listos para dispensar en tu mostrador con respaldo analítico oficial.
+        </p>
+
+        <!-- Métricas B2B -->
+        <div class="pt-3 grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
+          <div class="border-l-2 border-emerald-500 pl-3">
+            <span class="text-white font-extrabold text-sm block">CoA Incluido</span>
+            <span class="text-[10px] text-slate-400 block">Certificado por lote</span>
+          </div>
+          <div class="border-l-2 border-cyan-500 pl-3">
+            <span class="text-white font-extrabold text-sm block">Cadena de Frío</span>
+            <span class="text-[10px] text-slate-400 block">Monitoreo térmico continuo</span>
+          </div>
+          <div class="border-l-2 border-amber-500 pl-3">
+            <span class="text-white font-extrabold text-sm block">Facturación A</span>
+            <span class="text-[10px] text-slate-400 block">Comercial inter-droguería</span>
+          </div>
+          <div class="border-l-2 border-purple-500 pl-3">
+            <span class="text-white font-extrabold text-sm block">Entrega Segura</span>
+            <span class="text-[10px] text-slate-400 block">Remito y trazabilidad</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         4. GRILLA DE PRODUCTOS B2B
+         ========================================================================= -->
+    <section class="space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h2 id="titulo-rubro" class="text-lg font-black text-white">Catálogo Mayorista de Especialidades</h2>
+          <p id="subtitulo-rubro" class="text-xs text-slate-400">Seleccioná los preparados y cantidades para armar la Orden de Compra de tu farmacia</p>
+        </div>
+        <span id="contador-b2b" class="text-xs font-bold text-slate-400 bg-slate-900 border border-slate-800 px-3 py-1 rounded-full">
+          Cargando productos...
+        </span>
+      </div>
+
+      <div id="grid-b2b" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Renderizado dinámico con JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =========================================================================
+       5. DRAWER DE ORDEN DE COMPRA B2B
+       ========================================================================= -->
+  <div id="drawer-b2b" class="fixed inset-y-0 right-0 w-full sm:w-[480px] bg-slate-900 border-l border-slate-800 shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
+    
+    <!-- Header Drawer -->
+    <div class="p-4 bg-slate-950 border-b border-slate-800 flex items-center justify-between text-white">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+          <i data-lucide="clipboard-check" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 class="font-extrabold text-sm leading-tight">Orden de Compra B2B</h3>
+          <p class="text-[10px] text-slate-400">Droguería Farmacia Torres • Suministro</p>
+        </div>
+      </div>
+      <button onclick="toggleDrawerB2B()" class="text-slate-400 hover:text-white">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <!-- Lista de Lotes Solicitados -->
+    <div id="lista-b2b" class="flex-1 overflow-y-auto p-4 space-y-3">
+      <!-- Se puebla con JS -->
+    </div>
+
+    <!-- Datos de la Farmacia Compradora y Checkout -->
+    <div class="p-4 border-t border-slate-800 bg-slate-950/80 space-y-3 text-xs">
+      
+      <div class="bg-slate-900 border border-slate-800 p-3 rounded-2xl space-y-2">
+        <span class="text-[11px] font-extrabold text-emerald-400 uppercase tracking-wider block">Datos de la Farmacia Compradora</span>
+        
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-0.5">Nombre de la Farmacia *</label>
+            <input id="b2b-farmacia" type="text" placeholder="Ej: Farmacia San Cayetano" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white" />
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-0.5">CUIT Comercial *</label>
+            <input id="b2b-cuit" type="text" placeholder="30-12345678-9" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-0.5">Farmacéutico DT (MP) *</label>
+            <input id="b2b-dt" type="text" placeholder="Dra. Gómez (MP 5420)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white" />
+          </div>
+          <div>
+            <label class="text-[10px] text-slate-400 block mb-0.5">WhatsApp Droguería *</label>
+            <input id="b2b-tel" type="tel" placeholder="54911..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white" />
+          </div>
+        </div>
+
+        <div>
+          <label class="text-[10px] text-slate-400 block mb-0.5">Dirección de Entrega / Despacho</label>
+          <input id="b2b-dir" type="text" placeholder="Calle 45 Nº 620, Localidad" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white" />
+        </div>
+      </div>
+
+      <!-- Alerta Cadena de Frío -->
+      <div id="alerta-frio-b2b" class="bg-cyan-950/60 border border-cyan-500/30 text-cyan-300 p-2.5 rounded-xl text-[11px] hidden flex items-start gap-2">
+        <i data-lucide="snowflake" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
+        <span>Esta orden incluye preparados con <b>CADENA DE FRÍO (2°C - 8°C)</b>. Se despachará con conservadora y precinto térmico.</span>
+      </div>
+
+      <!-- Total -->
+      <div class="flex justify-between items-baseline pt-2 border-t border-slate-800 text-white">
+        <span class="text-sm font-bold text-slate-300">Total Mayorista Estimado:</span>
+        <span id="b2b-total" class="text-2xl font-black text-emerald-400">$0</span>
+      </div>
+
+      <!-- Botón de Envío -->
+      <button onclick="enviarOrdenB2BWhatsApp()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-3 rounded-2xl text-xs shadow-lg shadow-emerald-500/20 flex items-center justify-center space-x-2 transition">
+        <i data-lucide="send" class="w-4 h-4"></i>
+        <span>Generar Orden & Enviar a Droguería</span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       6. MODAL FICHA TÉCNICA / CERTIFICADO DE ANÁLISIS (CoA)
+       ========================================================================= -->
+  <div id="modal-coa" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 text-xs text-slate-300 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <span class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider block">Certificado de Análisis Oficial</span>
+          <h4 id="coa-nombre" class="font-black text-white text-base">Ficha Técnica</h4>
+        </div>
+        <button onclick="toggleModalCoA()" class="text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-2 font-mono text-[11px] bg-slate-950 p-4 rounded-2xl border border-slate-800">
+        <p>• <b>Laboratorio:</b> Droguería Farmacia Torres</p>
+        <p>• <b>Lote:</b> <span id="coa-lote" class="text-emerald-400"></span></p>
+        <p>• <b>Vencimiento:</b> <span id="coa-vto" class="text-slate-200"></span></p>
+        <p>• <b>Condición Térmica:</b> <span id="coa-temp" class="text-cyan-400"></span></p>
+        <p>• <b>Pureza / Título:</b> 99.4% (Conforme Farmacopea Argentina VII Ed.)</p>
+        <p>• <b>Esterilidad / Pirogenia:</b> Conforme (Filtración esterilizante 0.22µm)</p>
+      </div>
+
+      <p id="coa-especificaciones" class="text-slate-400 leading-relaxed"></p>
+
+      <button onclick="toggleModalCoA()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-bold py-2.5 rounded-xl">
+        Cerrar Ficha Técnica
+      </button>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       7. FOOTER B2B
+       ========================================================================= -->
+  <footer class="bg-slate-950 border-t border-slate-900 text-slate-500 text-[11px] py-8 mt-16">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <p class="font-bold text-slate-300">Droguería & Laboratorio Magistral Farmacia Torres</p>
+        <p>Av. San Martín 1420 • Habilitación Droguería Nº 4819/26 • DT Farmacéutico Matriculado</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="/" class="text-emerald-400 hover:underline">Ir a Farmacia Pública (Pacientes)</a>
+        <span>•</span>
+        <a href="/admin" class="hover:text-slate-300">Panel Mostrador</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       8. LÓGICA JAVASCRIPT B2B
+       ========================================================================= -->
+  <script>
+    let productosB2B = [];
+    let ordenB2B = {};
+    let rubroActivo = 'todos';
+
+    // Cargar catálogo B2B
+    async function cargarProductosB2B() {
+      try {
+        const res = await fetch('/api/drogueria/productos');
+        productosB2B = await res.json();
+        renderProductosB2B(productosB2B);
+      } catch (err) {
+        console.error('Error cargando productos B2B:', err);
+      }
+    }
+
+    function cambiarRubro(rubro) {
+      rubroActivo = rubro;
+      document.querySelectorAll('.rubro-btn').forEach(b => {
+        b.classList.remove('bg-emerald-500', 'text-slate-950');
+        b.classList.add('bg-slate-800', 'text-slate-300');
+      });
+      if (event && event.target) {
+        event.target.classList.remove('bg-slate-800', 'text-slate-300');
+        event.target.classList.add('bg-emerald-500', 'text-slate-950');
+      }
+
+      const tit = document.getElementById('titulo-rubro');
+      const subtit = document.getElementById('subtitulo-rubro');
+      if (rubro === 'todos') {
+        tit.innerText = 'Catálogo Mayorista de Especialidades';
+        subtit.innerText = 'Suministro en Oncológicos, Cosmética Magistral, Analgésicos y Quimioterapia';
+      } else {
+        tit.innerText = `Rubro: ${rubro}`;
+        subtit.innerText = `Preparados oficiales y lotes estandarizados de ${rubro.toLowerCase()}`;
+      }
+
+      filtrarProductosB2B();
+    }
+
+    function filtrarProductosB2B() {
+      const query = (document.getElementById('busqueda-b2b')?.value || '').toLowerCase().trim();
+      let filtrados = productosB2B;
+
+      if (rubroActivo !== 'todos') {
+        filtrados = filtrados.filter(p => p.rubro.toLowerCase() === rubroActivo.toLowerCase());
+      }
+
+      if (query.length > 0) {
+        filtrados = filtrados.filter(p => 
+          p.nombre.toLowerCase().includes(query) ||
+          p.principio_activo.toLowerCase().includes(query) ||
+          (p.lote && p.lote.toLowerCase().includes(query)) ||
+          p.rubro.toLowerCase().includes(query)
+        );
+      }
+
+      renderProductosB2B(filtrados);
+    }
+
+    function renderProductosB2B(lista) {
+      const container = document.getElementById('grid-b2b');
+      const contador = document.getElementById('contador-b2b');
+      if (contador) contador.innerText = `${lista.length} preparados disponibles`;
+
+      if (lista.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full bg-slate-900 border border-slate-800 rounded-3xl p-12 text-center text-slate-500 space-y-2">
+            <i data-lucide="search-x" class="w-10 h-10 mx-auto text-slate-600"></i>
+            <p class="font-bold text-white text-sm">No se encontraron preparados en este rubro</p>
+          </div>
+        `;
+        if (window.lucide) lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = lista.map(p => {
+        const frioBadge = p.requiere_frio
+          ? `<span class="bg-cyan-950/80 text-cyan-300 border border-cyan-700/50 text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1">❄️ ${p.temperatura}</span>`
+          : `<span class="bg-slate-800 text-slate-300 border border-slate-700 text-[10px] font-semibold px-2 py-0.5 rounded-full">🌡️ ${p.temperatura}</span>`;
+
+        let rubroEmoji = '💊';
+        if (p.rubro === 'Oncológicos') rubroEmoji = '🔬';
+        else if (p.rubro === 'Cosméticos') rubroEmoji = '✨';
+        else if (p.rubro === 'Quimioterápicos') rubroEmoji = '❄️';
+
+        return `
+          <div class="bg-slate-900 border border-slate-800 rounded-3xl p-5 hover:border-slate-700 transition flex flex-col justify-between space-y-4">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2 flex-wrap">
+                <span class="text-[10px] font-black uppercase tracking-wider text-emerald-400 bg-emerald-950/60 border border-emerald-800 px-2 py-0.5 rounded-md">
+                  ${rubroEmoji} ${p.rubro}
+                </span>
+                ${frioBadge}
+              </div>
+
+              <h3 class="font-extrabold text-base text-white leading-snug">${p.nombre}</h3>
+              <p class="text-xs text-slate-400 mt-1 font-medium">
+                Principio Activo: <span class="text-slate-200 font-bold">${p.principio_activo}</span>
+              </p>
+
+              <div class="mt-2.5 bg-slate-950 p-2.5 rounded-xl border border-slate-800/80 space-y-1 text-[11px]">
+                <div class="flex justify-between text-slate-400">
+                  <span>Presentación:</span>
+                  <span class="font-bold text-slate-200">${p.presentacion_mayorista}</span>
+                </div>
+                <div class="flex justify-between text-slate-400">
+                  <span>Lote / Vencimiento:</span>
+                  <span class="font-mono text-emerald-400">${p.lote} (${p.vencimiento})</span>
+                </div>
+              </div>
+
+              <p class="text-[11px] text-slate-400 mt-2.5 leading-relaxed line-clamp-2">${p.especificaciones}</p>
+
+              <button onclick="verFichaTecnica('${p.id}')" class="mt-2 text-[10px] text-cyan-400 hover:text-cyan-300 font-bold flex items-center gap-1 underline underline-offset-2">
+                <i data-lucide="file-text" class="w-3 h-3"></i>
+                <span>Ver Ficha Técnica / Protocolo Analítico</span>
+              </button>
+            </div>
+
+            <div class="pt-3 border-t border-slate-800 flex items-center justify-between">
+              <div>
+                <span class="text-[10px] text-slate-500 uppercase font-semibold block">Precio Mayorista x Lote</span>
+                <span class="text-xl font-black text-emerald-400">$${p.precio_mayorista.toLocaleString('es-AR')}</span>
+              </div>
+              <button onclick="agregarOrdenB2B('${p.id}')" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-3.5 py-2 rounded-xl text-xs transition shadow-md flex items-center gap-1.5 active:scale-95">
+                <i data-lucide="plus" class="w-4 h-4"></i>
+                <span>Sumar Lote</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (window.lucide) lucide.createIcons();
+    }
+
+    // Modal CoA
+    function verFichaTecnica(id) {
+      const prod = productosB2B.find(p => p.id === id);
+      if (!prod) return;
+      document.getElementById('coa-nombre').innerText = prod.nombre;
+      document.getElementById('coa-lote').innerText = prod.lote;
+      document.getElementById('coa-vto').innerText = prod.vencimiento;
+      document.getElementById('coa-temp').innerText = prod.temperatura;
+      document.getElementById('coa-especificaciones').innerText = prod.especificaciones;
+      toggleModalCoA();
+    }
+
+    function toggleModalCoA() {
+      const modal = document.getElementById('modal-coa');
+      modal.classList.toggle('hidden');
+    }
+
+    // Orden B2B
+    function agregarOrdenB2B(id) {
+      ordenB2B[id] = (ordenB2B[id] || 0) + 1;
+      actualizarUIOrdenB2B();
+      const badge = document.getElementById('badge-b2b-count');
+      if (badge) {
+        badge.classList.add('scale-125');
+        setTimeout(() => badge.classList.remove('scale-125'), 200);
+      }
+    }
+
+    function cambiarCantidadB2B(id, delta) {
+      ordenB2B[id] = (ordenB2B[id] || 0) + delta;
+      if (ordenB2B[id] <= 0) delete ordenB2B[id];
+      actualizarUIOrdenB2B();
+    }
+
+    function actualizarUIOrdenB2B() {
+      const container = document.getElementById('lista-b2b');
+      const badge = document.getElementById('badge-b2b-count');
+      const totalSpan = document.getElementById('b2b-total');
+      const alertaFrio = document.getElementById('alerta-frio-b2b');
+
+      const keys = Object.keys(ordenB2B);
+      const totalLotes = Object.values(ordenB2B).reduce((a, b) => a + b, 0);
+
+      if (totalLotes > 0) {
+        badge.innerText = totalLotes;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+
+      if (keys.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-16 text-slate-500 space-y-2">
+            <i data-lucide="package-open" class="w-10 h-10 mx-auto text-slate-600"></i>
+            <p class="font-bold text-slate-300 text-sm">No has seleccionado preparados</p>
+            <p class="text-xs text-slate-500">Sumá lotes del catálogo mayorista para cotizar.</p>
+          </div>
+        `;
+        if (totalSpan) totalSpan.innerText = '$0';
+        if (alertaFrio) alertaFrio.classList.add('hidden');
+        if (window.lucide) lucide.createIcons();
+        return;
+      }
+
+      let total = 0;
+      let hayFrio = false;
+
+      container.innerHTML = keys.map(id => {
+        const prod = productosB2B.find(p => p.id === id);
+        if (!prod) return '';
+        const subtotal = prod.precio_mayorista * ordenB2B[id];
+        total += subtotal;
+        if (prod.requiere_frio) hayFrio = true;
+
+        return `
+          <div class="bg-slate-950 border border-slate-800 p-3 rounded-2xl flex items-center justify-between">
+            <div class="flex-1 pr-3">
+              <h4 class="font-bold text-xs text-white leading-snug">${prod.nombre}</h4>
+              <p class="text-[10px] text-slate-400 mt-0.5">${prod.presentacion_mayorista} • Lote: ${prod.lote}</p>
+              <p class="text-[11px] text-emerald-400 font-bold mt-1">$${prod.precio_mayorista.toLocaleString('es-AR')} x lote</p>
+            </div>
+            <div class="flex items-center space-x-1.5 bg-slate-900 border border-slate-800 rounded-xl p-1">
+              <button onclick="cambiarCantidadB2B('${id}', -1)" class="w-6 h-6 rounded-lg bg-slate-800 text-white font-bold text-xs hover:bg-slate-700">-</button>
+              <span class="text-xs font-black w-5 text-center text-white">${ordenB2B[id]}</span>
+              <button onclick="cambiarCantidadB2B('${id}', 1)" class="w-6 h-6 rounded-lg bg-slate-800 text-white font-bold text-xs hover:bg-slate-700">+</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (totalSpan) totalSpan.innerText = `$${total.toLocaleString('es-AR')}`;
+      if (hayFrio && alertaFrio) alertaFrio.classList.remove('hidden');
+      else if (alertaFrio) alertaFrio.classList.add('hidden');
+    }
+
+    function toggleDrawerB2B() {
+      const drawer = document.getElementById('drawer-b2b');
+      drawer.classList.toggle('translate-x-full');
+    }
+
+    async function enviarOrdenB2BWhatsApp() {
+      const keys = Object.keys(ordenB2B);
+      if (keys.length === 0) return alert('No hay preparados en la orden');
+
+      const farmacia = document.getElementById('b2b-farmacia').value.trim();
+      const cuit = document.getElementById('b2b-cuit').value.trim();
+      const dt = document.getElementById('b2b-dt').value.trim();
+      const tel = document.getElementById('b2b-tel').value.trim();
+      const dir = document.getElementById('b2b-dir').value.trim();
+
+      if (!farmacia || !cuit || !dt) {
+        return alert('Por favor, ingresá el Nombre de la Farmacia, CUIT y Director Técnico para emitir el remito oficial.');
+      }
+
+      const items = keys.map(id => ({ id, cantidad: ordenB2B[id] }));
+
+      try {
+        const res = await fetch('/api/drogueria/pedidos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            farmacia_nombre: farmacia,
+            cuit: cuit,
+            director_tecnico: dt,
+            telefono: tel,
+            direccion: dir,
+            items: items,
+            observaciones: 'Generado desde el Portal B2B Droguería Torres'
+          })
+        });
+        const data = await res.json();
+
+        // Limpiar orden
+        ordenB2B = {};
+        actualizarUIOrdenB2B();
+        toggleDrawerB2B();
+
+        // Abrir WhatsApp corporativo de droguería
+        const encoded = encodeURIComponent(data.mensaje_whatsapp);
+        window.open(`https://wa.me/?text=${encoded}`, '_blank');
+      } catch (err) {
+        alert('Error al registrar la orden B2B');
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      cargarProductosB2B();
+    });
+  </script>
+</body>
+</html>

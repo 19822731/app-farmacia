@@ -14,13 +14,15 @@ from rapidfuzz import fuzz, process
 # Rutas base
 BASE_DIR = Path(__file__).resolve().parent
 DATA_FILE = BASE_DIR / "data" / "medicamentos.json"
+DATA_B2B_FILE = BASE_DIR / "data" / "medicamentos_b2b.json"
 PEDIDOS_FILE = BASE_DIR / "data" / "pedidos.json"
+PEDIDOS_B2B_FILE = BASE_DIR / "data" / "pedidos_b2b.json"
 STATIC_DIR = BASE_DIR / "static"
 
 app = FastAPI(
-    title="Farmacia WhatsApp Bot API & Catálogo Web",
-    description="Backend de gestión farmacéutica, catálogo interactivo, búsqueda difusa y webhook WhatsApp",
-    version="2.0.0"
+    title="Farmacia & Droguería Torres API",
+    description="Backend integral: Catálogo público, portal droguería B2B (Oncológicos, Cosméticos, Analgésicos, Quimioterápicos) y WhatsApp Bot",
+    version="2.1.0"
 )
 
 # Servir archivos estáticos
@@ -49,11 +51,40 @@ def save_pedidos(pedidos: List[dict]):
     with open(PEDIDOS_FILE, "w", encoding="utf-8") as f:
         json.dump(pedidos, f, indent=2, ensure_ascii=False)
 
+def load_medicamentos_b2b() -> List[dict]:
+    if not DATA_B2B_FILE.exists():
+        return []
+    with open(DATA_B2B_FILE, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def load_pedidos_b2b() -> List[dict]:
+    if not PEDIDOS_B2B_FILE.exists():
+        return []
+    with open(PEDIDOS_B2B_FILE, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def save_pedidos_b2b(pedidos: List[dict]):
+    with open(PEDIDOS_B2B_FILE, "w", encoding="utf-8") as f:
+        json.dump(pedidos, f, indent=2, ensure_ascii=False)
+
 # --- MODELOS PYDANTIC ---
 
 class ItemPedido(BaseModel):
     id: str
     cantidad: int
+
+class ItemPedidoB2B(BaseModel):
+    id: str
+    cantidad: int
+
+class PedidoB2BRequest(BaseModel):
+    farmacia_nombre: str
+    cuit: str
+    director_tecnico: str
+    telefono: str
+    direccion: Optional[str] = ""
+    items: List[ItemPedidoB2B]
+    observaciones: Optional[str] = ""
 
 class PedidoRequest(BaseModel):
     cliente_nombre: Optional[str] = "Cliente"
@@ -100,6 +131,106 @@ async def serve_admin():
     if admin_file.exists():
         return HTMLResponse(content=admin_file.read_text(encoding="utf-8"))
     return HTMLResponse("<h1>Panel Administrador - En construcción</h1>")
+
+@app.get("/drogueria", response_class=HTMLResponse)
+@app.get("/b2b", response_class=HTMLResponse)
+async def serve_drogueria():
+    """Sirve el portal B2B de droguería y laboratorio para farmacias asociadas."""
+    drogueria_file = STATIC_DIR / "drogueria.html"
+    if drogueria_file.exists():
+        return HTMLResponse(content=drogueria_file.read_text(encoding="utf-8"))
+    return HTMLResponse("<h1>Portal Droguería & Farmacias - En construcción</h1>")
+
+# --- ENDPOINTS B2B (DROGUERÍA / FARMACIAS) ---
+
+@app.get("/api/drogueria/productos")
+async def listar_productos_b2b(rubro: Optional[str] = None):
+    """Lista los productos mayoristas elaborados por la droguería de Farmacia Torres."""
+    prods = load_medicamentos_b2b()
+    if rubro and rubro.lower() != "todos":
+        prods = [p for p in prods if p.get("rubro", "").lower() == rubro.lower()]
+    return prods
+
+@app.post("/api/drogueria/pedidos")
+async def crear_pedido_b2b(pedido: PedidoB2BRequest):
+    """Registra una orden de compra B2B entre farmacias y genera el remito comercial."""
+    prods = {p["id"]: p for p in load_medicamentos_b2b()}
+    pedido_id = f"B2B-{random.randint(1000, 9999)}"
+    
+    lineas_msg = []
+    total_bruto = 0.0
+    items_detalle = []
+    requiere_frio_global = False
+    
+    for it in pedido.items:
+        prod = prods.get(it.id)
+        if not prod:
+            continue
+        subtotal = prod["precio_mayorista"] * it.cantidad
+        total_bruto += subtotal
+        if prod.get("requiere_frio"):
+            requiere_frio_global = True
+            
+        lineas_msg.append(
+            f"• *{prod['nombre']}* ({prod['rubro']})\n"
+            f"  Cant: {it.cantidad} lotes | Lote: {prod.get('lote','S/D')} | Subtotal: ${subtotal:,.0f}"
+        )
+        items_detalle.append({
+            "id": prod["id"],
+            "nombre": prod["nombre"],
+            "rubro": prod["rubro"],
+            "lote": prod.get("lote"),
+            "cantidad": it.cantidad,
+            "precio_unitario": prod["precio_mayorista"],
+            "subtotal": subtotal,
+            "requiere_frio": prod.get("requiere_frio", False)
+        })
+        
+    nuevo_pedido = {
+        "id": pedido_id,
+        "farmacia_nombre": pedido.farmacia_nombre,
+        "cuit": pedido.cuit,
+        "director_tecnico": pedido.director_tecnico,
+        "telefono": pedido.telefono,
+        "direccion": pedido.direccion,
+        "fecha": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "estado": "pendiente_aprobacion",
+        "requiere_frio": requiere_frio_global,
+        "items": items_detalle,
+        "total_mayorista": total_bruto,
+        "observaciones": pedido.observaciones
+    }
+    
+    pedidos = load_pedidos_b2b()
+    pedidos.append(nuevo_pedido)
+    save_pedidos_b2b(pedidos)
+    
+    # Formatear remito/mensaje WhatsApp inter-farmacias
+    msg_wa = (
+        f"🏢 *ORDEN DE COMPRA B2B - DROGUERÍA FARMACIA TORRES* (#{pedido_id})\n\n"
+        f"🏥 *Farmacia Solicitante:* {pedido.farmacia_nombre}\n"
+        f"📄 *CUIT:* {pedido.cuit}\n"
+        f"👨‍⚕️ *Director Técnico:* {pedido.director_tecnico}\n"
+        f"📱 *Tel:* {pedido.telefono}\n"
+    )
+    if pedido.direccion:
+        msg_wa += f"📍 *Entrega:* {pedido.direccion}\n"
+        
+    msg_wa += "\n📦 *Detalle de Lotes Solicitados:*\n" + "\n".join(lineas_msg)
+    msg_wa += f"\n\n💰 *Total Mayorista Estimado:* *${total_bruto:,.0f}*"
+    
+    if requiere_frio_global:
+        msg_wa += "\n\n❄️ *Aviso Logístico:* Incluye preparados con *CADENA DE FRÍO (2°C - 8°C)*. Se despachará con conservadora y control de temperatura."
+        
+    if pedido.observaciones:
+        msg_wa += f"\n\n📝 *Observaciones:* {pedido.observaciones}"
+        
+    return {
+        "pedido_id": pedido_id,
+        "total_mayorista": total_bruto,
+        "requiere_frio": requiere_frio_global,
+        "mensaje_whatsapp": msg_wa
+    }
 
 # --- ENDPOINTS MEDICAMENTOS ---
 
