@@ -3,208 +3,566 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Farmacia Torres | Catálogo & Pedidos por WhatsApp</title>
+  <title>Farmacia Torres | Atención Farmacéutica, Medicamentos & Genéricos</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans (Tipografía geométrica clínica de alta gama) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            clinic: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
-    .badge-receta { background-color: #fee2e2; color: #b91c1c; }
-    .badge-libre { background-color: #dcfce7; color: #15803d; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .badge-receta { background-color: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+    .badge-libre { background-color: #f0fdf4; color: #16a34a; border: 1px solid #bbf7d0; }
+    
+    /* Custom scrollbars */
+    ::-webkit-scrollbar { height: 6px; width: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+<body class="bg-slate-50/70 text-slate-800 min-h-screen flex flex-col selection:bg-emerald-100 selection:text-emerald-900">
 
-  <!-- Header -->
-  <header class="bg-emerald-600 text-white shadow-md sticky top-0 z-40">
-    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center space-x-2">
-        <i data-lucide="cross" class="w-7 h-7 text-white fill-white"></i>
+  <!-- =========================================================================
+       1. BARRA SUPERIOR DE CONFIANZA & SERVICIOS (Estilo Cruz Verde / Farmatodo)
+       ========================================================================= -->
+  <div class="bg-slate-900 text-slate-300 text-[11px] font-medium border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 py-2 flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center space-x-4">
+        <span class="flex items-center gap-1.5 text-emerald-400 font-semibold">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Farmacia de Turno Abierta Hoy
+        </span>
+        <span class="hidden sm:inline text-slate-600">|</span>
+        <span class="hidden sm:inline flex items-center gap-1 text-slate-300">
+          <i data-lucide="truck" class="w-3.5 h-3.5 text-slate-400"></i>
+          Envíos urbanos en el día
+        </span>
+        <span class="hidden md:inline text-slate-600">|</span>
+        <span class="hidden md:inline text-slate-300">
+          🛡️ Dirección Técnica Farmacéutica • MP 14.820
+        </span>
+      </div>
+
+      <div class="flex items-center space-x-4 ml-auto">
+        <span class="text-emerald-300 font-bold hidden sm:inline">Descuentos Obras Sociales hasta 70%</span>
+        <a href="https://wa.me/?text=Hola%20Farmacia%20Torres%2C%20quisiera%20hacer%20una%20consulta" target="_blank" class="text-white hover:text-emerald-400 flex items-center gap-1 transition">
+          <i data-lucide="message-circle" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>Mostrador WhatsApp</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       2. HEADER PRINCIPAL DE ALTA GAMA (Studio Design Omnicanal)
+       ========================================================================= -->
+  <header class="bg-white border-b border-slate-200/80 sticky top-0 z-40 shadow-sm/50 backdrop-blur-md bg-white/95">
+    <div class="max-w-7xl mx-auto px-4 py-3.5 flex items-center justify-between gap-4">
+      
+      <!-- Logotipo e Identidad Institucional -->
+      <a href="/" class="flex items-center space-x-3 group shrink-0">
+        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform duration-200">
+          <i data-lucide="cross" class="w-6 h-6 text-white fill-white"></i>
+        </div>
         <div>
-          <h1 class="text-xl font-bold leading-tight">Farmacia Torres</h1>
-          <p class="text-xs text-emerald-100">Catálogo interactivo & Pedidos directos</p>
+          <div class="flex items-center gap-1.5">
+            <span class="text-xl font-extrabold tracking-tight text-slate-900 leading-none">FARMACIA</span>
+            <span class="text-xl font-black tracking-tight text-emerald-700 leading-none">TORRES</span>
+          </div>
+          <p class="text-[10px] font-semibold text-slate-400 tracking-wider uppercase mt-0.5">Salud • Genéricos • Obras Sociales</p>
+        </div>
+      </a>
+
+      <!-- Buscador Inteligente Central (Estilo Farmacity / Farmatodo) -->
+      <div class="flex-1 max-w-2xl mx-2 hidden md:block">
+        <div class="relative">
+          <i data-lucide="search" class="w-4 h-4 absolute left-4 top-3 text-slate-400"></i>
+          <input 
+            id="input-busqueda" 
+            type="text" 
+            placeholder="Buscar por medicamento, droga o síntoma (ej. Tafirol, Ibuprofeno, Acidez, Melatonina)..." 
+            class="w-full pl-11 pr-24 py-2.5 bg-slate-100/90 hover:bg-slate-100 focus:bg-white border border-transparent focus:border-emerald-500 rounded-2xl text-xs sm:text-sm font-medium transition focus:outline-none focus:ring-4 focus:ring-emerald-500/10"
+            oninput="ejecutarBusqueda(this.value)"
+          />
+          <div class="absolute right-3 top-2.5 flex items-center gap-1">
+            <span class="text-[10px] bg-slate-200 text-slate-600 px-1.5 py-0.5 rounded font-mono font-semibold">⌘K</span>
+          </div>
         </div>
       </div>
-      
-      <div class="flex items-center space-x-3">
-        <!-- Botón Ver Mostrador / Admin -->
-        <a href="/admin" target="_blank" class="text-xs bg-emerald-800 hover:bg-emerald-900 text-emerald-100 px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition">
-          <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-          <span class="hidden sm:inline">Panel Mostrador</span>
+
+      <!-- Acciones Rápidas del Header -->
+      <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
+        
+        <!-- Botón Subir Receta (CTA de alta conversión médica) -->
+        <button onclick="toggleModalReceta()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/80 px-3 py-2 rounded-xl text-xs font-bold flex items-center space-x-1.5 transition shadow-sm">
+          <i data-lucide="camera" class="w-4 h-4 text-emerald-600"></i>
+          <span class="hidden sm:inline">Subir Receta</span>
+        </button>
+
+        <!-- Botón Panel Mostrador -->
+        <a href="/admin" target="_blank" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl font-semibold flex items-center space-x-1.5 transition" title="Panel de Mostrador Farmacéutico">
+          <i data-lucide="layout-dashboard" class="w-4 h-4 text-slate-500"></i>
+          <span class="hidden lg:inline">Mostrador</span>
         </a>
 
-        <!-- Botón Ver Simulador de Bot -->
-        <button onclick="toggleModalSimulador()" class="text-xs bg-emerald-700 hover:bg-emerald-800 text-white px-3 py-1.5 rounded-lg flex items-center space-x-1.5 transition">
-          <i data-lucide="bot" class="w-4 h-4"></i>
-          <span class="hidden sm:inline">Simulador Bot</span>
+        <!-- Botón Simulador WhatsApp -->
+        <button onclick="toggleModalSimulador()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl font-semibold flex items-center space-x-1.5 transition" title="Probar bot de WhatsApp en pantalla">
+          <i data-lucide="bot" class="w-4 h-4 text-emerald-600"></i>
+          <span class="hidden lg:inline">Bot</span>
         </button>
 
-        <!-- Carrito Badge -->
-        <button onclick="toggleDrawerCarrito()" class="relative bg-white text-emerald-700 p-2 rounded-xl shadow font-semibold hover:bg-emerald-50 transition flex items-center space-x-1">
-          <i data-lucide="shopping-cart" class="w-5 h-5"></i>
-          <span id="badge-cart-count" class="bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full font-bold hidden">0</span>
+        <!-- Botón Carrito / Pedido -->
+        <button onclick="toggleDrawerCarrito()" class="relative bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2 rounded-xl font-bold text-xs shadow-md shadow-emerald-600/20 hover:shadow-emerald-600/30 transition flex items-center space-x-2">
+          <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Mi Pedido</span>
+          <span id="badge-cart-count" class="bg-white text-emerald-700 text-[10px] w-4 h-4 rounded-full font-black flex items-center justify-center hidden">0</span>
         </button>
+
+      </div>
+    </div>
+
+    <!-- Buscador Móvil (Visible solo en smartphones) -->
+    <div class="px-4 pb-3 md:hidden">
+      <div class="relative">
+        <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-3 text-slate-400"></i>
+        <input 
+          id="input-busqueda-mob" 
+          type="text" 
+          placeholder="Buscar remedio, genérico o síntoma..." 
+          class="w-full pl-10 pr-4 py-2 bg-slate-100 border border-slate-200 rounded-xl text-xs font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          oninput="ejecutarBusqueda(this.value)"
+        />
+      </div>
+    </div>
+
+    <!-- Sub-Navbar de Categorías (Estilo Farmacity / Cruz Verde) -->
+    <div class="border-t border-slate-100 bg-slate-50/80">
+      <div class="max-w-7xl mx-auto px-4 flex items-center gap-1 overflow-x-auto py-2 text-xs font-semibold text-slate-600">
+        <button onclick="filtrarCategoria('todas')" class="cat-btn px-3 py-1.5 rounded-xl bg-slate-900 text-white whitespace-nowrap shadow-sm">Todos los Medicamentos</button>
+        <button onclick="filtrarCategoria('genericos')" class="cat-btn px-3 py-1.5 rounded-xl bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold whitespace-nowrap hover:bg-emerald-200">🟢 Genéricos de Ahorro</button>
+        <button onclick="filtrarCategoria('Vitaminas')" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 whitespace-nowrap">Vitaminas</button>
+        <button onclick="filtrarCategoria('Suplementos')" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 whitespace-nowrap">Suplementos</button>
+        <button onclick="filtrarCategoria('Falta de Sueño')" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 whitespace-nowrap">Sueño & Descanso</button>
+        <button onclick="filtrarCategoria('Analgésicos y Antifebriles')" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 whitespace-nowrap">Analgésicos</button>
+        <button onclick="filtrarCategoria('Antiinflamatorios y Analgésicos')" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 whitespace-nowrap">Antiinflamatorios</button>
+        <button onclick="filtrarCategoria('Antiespasmódicos / Digestivos')" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 whitespace-nowrap">Digestivos</button>
+        <button onclick="filtrarCategoria('Respiratorio')" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 whitespace-nowrap">Respiratorio</button>
+        <button onclick="filtrarCategoria('Antibióticos')" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 whitespace-nowrap">Antibióticos</button>
+        <button onclick="filtrarCategoria('Cardiovascular / Presión')" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 whitespace-nowrap">Cardiovascular</button>
       </div>
     </div>
   </header>
 
-  <!-- Main Container -->
-  <main class="max-w-5xl mx-auto px-4 py-6 flex-1 w-full">
-    
-    <!-- Banner Informativo -->
-    <div class="bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-2xl p-5 mb-6 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div>
-        <h2 class="text-lg font-bold">¿Buscás un remedio o precio específico?</h2>
-        <p class="text-sm text-emerald-100">Consultá por nombre o droga (ej. Ibuprofeno, Paracetamol, Amoxicilina). Armá tu pedido y envialo a WhatsApp con 1 click.</p>
-      </div>
-      <a href="https://wa.me/?text=Hola%20Farmacia%2C%20quisiera%20hacer%20una%20consulta" target="_blank" class="whitespace-nowrap bg-white text-emerald-800 font-semibold px-4 py-2 rounded-xl text-sm shadow hover:bg-emerald-50 flex items-center space-x-1.5">
-        <i data-lucide="message-circle" class="w-4 h-4 text-emerald-600"></i>
-        <span>Chat Directo</span>
-      </a>
-    </div>
+  <!-- =========================================================================
+       3. CONTENIDO PRINCIPAL
+       ========================================================================= -->
+  <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full space-y-8">
 
-    <!-- Buscador y Filtros -->
-    <div class="mb-6 space-y-4">
-      <div class="relative">
-        <i data-lucide="search" class="w-5 h-5 absolute left-3.5 top-3.5 text-slate-400"></i>
-        <input 
-          id="input-busqueda" 
-          type="text" 
-          placeholder="Buscar por medicamento, droga o síntoma (ej. Tafirol, Paracetamol, Acidez)..." 
-          class="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm"
-          oninput="ejecutarBusqueda(this.value)"
-        />
-      </div>
+    <!-- HERO EDITORIAL INSTITUCIONAL (Estilo Farmatodo / Pentagram) -->
+    <div class="relative bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-950 text-white rounded-3xl p-6 sm:p-8 lg:p-10 shadow-xl overflow-hidden border border-slate-800">
+      <div class="absolute -right-10 -bottom-10 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <div class="lg:col-span-8 space-y-4">
+          <div class="inline-flex items-center gap-2 bg-emerald-500/20 border border-emerald-400/30 px-3 py-1 rounded-full text-emerald-300 text-xs font-bold tracking-wide">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+            ATENCIÓN FARMACÉUTICA ÉTICA & TRANSPARENTE
+          </div>
+          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-white leading-tight">
+            Tu salud y economía en manos de farmacéuticos matriculados.
+          </h1>
+          <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl font-normal">
+            Encontrá medicamentos con <strong class="text-emerald-400 font-bold">hasta 60% de ahorro</strong> en genéricos certificados por ANMAT. Calculá tu copago con Obra Social y enviá tu receta por WhatsApp para tenerla lista sin demoras.
+          </p>
 
-      <!-- Sección Estilo Farmacity: ¿Qué necesitas tratar? -->
-      <section class="mt-4 mb-4">
-        <div class="flex items-center justify-between mb-3">
-          <h2 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">¿Qué necesitas tratar?</h2>
-          <button onclick="limpiarFiltrosSintomas()" id="btn-ver-todos" class="text-xs text-emerald-700 hover:text-emerald-800 font-bold hidden items-center gap-1">
-            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
-            <span>Ver todo el catálogo</span>
-          </button>
+          <div class="pt-2 flex flex-wrap gap-3">
+            <button onclick="toggleModalReceta()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold px-5 py-3 rounded-2xl text-xs sm:text-sm shadow-lg shadow-emerald-500/25 transition flex items-center space-x-2">
+              <i data-lucide="camera" class="w-4 h-4"></i>
+              <span>Cotizar Receta Médica</span>
+            </button>
+            <button onclick="filtrarCategoria('genericos')" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold px-5 py-3 rounded-2xl text-xs sm:text-sm transition flex items-center space-x-2 backdrop-blur-sm">
+              <i data-lucide="sparkles" class="w-4 h-4 text-emerald-400"></i>
+              <span>Ver Genéricos de Ahorro</span>
+            </button>
+          </div>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          <!-- 1. Gripe y Resfrío -->
-          <div id="card-gripe" onclick="filtrarPorSintoma('gripe')" class="sintoma-card group bg-white border border-slate-200/90 rounded-2xl h-[78px] flex items-center overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-500 transition-all cursor-pointer">
-            <div class="w-24 sm:w-28 h-full shrink-0 overflow-hidden bg-slate-100 flex items-center justify-center">
-              <img src="https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=300&q=80" alt="Gripe y Resfrío" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'text-2xl\'>🤧</span>';" />
-            </div>
-            <div class="px-4 py-2 flex-1">
-              <h3 class="font-extrabold text-xs sm:text-sm text-slate-800 tracking-wide uppercase group-hover:text-emerald-700 transition-colors">Gripe y Resfrío</h3>
-            </div>
+        <!-- Tarjetas destacadas en el Hero -->
+        <div class="lg:col-span-4 grid grid-cols-2 gap-3 text-left">
+          <div class="bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-sm">
+            <span class="text-emerald-400 font-black text-2xl block">60%</span>
+            <span class="text-xs text-slate-300 font-semibold block mt-1">Ahorro en Genéricos</span>
+            <span class="text-[10px] text-slate-400 block mt-0.5">Misma droga y eficacia garantizada.</span>
           </div>
-
-          <!-- 2. Dolor de Cabeza -->
-          <div id="card-cabeza" onclick="filtrarPorSintoma('cabeza')" class="sintoma-card group bg-white border border-slate-200/90 rounded-2xl h-[78px] flex items-center overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-500 transition-all cursor-pointer">
-            <div class="w-24 sm:w-28 h-full shrink-0 overflow-hidden bg-slate-100 flex items-center justify-center">
-              <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=300&q=80" alt="Dolor de Cabeza" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'text-2xl\'>🤕</span>';" />
-            </div>
-            <div class="px-4 py-2 flex-1">
-              <h3 class="font-extrabold text-xs sm:text-sm text-slate-800 tracking-wide uppercase group-hover:text-emerald-700 transition-colors">Dolor de Cabeza</h3>
-            </div>
+          <div class="bg-white/5 border border-white/10 p-4 rounded-2xl backdrop-blur-sm">
+            <span class="text-emerald-400 font-black text-2xl block">70%</span>
+            <span class="text-xs text-slate-300 font-semibold block mt-1">Obras Sociales</span>
+            <span class="text-[10px] text-slate-400 block mt-0.5">OSDE, PAMI, Swiss Medical, Galeno.</span>
           </div>
-
-          <!-- 3. Dolor de Panza -->
-          <div id="card-panza" onclick="filtrarPorSintoma('panza')" class="sintoma-card group bg-white border border-slate-200/90 rounded-2xl h-[78px] flex items-center overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-500 transition-all cursor-pointer">
-            <div class="w-24 sm:w-28 h-full shrink-0 overflow-hidden bg-slate-100 flex items-center justify-center">
-              <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=300&q=80" alt="Dolor de Panza" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'text-2xl\'>🤢</span>';" />
+          <div class="col-span-2 bg-emerald-500/10 border border-emerald-400/20 p-3.5 rounded-2xl flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-300 shrink-0">
+              <i data-lucide="clock" class="w-4 h-4"></i>
             </div>
-            <div class="px-4 py-2 flex-1">
-              <h3 class="font-extrabold text-xs sm:text-sm text-slate-800 tracking-wide uppercase group-hover:text-emerald-700 transition-colors">Dolor de Panza</h3>
-            </div>
-          </div>
-
-          <!-- 4. Alergias -->
-          <div id="card-alergias" onclick="filtrarPorSintoma('alergias')" class="sintoma-card group bg-white border border-slate-200/90 rounded-2xl h-[78px] flex items-center overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-500 transition-all cursor-pointer">
-            <div class="w-24 sm:w-28 h-full shrink-0 overflow-hidden bg-slate-100 flex items-center justify-center">
-              <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&w=300&q=80" alt="Alergias" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'text-2xl\'>🌿</span>';" />
-            </div>
-            <div class="px-4 py-2 flex-1">
-              <h3 class="font-extrabold text-xs sm:text-sm text-slate-800 tracking-wide uppercase group-hover:text-emerald-700 transition-colors">Alergias</h3>
-            </div>
-          </div>
-
-          <!-- 5. Falta de Sueño -->
-          <div id="card-sueno" onclick="filtrarPorSintoma('sueno')" class="sintoma-card group bg-white border border-slate-200/90 rounded-2xl h-[78px] flex items-center overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-500 transition-all cursor-pointer">
-            <div class="w-24 sm:w-28 h-full shrink-0 overflow-hidden bg-slate-100 flex items-center justify-center">
-              <img src="https://images.unsplash.com/photo-1520206183501-b80df61043c2?auto=format&fit=crop&w=300&q=80" alt="Falta de Sueño" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'text-2xl\'>😴</span>';" />
-            </div>
-            <div class="px-4 py-2 flex-1">
-              <h3 class="font-extrabold text-xs sm:text-sm text-slate-800 tracking-wide uppercase group-hover:text-emerald-700 transition-colors">Falta de Sueño</h3>
-            </div>
-          </div>
-
-          <!-- 6. Vitaminas -->
-          <div id="card-vitaminas" onclick="filtrarPorSintoma('vitaminas')" class="sintoma-card group bg-white border border-slate-200/90 rounded-2xl h-[78px] flex items-center overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-500 transition-all cursor-pointer">
-            <div class="w-24 sm:w-28 h-full shrink-0 overflow-hidden bg-slate-100 flex items-center justify-center">
-              <img src="https://images.unsplash.com/photo-1577401239170-897942555fb3?auto=format&fit=crop&w=300&q=80" alt="Vitaminas" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'text-2xl\'>🍊</span>';" />
-            </div>
-            <div class="px-4 py-2 flex-1">
-              <h3 class="font-extrabold text-xs sm:text-sm text-slate-800 tracking-wide uppercase group-hover:text-emerald-700 transition-colors">Vitaminas</h3>
-            </div>
-          </div>
-
-          <!-- 7. Suplementos -->
-          <div id="card-suplementos" onclick="filtrarPorSintoma('suplementos')" class="sintoma-card group bg-white border border-slate-200/90 rounded-2xl h-[78px] flex items-center overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-500 transition-all cursor-pointer sm:col-span-2 lg:col-span-1">
-            <div class="w-24 sm:w-28 h-full shrink-0 overflow-hidden bg-slate-100 flex items-center justify-center">
-              <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=300&q=80" alt="Suplementos" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'text-2xl\'>💪</span>';" />
-            </div>
-            <div class="px-4 py-2 flex-1">
-              <h3 class="font-extrabold text-xs sm:text-sm text-slate-800 tracking-wide uppercase group-hover:text-emerald-700 transition-colors">Suplementos</h3>
+            <div class="text-xs">
+              <span class="font-bold text-white block">Preparación rápida</span>
+              <span class="text-slate-300 text-[11px]">Enviás por WhatsApp y retiras en mostrador.</span>
             </div>
           </div>
         </div>
-      </section>
 
-      <!-- Filtro Categorías -->
-      <div id="categorias-container" class="flex gap-2 overflow-x-auto pb-2 text-xs pt-1">
-        <button onclick="filtrarCategoria('todas')" class="cat-btn px-3 py-1.5 rounded-full bg-emerald-600 text-white font-medium whitespace-nowrap shadow-sm">Todas</button>
-        <button onclick="filtrarCategoria('genericos')" class="cat-btn px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold whitespace-nowrap hover:bg-emerald-200">🟢 Genéricos / Ahorro</button>
-        <button onclick="filtrarCategoria('Vitaminas')" class="cat-btn px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 whitespace-nowrap">Vitaminas</button>
-        <button onclick="filtrarCategoria('Suplementos')" class="cat-btn px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 whitespace-nowrap">Suplementos</button>
-        <button onclick="filtrarCategoria('Falta de Sueño')" class="cat-btn px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 whitespace-nowrap">Falta de Sueño</button>
-        <button onclick="filtrarCategoria('Analgésicos y Antifebriles')" class="cat-btn px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 whitespace-nowrap">Analgésicos</button>
-        <button onclick="filtrarCategoria('Antiinflamatorios y Analgésicos')" class="cat-btn px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 whitespace-nowrap">Antiinflamatorios</button>
-        <button onclick="filtrarCategoria('Antibióticos')" class="cat-btn px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 whitespace-nowrap">Antibióticos</button>
-        <button onclick="filtrarCategoria('Antiespasmódicos / Digestivos')" class="cat-btn px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 whitespace-nowrap">Digestivos</button>
-        <button onclick="filtrarCategoria('Cardiovascular / Presión')" class="cat-btn px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-600 hover:bg-slate-100 whitespace-nowrap">Cardiovascular</button>
       </div>
     </div>
 
-    <!-- Lista de Medicamentos -->
-    <div id="grid-medicamentos" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-      <div class="col-span-full text-center py-10 text-slate-400">
-        <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2 text-emerald-600"></i>
-        Cargando medicamentos...
+    <!-- =========================================================================
+         4. SECCIÓN "¿QUÉ NECESITAS TRATAR?" (Fiel a Farmacity - 7 Tarjetas)
+         ========================================================================= -->
+    <section class="space-y-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">¿Qué necesitas tratar?</h2>
+          <p class="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">Seleccioná un síntoma o necesidad para ver tratamientos y alternativas de ahorro</p>
+        </div>
+        <button onclick="limpiarFiltrosSintomas()" id="btn-ver-todos" class="text-xs text-emerald-700 hover:text-emerald-800 font-bold hidden items-center gap-1 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200">
+          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+          <span>Ver todo</span>
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
+        
+        <!-- 1. Gripe y Resfrío -->
+        <div id="card-gripe" onclick="filtrarPorSintoma('gripe')" class="sintoma-card group bg-white border border-slate-200/90 rounded-2xl h-[84px] flex items-center overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-500 transition-all cursor-pointer">
+          <div class="w-28 sm:w-32 h-full shrink-0 overflow-hidden bg-slate-100 flex items-center justify-center">
+            <img src="https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=320&q=80" alt="Gripe y Resfrío" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'text-3xl\'>🤧</span>';" />
+          </div>
+          <div class="px-4 py-2 flex-1">
+            <h3 class="font-extrabold text-xs sm:text-sm text-slate-800 tracking-wide uppercase group-hover:text-emerald-700 transition-colors">Gripe y Resfrío</h3>
+            <span class="text-[10px] text-slate-400 font-medium block mt-0.5">Antigripales y descongestivos</span>
+          </div>
+        </div>
+
+        <!-- 2. Dolor de Cabeza -->
+        <div id="card-cabeza" onclick="filtrarPorSintoma('cabeza')" class="sintoma-card group bg-white border border-slate-200/90 rounded-2xl h-[84px] flex items-center overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-500 transition-all cursor-pointer">
+          <div class="w-28 sm:w-32 h-full shrink-0 overflow-hidden bg-slate-100 flex items-center justify-center">
+            <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=320&q=80" alt="Dolor de Cabeza" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'text-3xl\'>🤕</span>';" />
+          </div>
+          <div class="px-4 py-2 flex-1">
+            <h3 class="font-extrabold text-xs sm:text-sm text-slate-800 tracking-wide uppercase group-hover:text-emerald-700 transition-colors">Dolor de Cabeza</h3>
+            <span class="text-[10px] text-slate-400 font-medium block mt-0.5">Analgésicos y antifebriles</span>
+          </div>
+        </div>
+
+        <!-- 3. Dolor de Panza -->
+        <div id="card-panza" onclick="filtrarPorSintoma('panza')" class="sintoma-card group bg-white border border-slate-200/90 rounded-2xl h-[84px] flex items-center overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-500 transition-all cursor-pointer">
+          <div class="w-28 sm:w-32 h-full shrink-0 overflow-hidden bg-slate-100 flex items-center justify-center">
+            <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=320&q=80" alt="Dolor de Panza" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'text-3xl\'>🤢</span>';" />
+          </div>
+          <div class="px-4 py-2 flex-1">
+            <h3 class="font-extrabold text-xs sm:text-sm text-slate-800 tracking-wide uppercase group-hover:text-emerald-700 transition-colors">Dolor de Panza</h3>
+            <span class="text-[10px] text-slate-400 font-medium block mt-0.5">Digestivos y antiespasmódicos</span>
+          </div>
+        </div>
+
+        <!-- 4. Alergias -->
+        <div id="card-alergias" onclick="filtrarPorSintoma('alergias')" class="sintoma-card group bg-white border border-slate-200/90 rounded-2xl h-[84px] flex items-center overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-500 transition-all cursor-pointer">
+          <div class="w-28 sm:w-32 h-full shrink-0 overflow-hidden bg-slate-100 flex items-center justify-center">
+            <img src="https://images.unsplash.com/photo-1576765608535-5f04d1e3f289?auto=format&fit=crop&w=320&q=80" alt="Alergias" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'text-3xl\'>🌿</span>';" />
+          </div>
+          <div class="px-4 py-2 flex-1">
+            <h3 class="font-extrabold text-xs sm:text-sm text-slate-800 tracking-wide uppercase group-hover:text-emerald-700 transition-colors">Alergias</h3>
+            <span class="text-[10px] text-slate-400 font-medium block mt-0.5">Antihistamínicos y rinitis</span>
+          </div>
+        </div>
+
+        <!-- 5. Falta de Sueño -->
+        <div id="card-sueno" onclick="filtrarPorSintoma('sueno')" class="sintoma-card group bg-white border border-slate-200/90 rounded-2xl h-[84px] flex items-center overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-500 transition-all cursor-pointer">
+          <div class="w-28 sm:w-32 h-full shrink-0 overflow-hidden bg-slate-100 flex items-center justify-center">
+            <img src="https://images.unsplash.com/photo-1520206183501-b80df61043c2?auto=format&fit=crop&w=320&q=80" alt="Falta de Sueño" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'text-3xl\'>😴</span>';" />
+          </div>
+          <div class="px-4 py-2 flex-1">
+            <h3 class="font-extrabold text-xs sm:text-sm text-slate-800 tracking-wide uppercase group-hover:text-emerald-700 transition-colors">Falta de Sueño</h3>
+            <span class="text-[10px] text-slate-400 font-medium block mt-0.5">Melatonina y descanso natural</span>
+          </div>
+        </div>
+
+        <!-- 6. Vitaminas -->
+        <div id="card-vitaminas" onclick="filtrarPorSintoma('vitaminas')" class="sintoma-card group bg-white border border-slate-200/90 rounded-2xl h-[84px] flex items-center overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-500 transition-all cursor-pointer">
+          <div class="w-28 sm:w-32 h-full shrink-0 overflow-hidden bg-slate-100 flex items-center justify-center">
+            <img src="https://images.unsplash.com/photo-1577401239170-897942555fb3?auto=format&fit=crop&w=320&q=80" alt="Vitaminas" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'text-3xl\'>🍊</span>';" />
+          </div>
+          <div class="px-4 py-2 flex-1">
+            <h3 class="font-extrabold text-xs sm:text-sm text-slate-800 tracking-wide uppercase group-hover:text-emerald-700 transition-colors">Vitaminas</h3>
+            <span class="text-[10px] text-slate-400 font-medium block mt-0.5">Vitamina C, D3 y defensas</span>
+          </div>
+        </div>
+
+        <!-- 7. Suplementos -->
+        <div id="card-suplementos" onclick="filtrarPorSintoma('suplementos')" class="sintoma-card group bg-white border border-slate-200/90 rounded-2xl h-[84px] flex items-center overflow-hidden shadow-sm hover:shadow-md hover:border-emerald-500 transition-all cursor-pointer sm:col-span-2 lg:col-span-1">
+          <div class="w-28 sm:w-32 h-full shrink-0 overflow-hidden bg-slate-100 flex items-center justify-center">
+            <img src="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=320&q=80" alt="Suplementos" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'text-3xl\'>💪</span>';" />
+          </div>
+          <div class="px-4 py-2 flex-1">
+            <h3 class="font-extrabold text-xs sm:text-sm text-slate-800 tracking-wide uppercase group-hover:text-emerald-700 transition-colors">Suplementos</h3>
+            <span class="text-[10px] text-slate-400 font-medium block mt-0.5">Magnesio, Colágeno y energía</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         5. PILARES ÉTICOS Y DE CONFIANZA (Estilo Cruz Verde & Farmacia del Pueblo)
+         ========================================================================= -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5 py-2">
+      <div class="bg-white border border-slate-200/70 p-4 rounded-2xl shadow-sm flex items-start space-x-3">
+        <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center shrink-0">
+          <i data-lucide="badge-check" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h4 class="font-bold text-xs text-slate-900 leading-snug">Bioequivalencia ANMAT</h4>
+          <p class="text-[11px] text-slate-500 mt-0.5">Genéricos aprobados con misma potencia terapéutica.</p>
+        </div>
+      </div>
+
+      <div class="bg-white border border-slate-200/70 p-4 rounded-2xl shadow-sm flex items-start space-x-3">
+        <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center shrink-0">
+          <i data-lucide="user-check" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h4 class="font-bold text-xs text-slate-900 leading-snug">Farmacéutico Oficial</h4>
+          <p class="text-[11px] text-slate-500 mt-0.5">Supervisión y control de recetas en cada entrega.</p>
+        </div>
+      </div>
+
+      <div class="bg-white border border-slate-200/70 p-4 rounded-2xl shadow-sm flex items-start space-x-3">
+        <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center shrink-0">
+          <i data-lucide="tag" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h4 class="font-bold text-xs text-slate-900 leading-snug">Precios Claros</h4>
+          <p class="text-[11px] text-slate-500 mt-0.5">Comparativas directas de ahorro antes de comprar.</p>
+        </div>
+      </div>
+
+      <div class="bg-white border border-slate-200/70 p-4 rounded-2xl shadow-sm flex items-start space-x-3">
+        <div class="w-9 h-9 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center shrink-0">
+          <i data-lucide="building-2" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h4 class="font-bold text-xs text-slate-900 leading-snug">Obras Sociales</h4>
+          <p class="text-[11px] text-slate-500 mt-0.5">Descuentos directos en medicamentos recetados.</p>
+        </div>
       </div>
     </div>
+
+    <!-- =========================================================================
+         6. CATÁLOGO DE MEDICAMENTOS (Studio E-Commerce Quality)
+         ========================================================================= -->
+    <section class="space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-200/80 pb-3">
+        <div>
+          <h3 id="titulo-seccion-catalogo" class="text-lg font-black text-slate-900">Catálogo Farmacéutico</h3>
+          <p id="subtitulo-seccion-catalogo" class="text-xs text-slate-500 font-medium">Listado oficial de medicamentos con stock verificado en mostrador</p>
+        </div>
+        <span id="contador-productos" class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
+          Cargando catálogo...
+        </span>
+      </div>
+
+      <!-- Grilla de Medicamentos -->
+      <div id="grid-medicamentos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="col-span-full text-center py-16 text-slate-400">
+          <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2 text-emerald-600"></i>
+          Cargando medicamentos en mostrador...
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <!-- Modal / Drawer de Carrito -->
-  <div id="drawer-carrito" class="fixed inset-y-0 right-0 w-full sm:w-96 bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col">
-    <div class="p-4 bg-emerald-600 text-white flex items-center justify-between">
-      <div class="flex items-center space-x-2">
-        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
-        <h3 class="font-bold text-lg">Tu Pedido</h3>
+  <!-- =========================================================================
+       7. FOOTER INSTITUCIONAL COMPLETO (Estilo Farmacia de Primera Línea)
+       ========================================================================= -->
+  <footer class="bg-slate-900 text-slate-400 text-xs mt-16 border-t border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
+      
+      <div class="space-y-3">
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded-xl bg-emerald-600 flex items-center justify-center text-white font-bold">
+            <i data-lucide="cross" class="w-5 h-5 text-white fill-white"></i>
+          </div>
+          <span class="text-base font-extrabold text-white">FARMACIA TORRES</span>
+        </div>
+        <p class="text-slate-400 text-[11px] leading-relaxed">
+          Compromiso profesional en dispensación de medicamentos, equivalentes genéricos y atención personalizada para la salud de toda la comunidad.
+        </p>
+        <p class="text-emerald-400 text-[11px] font-semibold">Dirección Técnica: Farmacéutico Matriculado</p>
       </div>
-      <button onclick="toggleDrawerCarrito()" class="text-white hover:text-emerald-200">
+
+      <div>
+        <h4 class="font-bold text-white uppercase tracking-wider text-[11px] mb-3">Atención & Horarios</h4>
+        <ul class="space-y-2 text-[11px]">
+          <li>⏰ Lunes a Sábados: 8:30 a 21:00 hs continuado</li>
+          <li>🚨 Urgencias de Turno: Guardia 24 hs según cronograma</li>
+          <li>📍 Av. San Martín 1420 (frente a la plaza central)</li>
+          <li>🛵 Envíos a domicilio en 45 minutos</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-bold text-white uppercase tracking-wider text-[11px] mb-3">Obras Sociales & Pagos</h4>
+        <ul class="space-y-2 text-[11px]">
+          <li>✓ OSDE • Swiss Medical • Galeno • PAMI</li>
+          <li>✓ Cobertura de Medicación Crónica hasta 70%</li>
+          <li>✓ Tarjetas de Débito, Crédito, Transferencias</li>
+          <li>✓ Cuenta DNI & Mercado Pago</li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-bold text-white uppercase tracking-wider text-[11px] mb-3">Seguridad & Marco Legal</h4>
+        <p class="text-[11px] text-slate-400 leading-relaxed mb-3">
+          Establecimiento farmacéutico habilitado. La venta de medicamentos bajo receta se efectiviza únicamente contra presentación de la orden médica válida.
+        </p>
+        <div class="flex items-center gap-2">
+          <span class="bg-slate-800 text-slate-300 text-[10px] font-bold px-2 py-1 rounded border border-slate-700">ANMAT</span>
+          <span class="bg-slate-800 text-slate-300 text-[10px] font-bold px-2 py-1 rounded border border-slate-700">COL. FARMACÉUTICOS</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="border-t border-slate-800 py-4 text-center text-[11px] text-slate-500">
+      © 2026 Farmacia Torres. Todos los derechos reservados. Sistema Integral de Catálogo & WhatsApp Bot.
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       8. MODAL PARA SUBIR RECETA MÉDICA (Fórmula / Prescripción)
+       ========================================================================= -->
+  <div id="modal-receta" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 border border-slate-100">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+            <i data-lucide="camera" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-base text-slate-900">Cotizar Receta Médica</h3>
+            <p class="text-[11px] text-slate-400">Validación directa con Farmacéutico</p>
+          </div>
+        </div>
+        <button onclick="toggleModalReceta()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="border-2 border-dashed border-slate-200 rounded-2xl p-6 text-center hover:border-emerald-500 transition cursor-pointer bg-slate-50/50">
+        <i data-lucide="image-plus" class="w-10 h-10 mx-auto text-emerald-600 mb-2"></i>
+        <p class="text-xs font-bold text-slate-700">Sacá una foto clara o subí el archivo</p>
+        <p class="text-[10px] text-slate-400 mt-1">Asegurate de que se lea la firma, matrícula y diagnóstico</p>
+      </div>
+
+      <div class="space-y-2 text-xs">
+        <div>
+          <label class="font-bold text-slate-700 text-[11px] block mb-1">Obra Social / Prepaga:</label>
+          <select id="receta-obra-social" class="w-full border border-slate-200 rounded-xl p-2.5 font-semibold text-slate-700 bg-white">
+            <option value="Particular">Particular (Sin Cobertura)</option>
+            <option value="OSDE">OSDE (40% - 70%)</option>
+            <option value="Swiss Medical">Swiss Medical (40% - 70%)</option>
+            <option value="PAMI">PAMI (50% - 100%)</option>
+            <option value="Galeno">Galeno (40%)</option>
+            <option value="Otra">Otra Obra Social / Prepaga</option>
+          </select>
+        </div>
+        <div>
+          <label class="font-bold text-slate-700 text-[11px] block mb-1">Tu nombre o teléfono:</label>
+          <input id="receta-contacto" type="text" placeholder="Ej: María Gómez (11 2345-6789)" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs" />
+        </div>
+      </div>
+
+      <div class="pt-2 flex gap-2">
+        <button onclick="enviarRecetaWhatsApp()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow-md shadow-emerald-600/20">
+          <i data-lucide="message-circle" class="w-4 h-4"></i>
+          <span>Enviar por WhatsApp</span>
+        </button>
+        <button onclick="toggleModalReceta()" class="px-4 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl text-xs">
+          Cancelar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       9. DRAWER / CARRITO DE COMPRAS CON LIQUIDACIÓN DE OBRA SOCIAL
+       ========================================================================= -->
+  <div id="drawer-carrito" class="fixed inset-y-0 right-0 w-full sm:w-[420px] bg-white shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col border-l border-slate-200">
+    
+    <div class="p-4 bg-slate-900 text-white flex items-center justify-between">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+          <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 class="font-extrabold text-base leading-tight">Tu Pedido</h3>
+          <p class="text-[10px] text-slate-400">Farmacia Torres • Mostrador Online</p>
+        </div>
+      </div>
+      <button onclick="toggleDrawerCarrito()" class="text-slate-400 hover:text-white transition">
         <i data-lucide="x" class="w-6 h-6"></i>
       </button>
     </div>
 
+    <!-- Lista de Productos en el Carrito -->
     <div id="lista-carrito" class="flex-1 overflow-y-auto p-4 space-y-3">
-      <!-- Se llena con JS -->
+      <!-- Se puebla con JS -->
     </div>
 
-    <!-- Resumen y Checkout -->
-    <div class="p-4 border-t border-slate-100 bg-slate-50 space-y-3">
+    <!-- Liquidación de Obra Social y Totales -->
+    <div class="p-4 border-t border-slate-200 bg-slate-50 space-y-3">
+      
       <!-- Obra Social / Prepaga -->
       <div>
-        <label class="block text-[11px] font-bold text-slate-700 mb-1">🏥 Obra Social / Prepaga:</label>
-        <select id="cart-obra-social" onchange="actualizarCarritoUI()" class="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs font-semibold text-slate-700">
+        <div class="flex justify-between items-center mb-1">
+          <label class="block text-[11px] font-bold text-slate-700">🏥 Cobertura Obra Social / Prepaga:</label>
+          <span class="text-[10px] text-emerald-700 font-bold">Descuento inmediato</span>
+        </div>
+        <select id="cart-obra-social" onchange="actualizarCarritoUI()" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 text-xs font-semibold text-slate-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
           <option value="Particular" data-desc="0">Particular (Sin Cobertura) - 0%</option>
           <option value="OSDE" data-desc="40">OSDE - 40% desc. en recetados</option>
           <option value="Swiss Medical" data-desc="40">Swiss Medical - 40% desc. en recetados</option>
@@ -216,151 +574,195 @@
 
       <!-- Datos del Cliente -->
       <div class="grid grid-cols-2 gap-2 text-xs">
-        <input id="cart-nombre" type="text" placeholder="Tu Nombre..." class="border border-slate-200 rounded-lg p-2 text-xs bg-white" />
-        <input id="cart-telefono" type="tel" placeholder="WhatsApp (ej: 54911...)" class="border border-slate-200 rounded-lg p-2 text-xs bg-white" />
+        <div>
+          <label class="text-[10px] font-bold text-slate-500 block mb-0.5">Nombre:</label>
+          <input id="cart-nombre" type="text" placeholder="Ej: Carlos Silva" class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-white" />
+        </div>
+        <div>
+          <label class="text-[10px] font-bold text-slate-500 block mb-0.5">WhatsApp:</label>
+          <input id="cart-telefono" type="tel" placeholder="Ej: 54911..." class="w-full border border-slate-200 rounded-xl p-2 text-xs bg-white" />
+        </div>
       </div>
 
-      <div class="space-y-1 text-xs text-slate-600 pt-1">
-        <div class="flex justify-between items-center">
-          <span>Subtotal lista:</span>
+      <!-- Desglose de Precios -->
+      <div class="space-y-1.5 text-xs text-slate-600 pt-2 border-t border-slate-200">
+        <div class="flex justify-between items-center text-slate-500">
+          <span>Subtotal productos:</span>
           <span id="cart-subtotal" class="font-bold text-slate-800">$0</span>
         </div>
-        <div id="fila-descuento-os" class="flex justify-between items-center text-emerald-700 font-semibold hidden">
+        
+        <div id="fila-descuento-os" class="flex justify-between items-center text-emerald-700 font-bold hidden">
           <span>Descuento Obra Social:</span>
           <span id="cart-descuento">-$0</span>
         </div>
-        <div class="flex justify-between items-center text-sm font-extrabold text-slate-900 pt-1 border-t">
-          <span>Total a abonar:</span>
-          <span id="cart-total" class="text-emerald-700 text-lg">$0</span>
+
+        <div class="flex justify-between items-baseline pt-2 border-t border-slate-200 text-slate-900">
+          <span class="text-sm font-extrabold">Total a pagar:</span>
+          <span id="cart-total" class="text-2xl font-black text-emerald-700">$0</span>
         </div>
       </div>
 
-      <div id="alerta-receta-cart" class="hidden bg-amber-50 border border-amber-200 text-amber-800 text-xs p-2 rounded-lg flex items-start space-x-1.5">
+      <!-- Alerta si requiere receta médica -->
+      <div id="alerta-receta-cart" class="bg-amber-50 border border-amber-200/80 rounded-xl p-2.5 text-[11px] text-amber-900 hidden flex items-start gap-2">
         <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600 shrink-0 mt-0.5"></i>
-        <span>Incluye medicamentos <b>bajo receta</b>. Envía la foto de la receta médica por WhatsApp.</span>
+        <span>Este pedido incluye medicamentos <b>bajo receta</b>. Podés adjuntar la foto por WhatsApp.</span>
       </div>
 
+      <!-- Botones de Acción -->
       <div class="grid grid-cols-2 gap-2 pt-1">
-        <button onclick="enviarPedidoWhatsApp(false)" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-3 rounded-xl shadow flex items-center justify-center space-x-1.5 transition text-[11px]">
-          <i data-lucide="bot" class="w-4 h-4 text-emerald-400"></i>
+        <button onclick="enviarPedidoWhatsApp(true)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-3 px-2 rounded-2xl text-xs shadow-md shadow-emerald-600/20 flex items-center justify-center gap-1.5 transition">
+          <i data-lucide="message-circle" class="w-4 h-4"></i>
+          <span>Pedir x WhatsApp</span>
+        </button>
+        <button onclick="enviarPedidoWhatsApp(false)" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-2 rounded-2xl text-xs flex items-center justify-center gap-1.5 transition" title="Ver pedido simulado en pantalla">
+          <i data-lucide="play" class="w-4 h-4 text-emerald-400"></i>
           <span>Probar en Pantalla</span>
         </button>
-        <button onclick="enviarPedidoWhatsApp(true)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-3 rounded-xl shadow flex items-center justify-center space-x-1.5 transition text-[11px]">
-          <i data-lucide="message-square" class="w-4 h-4"></i>
-          <span>Abrir WhatsApp</span>
-        </button>
       </div>
+
     </div>
   </div>
 
-  <!-- Botón Flotante para Abrir Simulador de WhatsApp -->
-  <button onclick="toggleModalSimulador()" class="fixed bottom-6 right-6 z-40 bg-emerald-600 hover:bg-emerald-700 text-white p-3.5 rounded-full shadow-2xl flex items-center space-x-2 transition transform hover:scale-105 border-2 border-white">
+  <!-- =========================================================================
+       10. BOTÓN FLOTANTE Y SIMULADOR DE WHATSAPP
+       ========================================================================= -->
+  <button 
+    onclick="toggleModalSimulador()" 
+    class="fixed bottom-6 right-6 bg-emerald-600 hover:bg-emerald-700 text-white p-3.5 rounded-full shadow-2xl hover:scale-105 transition-all z-40 flex items-center space-x-2 border-2 border-white group"
+    title="Abrir Simulador de WhatsApp"
+  >
     <i data-lucide="message-circle" class="w-6 h-6"></i>
-    <span class="font-bold text-xs pr-1 hidden sm:inline">Probar Chat WhatsApp</span>
+    <span class="text-xs font-extrabold pr-1 hidden sm:inline">Probar Chat WhatsApp</span>
   </button>
 
-  <!-- Modal de Simulador de Bot WhatsApp -->
-  <div id="modal-simulador" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col h-[560px]">
-      <div class="bg-emerald-700 p-3.5 text-white flex items-center justify-between shadow">
+  <div id="modal-simulador" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-3xl w-full max-w-sm h-[580px] shadow-2xl flex flex-col overflow-hidden border border-slate-100">
+      
+      <!-- Top WhatsApp Bar -->
+      <div class="bg-emerald-700 text-white p-3.5 flex items-center justify-between shadow-md">
         <div class="flex items-center space-x-2.5">
-          <div class="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center font-bold text-white shadow-inner">🏥</div>
+          <div class="w-9 h-9 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-sm">
+            🏥
+          </div>
           <div>
-            <h4 class="font-semibold text-xs leading-tight">Farmacia Torres (Bot)</h4>
+            <h4 class="font-extrabold text-xs leading-tight">Farmacia Torres (Bot)</h4>
             <p class="text-[10px] text-emerald-200">En línea • Responde automático</p>
           </div>
         </div>
-        <button onclick="toggleModalSimulador()" class="text-white hover:text-emerald-200">
+        <button onclick="toggleModalSimulador()" class="text-white/80 hover:text-white">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
-      <!-- Barra de pruebas rápidas (atajos) -->
-      <div class="bg-emerald-50/80 px-2.5 py-1.5 border-b border-emerald-100 flex gap-1.5 overflow-x-auto text-[10px]">
-        <button onclick="enviarSimulacionChat('Hola')" class="bg-white border border-emerald-200 text-emerald-800 px-2 py-0.5 rounded-full whitespace-nowrap hover:bg-emerald-100">👋 Menú</button>
-        <button onclick="enviarSimulacionChat('Tafirol 1g')" class="bg-white border border-emerald-200 text-emerald-800 px-2 py-0.5 rounded-full whitespace-nowrap hover:bg-emerald-100">💊 Tafirol</button>
-        <button onclick="enviarSimulacionChat('Ibuprofeno 600')" class="bg-white border border-emerald-200 text-emerald-800 px-2 py-0.5 rounded-full whitespace-nowrap hover:bg-emerald-100">💊 Ibuprofeno</button>
-        <button onclick="enviarSimulacionChat('Amoxidal')" class="bg-white border border-emerald-200 text-emerald-800 px-2 py-0.5 rounded-full whitespace-nowrap hover:bg-emerald-100">💊 Amoxidal</button>
-        <button onclick="enviarSimulacionChat('Horarios')" class="bg-white border border-emerald-200 text-emerald-800 px-2 py-0.5 rounded-full whitespace-nowrap hover:bg-emerald-100">⏰ Horarios</button>
-        <button onclick="simularEnvioReceta()" class="bg-white border border-emerald-200 text-emerald-800 px-2 py-0.5 rounded-full whitespace-nowrap hover:bg-emerald-100">📸 Enviar Receta</button>
+      <!-- Atajos rápidos del simulador -->
+      <div class="bg-emerald-50/90 px-2.5 py-1.5 border-b border-emerald-100 flex gap-1.5 overflow-x-auto text-[10px]">
+        <button onclick="enviarSimulacionChat('Hola')" class="bg-white border border-emerald-200 text-emerald-800 px-2.5 py-1 rounded-full font-bold whitespace-nowrap hover:bg-emerald-100">👋 Menú</button>
+        <button onclick="enviarSimulacionChat('Tafirol 1g')" class="bg-white border border-emerald-200 text-emerald-800 px-2.5 py-1 rounded-full font-bold whitespace-nowrap hover:bg-emerald-100">💊 Tafirol</button>
+        <button onclick="enviarSimulacionChat('Ibuprofeno 600')" class="bg-white border border-emerald-200 text-emerald-800 px-2.5 py-1 rounded-full font-bold whitespace-nowrap hover:bg-emerald-100">💊 Ibuprofeno</button>
+        <button onclick="enviarSimulacionChat('Vitaminas')" class="bg-white border border-emerald-200 text-emerald-800 px-2.5 py-1 rounded-full font-bold whitespace-nowrap hover:bg-emerald-100">🍊 Vitaminas</button>
+        <button onclick="enviarSimulacionChat('Horarios')" class="bg-white border border-emerald-200 text-emerald-800 px-2.5 py-1 rounded-full font-bold whitespace-nowrap hover:bg-emerald-100">⏰ Horarios</button>
+        <button onclick="simularEnvioReceta()" class="bg-white border border-emerald-200 text-emerald-800 px-2.5 py-1 rounded-full font-bold whitespace-nowrap hover:bg-emerald-100">📸 Enviar Receta</button>
       </div>
 
-      <!-- Área de mensajes -->
-      <div id="chat-messages" class="flex-1 p-3 overflow-y-auto bg-slate-100 space-y-2 text-xs">
-        <div class="bg-white p-2.5 rounded-xl shadow-sm max-w-[85%] text-slate-700 leading-relaxed">
-          ¡Hola! Soy el asistente virtual de Farmacia Torres. 🏥<br><br>
-          Puedes escribir como si fueras un cliente desde tu celular (ej: <b>Tafirol</b>, <b>Ibuprofeno</b> o <b>Horarios</b>).
+      <!-- Mensajes del Chat -->
+      <div id="chat-messages" class="flex-1 p-3.5 overflow-y-auto bg-slate-100 space-y-2.5 text-xs font-normal">
+        <div class="bg-white p-3 rounded-2xl rounded-tl-sm shadow-sm max-w-[85%] text-slate-700 leading-relaxed border border-slate-200/50">
+          👋 ¡Hola! Soy el asistente oficial de <b>Farmacia Torres</b>. 🏥<br><br>
+          Podés consultar stock, precios y genéricos escribiendo por ejemplo: <b>Tafirol</b>, <b>Ibuprofeno</b>, <b>Vitaminas</b> o <b>Horarios</b>.
         </div>
       </div>
 
-      <!-- Input de chat -->
-      <div class="p-2.5 bg-white border-t border-slate-200 flex items-center space-x-2">
+      <!-- Input de Chat -->
+      <div class="p-3 bg-white border-t border-slate-200 flex items-center space-x-2">
         <input 
           id="chat-input" 
           type="text" 
-          placeholder="Escribe un mensaje de WhatsApp..." 
-          class="flex-1 border border-slate-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-emerald-500" 
+          placeholder="Escribí un mensaje..." 
+          class="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500" 
           onkeydown="if(event.key === 'Enter') enviarSimulacionChat()"
         />
-        <button onclick="enviarSimulacionChat()" class="bg-emerald-600 hover:bg-emerald-700 text-white p-2 rounded-lg transition">
+        <button onclick="enviarSimulacionChat()" class="bg-emerald-600 hover:bg-emerald-700 text-white p-2.5 rounded-xl transition">
           <i data-lucide="send" class="w-4 h-4"></i>
         </button>
       </div>
+
     </div>
   </div>
 
-  <!-- Scripts -->
+  <!-- =========================================================================
+       11. LÓGICA JAVASCRIPT ROBUSTA
+       ========================================================================= -->
   <script>
     let medicamentos = [];
     let carrito = {};
 
-    // Cargar productos
+    // Cargar catálogo inicial
     async function cargarMedicamentos() {
       try {
         const res = await fetch('/api/medicamentos');
         medicamentos = await res.json();
         renderMedicamentos(medicamentos);
       } catch (err) {
-        document.getElementById('grid-medicamentos').innerHTML = `<p class="col-span-full text-center text-red-500">Error al cargar medicamentos.</p>`;
+        console.error('Error cargando medicamentos:', err);
+        document.getElementById('grid-medicamentos').innerHTML = `
+          <div class="col-span-full text-center py-10 text-red-500">
+            Error al conectar con la base de medicamentos.
+          </div>
+        `;
       }
     }
 
+    // Renderizar grilla de productos de alta conversión
     function renderMedicamentos(lista) {
       const container = document.getElementById('grid-medicamentos');
+      const contador = document.getElementById('contador-productos');
+      if (contador) {
+        contador.innerText = `${lista.length} productos disponibles`;
+      }
+
       if (lista.length === 0) {
         container.innerHTML = `
-          <div class="col-span-full text-center py-10 text-slate-400">
-            <i data-lucide="package-x" class="w-10 h-10 mx-auto mb-2 text-slate-300"></i>
-            No se encontraron medicamentos con esa búsqueda.
+          <div class="col-span-full bg-white border border-slate-200 rounded-3xl text-center py-16 px-4 text-slate-400 space-y-3">
+            <i data-lucide="package-search" class="w-12 h-12 mx-auto text-slate-300"></i>
+            <h4 class="font-bold text-slate-700 text-base">No se encontraron medicamentos con esa búsqueda</h4>
+            <p class="text-xs text-slate-400 max-w-sm mx-auto">Probá buscando por droga básica (ej. Paracetamol, Ibuprofeno, Amoxicilina) o seleccioná otra categoría.</p>
+            <button onclick="limpiarFiltrosSintomas()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-4 py-2 rounded-xl text-xs transition">
+              Ver todos los productos
+            </button>
           </div>
         `;
-        lucide.createIcons();
+        if (window.lucide) lucide.createIcons();
         return;
       }
 
       container.innerHTML = lista.map(m => {
         const badgeRecetaClass = m.requiere_receta ? 'badge-receta' : 'badge-libre';
-        const badgeRecetaText = m.requiere_receta ? 'Bajo Receta' : 'Venta Libre';
-        const stockColor = m.stock > 10 ? 'text-emerald-600' : 'text-amber-600';
+        const badgeRecetaText = m.requiere_receta ? '🔴 Bajo Receta' : '🟢 Venta Libre';
+        const stockBadge = m.stock > 10 
+          ? `<span class="text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-md">Stock disponible (${m.stock} u.)</span>`
+          : `<span class="text-[10px] text-amber-700 font-semibold bg-amber-50 px-2 py-0.5 rounded-md">Últimas ${m.stock} unidades</span>`;
         
         const badgeTipo = m.es_generico 
-          ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">🟢 Genérico Ahorro</span>`
-          : `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">🏷️ Marca Líder</span>`;
+          ? `<span class="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300">🟢 Genérico Ahorro</span>`
+          : `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">🏷️ Marca Líder</span>`;
 
-        // Buscar si hay genérico equivalente más económico
+        // Comparativa inteligente de ahorro si es de marca
         let avisoGenerico = '';
         if (!m.es_generico) {
           const genEquiv = medicamentos.find(g => g.es_generico && g.principio_activo === m.principio_activo && g.precio < m.precio);
           if (genEquiv) {
             const ahorro = m.precio - genEquiv.precio;
+            const pctAhorro = Math.round((ahorro / m.precio) * 100);
             avisoGenerico = `
-              <div class="mt-2.5 bg-emerald-50 border border-emerald-200/80 rounded-xl p-2 flex items-center justify-between text-[11px]">
-                <div class="leading-tight">
-                  <span class="text-emerald-800 font-bold block">💡 Opción genérica:</span>
-                  <span class="text-slate-600 text-[10px]">${genEquiv.nombre_comercial} (Ahorras $${ahorro.toLocaleString('es-AR')})</span>
+              <div class="mt-3 bg-emerald-50/90 border border-emerald-200 rounded-xl p-2.5 flex items-center justify-between text-[11px] transition hover:bg-emerald-100/70">
+                <div class="leading-tight pr-1">
+                  <div class="flex items-center gap-1 text-emerald-900 font-extrabold">
+                    <span>💡 Opción Ahorro ${pctAhorro}%:</span>
+                  </div>
+                  <span class="text-slate-600 text-[10px]">${genEquiv.nombre_comercial} (Ahorrás $${ahorro.toLocaleString('es-AR')})</span>
                 </div>
-                <button onclick="agregarAlCarrito('${genEquiv.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2 py-1 rounded-lg text-[10px] shadow-sm whitespace-nowrap">
-                  Ver $${genEquiv.precio.toLocaleString('es-AR')}
+                <button onclick="agregarAlCarrito('${genEquiv.id}')" class="bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold px-2.5 py-1.5 rounded-lg text-[10px] shadow-sm whitespace-nowrap transition">
+                  Comprar $${genEquiv.precio.toLocaleString('es-AR')}
                 </button>
               </div>
             `;
@@ -368,32 +770,46 @@
         }
 
         return `
-          <div class="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm hover:shadow-md transition flex flex-col justify-between">
+          <div class="bg-white border border-slate-200/90 rounded-3xl p-5 shadow-sm hover:shadow-md hover:border-slate-300 transition-all flex flex-col justify-between group">
             <div>
-              <div class="flex items-start justify-between gap-1.5 mb-2 flex-wrap">
-                <div class="flex gap-1">
+              <div class="flex items-center justify-between gap-1.5 mb-3 flex-wrap">
+                <div class="flex items-center gap-1.5">
                   ${badgeTipo}
                   <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${badgeRecetaClass}">
                     ${badgeRecetaText}
                   </span>
                 </div>
-                <span class="text-[11px] ${stockColor} font-medium">
-                  Stock: ${m.stock} u.
-                </span>
+                ${stockBadge}
               </div>
-              <h3 class="font-bold text-slate-900 text-base leading-snug">${m.nombre_comercial}</h3>
-              <p class="text-xs text-slate-500 font-medium mb-0.5">Droga: <span class="text-slate-800 font-semibold">${m.principio_activo} ${m.concentracion ? `(${m.concentracion})` : ''}</span></p>
-              <p class="text-[11px] text-slate-400">${m.presentacion} • ${m.laboratorio}</p>
-              ${m.indicacion ? `<p class="text-[11px] text-slate-500 mt-2 bg-slate-50 p-1.5 rounded-lg line-clamp-2">${m.indicacion}</p>` : ''}
+
+              <h3 class="font-extrabold text-slate-900 text-base leading-snug group-hover:text-emerald-800 transition-colors">
+                ${m.nombre_comercial}
+              </h3>
+              
+              <div class="mt-1 space-y-0.5">
+                <p class="text-xs text-slate-500 font-medium">
+                  Droga: <span class="text-slate-800 font-bold">${m.principio_activo} ${m.concentracion ? `(${m.concentracion})` : ''}</span>
+                </p>
+                <p class="text-[11px] text-slate-400">
+                  ${m.presentacion} • <span class="font-medium text-slate-500">${m.laboratorio}</span>
+                </p>
+              </div>
+
+              ${m.indicacion ? `
+                <div class="mt-3 bg-slate-50 border border-slate-100 rounded-xl p-2 text-[11px] text-slate-600 line-clamp-2">
+                  <span class="font-semibold text-slate-700">Indicación:</span> ${m.indicacion}
+                </div>
+              ` : ''}
+
               ${avisoGenerico}
             </div>
 
-            <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+            <div class="mt-5 pt-3.5 border-t border-slate-100 flex items-center justify-between">
               <div>
-                <span class="text-xs text-slate-400 block leading-none">Precio</span>
-                <span class="text-lg font-extrabold text-slate-900">$${m.precio.toLocaleString('es-AR')}</span>
+                <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block">Precio de lista</span>
+                <span class="text-xl font-black text-slate-900 leading-none">$${m.precio.toLocaleString('es-AR')}</span>
               </div>
-              <button onclick="agregarAlCarrito('${m.id}')" class="bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white px-3 py-1.5 rounded-xl font-semibold text-xs transition flex items-center space-x-1">
+              <button onclick="agregarAlCarrito('${m.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-3.5 py-2 rounded-xl text-xs transition shadow-sm hover:shadow flex items-center space-x-1.5 active:scale-95">
                 <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                 <span>Agregar</span>
               </button>
@@ -407,7 +823,7 @@
       }
     }
 
-    // Buscador
+    // Buscador con debounce
     let timerBusqueda;
     function ejecutarBusqueda(query) {
       clearTimeout(timerBusqueda);
@@ -423,17 +839,20 @@
         } catch (e) {
           console.error(e);
         }
-      }, 250);
+      }, 200);
     }
 
-    // Filtros de categoría
+    // Filtros de categoría del Navbar
     function filtrarCategoria(cat) {
+      limpiarFiltrosSintomas(false);
       document.querySelectorAll('.cat-btn').forEach(b => {
-        b.classList.remove('bg-emerald-600', 'text-white');
+        b.classList.remove('bg-slate-900', 'text-white');
         b.classList.add('bg-white', 'text-slate-600');
       });
-      event.target.classList.remove('bg-white', 'text-slate-600');
-      event.target.classList.add('bg-emerald-600', 'text-white');
+      if (event && event.target) {
+        event.target.classList.remove('bg-white', 'text-slate-600');
+        event.target.classList.add('bg-slate-900', 'text-white');
+      }
 
       if (cat === 'todas') {
         renderMedicamentos(medicamentos);
@@ -448,7 +867,6 @@
 
     // Filtrar por Síntoma / Necesidad (Sección Farmacity)
     function filtrarPorSintoma(tipo) {
-      // Limpiar estados activos de tarjetas
       document.querySelectorAll('.sintoma-card').forEach(c => {
         c.classList.remove('ring-2', 'ring-emerald-600', 'border-emerald-600', 'bg-emerald-50/50');
       });
@@ -457,7 +875,6 @@
         card.classList.add('ring-2', 'ring-emerald-600', 'border-emerald-600', 'bg-emerald-50/50');
       }
 
-      // Mostrar botón de limpiar filtro
       const btnVerTodos = document.getElementById('btn-ver-todos');
       if (btnVerTodos) {
         btnVerTodos.classList.remove('hidden');
@@ -510,14 +927,13 @@
 
       renderMedicamentos(filtrados.length > 0 ? filtrados : medicamentos);
 
-      // Desplazamiento suave hacia la lista de resultados
       const grid = document.getElementById('grid-medicamentos');
       if (grid) {
         grid.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     }
 
-    function limpiarFiltrosSintomas() {
+    function limpiarFiltrosSintomas(reRender = true) {
       document.querySelectorAll('.sintoma-card').forEach(c => {
         c.classList.remove('ring-2', 'ring-emerald-600', 'border-emerald-600', 'bg-emerald-50/50');
       });
@@ -526,13 +942,33 @@
         btnVerTodos.classList.add('hidden');
         btnVerTodos.classList.remove('inline-flex');
       }
-      renderMedicamentos(medicamentos);
+      if (reRender) renderMedicamentos(medicamentos);
     }
 
-    // Carrito
+    // Modal de Receta
+    function toggleModalReceta() {
+      const modal = document.getElementById('modal-receta');
+      modal.classList.toggle('hidden');
+    }
+
+    function enviarRecetaWhatsApp() {
+      const os = document.getElementById('receta-obra-social').value;
+      const contacto = document.getElementById('receta-contacto').value.trim() || 'Cliente';
+      const msg = `👋 *Hola Farmacia Torres!*%0A%0A📸 *Envío foto de receta médica para cotizar:*%0A• *Paciente/Contacto:* ${encodeURIComponent(contacto)}%0A• *Obra Social:* ${encodeURIComponent(os)}%0A%0A¿Me confirman disponibilidad y copago? Gracias!`;
+      window.open(`https://wa.me/?text=${msg}`, '_blank');
+      toggleModalReceta();
+    }
+
+    // Carrito de compras
     function agregarAlCarrito(id) {
       carrito[id] = (carrito[id] || 0) + 1;
       actualizarCarritoUI();
+      // Pequeña animación visual en el botón del carrito
+      const badgeCount = document.getElementById('badge-cart-count');
+      if (badgeCount) {
+        badgeCount.classList.add('scale-125');
+        setTimeout(() => badgeCount.classList.remove('scale-125'), 200);
+      }
     }
 
     function cambiarCantidad(id, delta) {
@@ -566,11 +1002,18 @@
       }
 
       if (keys.length === 0) {
-        itemsContainer.innerHTML = `<p class="text-center py-10 text-slate-400 text-sm">Tu carrito está vacío.</p>`;
+        itemsContainer.innerHTML = `
+          <div class="text-center py-16 text-slate-400 space-y-2">
+            <i data-lucide="shopping-cart" class="w-10 h-10 mx-auto text-slate-300 stroke-1"></i>
+            <p class="font-bold text-sm text-slate-600">Tu carrito está vacío</p>
+            <p class="text-xs text-slate-400 max-w-xs mx-auto">Seleccioná medicamentos del catálogo para calcular tu descuento y total.</p>
+          </div>
+        `;
         if (subtotalSpan) subtotalSpan.innerText = "$0";
         if (totalSpan) totalSpan.innerText = "$0";
         if (filaDescuento) filaDescuento.classList.add('hidden');
-        alertaReceta.classList.add('hidden');
+        if (alertaReceta) alertaReceta.classList.add('hidden');
+        if (window.lucide) lucide.createIcons();
         return;
       }
 
@@ -592,15 +1035,18 @@
         }
 
         return `
-          <div class="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-100 rounded-xl">
-            <div class="flex-1 pr-2">
-              <h4 class="font-bold text-xs text-slate-800">${med.nombre_comercial}</h4>
-              <p class="text-[11px] text-slate-400">$${med.precio.toLocaleString('es-AR')} c/u ${med.requiere_receta ? '<span class="text-red-600 font-bold">(Receta)</span>' : ''}</p>
+          <div class="p-3 bg-white border border-slate-200/80 rounded-2xl shadow-sm flex items-center justify-between">
+            <div class="flex-1 pr-3">
+              <h4 class="font-bold text-xs text-slate-900 leading-snug">${med.nombre_comercial}</h4>
+              <p class="text-[11px] text-slate-400 mt-0.5">
+                $${med.precio.toLocaleString('es-AR')} c/u 
+                ${med.requiere_receta ? '<span class="text-red-600 font-bold ml-1">(Receta)</span>' : ''}
+              </p>
             </div>
-            <div class="flex items-center space-x-2">
-              <button onclick="cambiarCantidad('${id}', -1)" class="w-6 h-6 rounded bg-white border border-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs">-</button>
-              <span class="text-xs font-bold w-4 text-center">${carrito[id]}</span>
-              <button onclick="cambiarCantidad('${id}', 1)" class="w-6 h-6 rounded bg-white border border-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs">+</button>
+            <div class="flex items-center space-x-1.5 bg-slate-100 rounded-xl p-1">
+              <button onclick="cambiarCantidad('${id}', -1)" class="w-6 h-6 rounded-lg bg-white border border-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs hover:bg-slate-50">-</button>
+              <span class="text-xs font-black w-5 text-center text-slate-900">${carrito[id]}</span>
+              <button onclick="cambiarCantidad('${id}', 1)" class="w-6 h-6 rounded-lg bg-white border border-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs hover:bg-slate-50">+</button>
             </div>
           </div>
         `;
@@ -662,31 +1108,29 @@
         toggleDrawerCarrito();
 
         if (abrirWhatsAppReal) {
-          // Abrir WhatsApp Web real con el pedido
           const textoEncoded = encodeURIComponent(data.mensaje_whatsapp);
           window.open(`https://wa.me/?text=${textoEncoded}`, '_blank');
         } else {
-          // Probar directamente en pantalla en el Simulador de WhatsApp
           const modal = document.getElementById('modal-simulador');
           modal.classList.remove('hidden');
 
           const chatBox = document.getElementById('chat-messages');
           chatBox.innerHTML += `
-            <div class="bg-emerald-600 text-white p-2.5 rounded-xl ml-auto max-w-[85%] text-right whitespace-pre-line text-xs font-mono">
+            <div class="bg-emerald-600 text-white p-2.5 rounded-2xl ml-auto max-w-[85%] text-right whitespace-pre-line text-xs font-mono shadow-sm">
               ${data.mensaje_whatsapp}
             </div>
           `;
           
           setTimeout(() => {
             const respuestaBot = 
-              `🎉 *¡Muchas gracias por tu pedido, ${clienteNombre}!* 📦\n\n` +
+              `🎉 *¡Muchas gracias por tu pedido a Farmacia Torres, ${clienteNombre}!* 📦\n\n` +
               `Hemos registrado tu pedido *#${data.pedido_id}* en el sistema de mostrador.\n` +
               `Total: *$${data.total_final.toLocaleString('es-AR')}*.\n\n` +
               (data.requiere_receta ? `⚠️ *Recuerda adjuntar la foto de la receta médica* por este chat.\n\n` : '') +
               `Puedes ver tu pedido entrando al Panel de Mostrador: http://localhost:8000/admin`;
 
             chatBox.innerHTML += `
-              <div class="bg-white p-2.5 rounded-xl shadow-sm max-w-[85%] text-slate-800 whitespace-pre-line leading-relaxed">
+              <div class="bg-white p-3 rounded-2xl shadow-sm max-w-[85%] text-slate-800 whitespace-pre-line leading-relaxed border border-slate-200/50">
                 ${respuestaBot}
               </div>
             `;
@@ -707,7 +1151,7 @@
     function simularEnvioReceta() {
       const chatBox = document.getElementById('chat-messages');
       chatBox.innerHTML += `
-        <div class="bg-emerald-600 text-white p-2.5 rounded-xl ml-auto max-w-[85%] text-right text-xs">
+        <div class="bg-emerald-600 text-white p-2.5 rounded-2xl ml-auto max-w-[85%] text-right text-xs shadow-sm">
           📷 <i>[Foto de Receta Médica adjunta - Dr. Martínez]</i><br>
           <b>#farmacia Aquí adjunto mi receta médica</b>
         </div>
@@ -716,9 +1160,9 @@
 
       setTimeout(() => {
         chatBox.innerHTML += `
-          <div class="bg-white p-2.5 rounded-xl shadow-sm max-w-[85%] text-slate-800 whitespace-pre-line text-xs">
+          <div class="bg-white p-3 rounded-2xl shadow-sm max-w-[85%] text-slate-800 whitespace-pre-line text-xs leading-relaxed border border-slate-200/50">
             👋 ¡Hola!<br><br>
-            📸 <b>Recibimos la foto de tu orden/receta médica.</b><br>
+            📸 <b>Recibimos la foto de tu orden/receta médica en Farmacia Torres.</b><br>
             Un farmacéutico la está revisando en este momento para verificar:<br>
             • Cobertura de tu obra social / prepaga<br>
             • Stock de la dosis indicada<br><br>
@@ -736,14 +1180,13 @@
 
       const chatBox = document.getElementById('chat-messages');
       chatBox.innerHTML += `
-        <div class="bg-emerald-600 text-white p-2.5 rounded-xl ml-auto max-w-[85%] text-right">
+        <div class="bg-emerald-600 text-white p-2.5 rounded-2xl ml-auto max-w-[85%] text-right shadow-sm">
           ${texto}
         </div>
       `;
       if (!textoManual) input.value = '';
       chatBox.scrollTop = chatBox.scrollHeight;
 
-      // Llamar al endpoint de webhook simulado
       try {
         const res = await fetch('/api/webhook/whatsapp', {
           method: 'POST',
@@ -758,7 +1201,7 @@
         const data = await res.json();
         
         chatBox.innerHTML += `
-          <div class="bg-white p-2.5 rounded-xl shadow-sm max-w-[85%] text-slate-700 whitespace-pre-line">
+          <div class="bg-white p-3 rounded-2xl shadow-sm max-w-[85%] text-slate-700 whitespace-pre-line border border-slate-200/50">
             ${data.response_text}
           </div>
         `;
@@ -768,7 +1211,16 @@
       }
     }
 
-    // Iniciar
+    // Atajo de teclado ⌘K para buscar
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        const searchInput = document.getElementById('input-busqueda');
+        if (searchInput) searchInput.focus();
+      }
+    });
+
+    // Inicializar
     window.addEventListener('DOMContentLoaded', () => {
       cargarMedicamentos();
       if (window.lucide && typeof window.lucide.createIcons === 'function') {
