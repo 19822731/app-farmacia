@@ -1,12 +1,12 @@
 #!/bin/bash
 # ========================================================
-# 🏥 Conectar Bot de WhatsApp Real - Farmacia San Martín
+# 🏥 Conectar Bot de WhatsApp Real - Farmacia Torres
 # ========================================================
 
 cd "$(dirname "$0")"
 
 echo "=========================================================="
-echo "🏥 INICIANDO SISTEMA DE FARMACIA Y BOT DE WHATSAPP..."
+echo "🏥 INICIANDO SISTEMA DE FARMACIA TORRES Y BOT DE WHATSAPP..."
 echo "=========================================================="
 
 # 1. Verificar si el servidor Python (Catálogo & API) está corriendo

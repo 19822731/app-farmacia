@@ -1,5 +1,5 @@
 /**
- * 🏥 WhatsApp Bot para Farmacia San Martín
+ * 🏥 WhatsApp Bot para Farmacia Torres
  * Conector nativo en Node.js usando Baileys (No requiere Docker)
  */
 
@@ -131,7 +131,8 @@ async function startWhatsAppBot() {
 
   // Escuchar mensajes entrantes
   sock.ev.on('messages.upsert', async (m) => {
-    if (m.type !== 'notify') return;
+    // Permitir notify (mensajes externos) y append (mensajes propios sincronizados)
+    if (m.type !== 'notify' && m.type !== 'append') return;
 
     for (const msg of m.messages) {
       // Si el mensaje es propio (enviado por ti mismo), permitirlo únicamente si incluye '#farmacia'
@@ -171,18 +172,23 @@ async function startWhatsAppBot() {
         continue; // No responder a amigos ni familiares
       }
 
+      console.log(`📩 [WhatsApp ${m.type}] Mensaje detectado de ${pushName}: "${textoOriginal}"`);
+
+      // Al responderse a uno mismo, no citar el mensaje propio para evitar bloqueos de WhatsApp
+      const quoteOpt = msg.key.fromMe ? {} : { quoted: msg };
+
       // Detectar si envió imagen (ej. receta médica)
       if (msg.message?.imageMessage) {
         console.log(`📸 Imagen/Receta médica recibida de ${pushName} (${remoteJid})`);
         const respuestaReceta = 
           `👋 ¡Hola ${pushName}!\n\n` +
-          `📸 *Recibimos la foto de tu orden/receta médica.*\n` +
+          `📸 *Recibimos la foto de tu orden/receta médica en Farmacia Torres.*\n` +
           `Un farmacéutico la está revisando en este momento para verificar:\n` +
           `• Cobertura de tu obra social / prepaga\n` +
           `• Stock de la dosis indicada\n\n` +
           `En breves minutos te confirmamos por este mismo chat. ¡Gracias por tu paciencia!`;
 
-        await sock.sendMessage(remoteJid, { text: respuestaReceta }, { quoted: msg });
+        await sock.sendMessage(remoteJid, { text: respuestaReceta }, quoteOpt);
         continue;
       }
 
@@ -197,13 +203,13 @@ async function startWhatsAppBot() {
       // Si solo enviaron "#farmacia", tratarlo como saludo/menú
       if (!texto) texto = 'hola';
 
-      console.log(`💬 Consulta de Farmacia de ${pushName}: "${texto}"`);
+      console.log(`💬 Consulta procesada para ${pushName}: "${texto}"`);
       const textoLower = texto.toLowerCase();
 
       // Saludos y Menú Principal
       if (['hola', 'buenas', 'buen dia', 'buenas tardes', 'buenas noches', 'menu', 'inicio', 'ayuda'].some(s => textoLower.includes(s))) {
         const menuPrincipal = 
-          `👋 *¡Hola ${pushName}! Bienvenido a Farmacia San Martín.* 🏥\n\n` +
+          `👋 *¡Hola ${pushName}! Bienvenido a Farmacia Torres.* 🏥\n\n` +
           `¿En qué te podemos ayudar hoy?\n\n` +
           `1️⃣ 🔍 *Consultar precio o stock:* Escribe el nombre del medicamento o droga (ej: *Tafirol*, *Ibuprofeno*, *Amoxidal*).\n` +
           `2️⃣ 🌐 *Ver catálogo online y pedir:* Entra a armar tu carrito aquí:\n` +
@@ -212,38 +218,38 @@ async function startWhatsAppBot() {
           `4️⃣ ⏰ *Horarios:* Lunes a Sábado de 8:30 a 21:00 hs. (Atendemos urgencias de turno).\n` +
           `5️⃣ 👨‍⚕️ *Farmacéutico:* Si tienes una consulta clínica, escribe *"farmaceutico"* y te derivamos con un profesional.`;
 
-        await sock.sendMessage(remoteJid, { text: menuPrincipal }, { quoted: msg });
+        await sock.sendMessage(remoteJid, { text: menuPrincipal }, quoteOpt);
         continue;
       }
 
       // Consulta de farmacéutico humano
       if (textoLower.includes('farmaceutico') || textoLower.includes('humano') || textoLower.includes('persona')) {
         const respuestaHumano = 
-          `👨‍⚕️ *Derivando a un profesional farmacéutico...*\n` +
+          `👨‍⚕️ *Derivando a un profesional farmacéutico de Farmacia Torres...*\n` +
           `Tu consulta ha sido transferida a nuestro equipo de mostrador. Te responderán a la brevedad en este chat.`;
-        await sock.sendMessage(remoteJid, { text: respuestaHumano }, { quoted: msg });
+        await sock.sendMessage(remoteJid, { text: respuestaHumano }, quoteOpt);
         continue;
       }
 
       // Horarios y ubicación
       if (textoLower.includes('horario') || textoLower.includes('direccion') || textoLower.includes('ubicacion') || textoLower.includes('donde estan')) {
         const respuestaInfo = 
-          `📍 *Farmacia San Martín*\n\n` +
+          `📍 *Farmacia Torres*\n\n` +
           `⏰ *Horarios:* Lunes a Sábados de 8:30 a 21:00 hs continuado.\n` +
-          `🏥 *Dirección:* Av. San Martín 1420 (frente a la plaza central).\n` +
+          `🏥 *Atención:* Mostrador y envíos a domicilio.\n` +
           `💳 *Medios de pago:* Efectivo, Débito, Transferencia y Obras Sociales.\n` +
           `🛵 *Envíos a domicilio:* Sí, dentro del radio urbano.`;
-        await sock.sendMessage(remoteJid, { text: respuestaInfo }, { quoted: msg });
+        await sock.sendMessage(remoteJid, { text: respuestaInfo }, quoteOpt);
         continue;
       }
 
       // Si es un pedido generado desde la web (empieza con "👋 *Nuevo Pedido")
       if (texto.includes('Nuevo Pedido') || texto.includes('Detalle de medicamentos')) {
         const respuestaPedido = 
-          `🎉 *¡Muchas gracias por enviar tu pedido, ${pushName}!* 📦\n\n` +
+          `🎉 *¡Muchas gracias por enviar tu pedido a Farmacia Torres, ${pushName}!* 📦\n\n` +
           `Hemos recibido el detalle de tu compra. Nuestro equipo está separando los medicamentos en mostrador.\n` +
           `Te confirmaremos el total final y los detalles de retiro o envío en unos minutos.`;
-        await sock.sendMessage(remoteJid, { text: respuestaPedido }, { quoted: msg });
+        await sock.sendMessage(remoteJid, { text: respuestaPedido }, quoteOpt);
         continue;
       }
 
@@ -287,7 +293,7 @@ async function startWhatsAppBot() {
 
       // Enviar respuesta
       if (respuestaFinal) {
-        await sock.sendMessage(remoteJid, { text: respuestaFinal }, { quoted: msg });
+        await sock.sendMessage(remoteJid, { text: respuestaFinal }, quoteOpt);
       }
     }
   });

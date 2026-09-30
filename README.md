@@ -1,4 +1,4 @@
-# 🏥 Farmacia WhatsApp Bot & Catálogo Web
+# 🏥 Farmacia Torres - WhatsApp Bot & Catálogo Web
 
 Solución integral de código abierto para automatizar la atención al cliente, consultas de precios/stock y pedidos en farmacias mediante **WhatsApp** y un **Catálogo Web Híbrido**.
 

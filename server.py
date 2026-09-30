@@ -274,7 +274,7 @@ async def crear_pedido(pedido: PedidoRequest):
 
     # Formatear mensaje para WhatsApp
     msg_wa = (
-        f"👋 *Nuevo Pedido en Farmacia San Martín* (#{pedido_id})\n\n"
+        f"👋 *Nuevo Pedido en Farmacia Torres* (#{pedido_id})\n\n"
         f"👤 *Cliente:* {pedido.cliente_nombre}\n"
     )
     if pedido.cliente_telefono:
@@ -324,9 +324,9 @@ async def actualizar_estado_pedido(pedido_id: str, data: ActualizarEstadoRequest
     mensaje_notificacion = ""
     if data.estado == "listo":
         mensaje_notificacion = (
-            f"👋 ¡Hola {encontrado['cliente_nombre']}! Te avisamos desde *Farmacia San Martín* "
+            f"👋 ¡Hola {encontrado['cliente_nombre']}! Te avisamos desde *Farmacia Torres* "
             f"que tu pedido *#{pedido_id}* ya está listo para retirar en mostrador. "
-            f"Total a abonar: *${encontrado['total_final']:,.0f}*. ¡Te esperamos en Av. San Martín 1420!"
+            f"Total a abonar: *${encontrado['total_final']:,.0f}*. ¡Te esperamos en Farmacia Torres!"
         )
     elif data.estado == "en_camino":
         mensaje_notificacion = (
