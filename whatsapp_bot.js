@@ -69,7 +69,8 @@ function loadMedicamentosFallback() {
 // Cuando uses un número exclusivo de la farmacia, cambia MODO_SEGURO a false.
 const MODO_SEGURO = true;
 const WHITELIST_NUMBERS = [
-  // Puedes agregar números de prueba autorizados aquí (ej: '5491122334455')
+  '381561354', // Número del cliente de pruebas (puede hablarle 100% natural al bot)
+  '549381561354'
 ];
 
 async function startWhatsAppBot() {
