@@ -18,6 +18,7 @@ DATA_B2B_FILE = BASE_DIR / "data" / "medicamentos_b2b.json"
 PEDIDOS_FILE = BASE_DIR / "data" / "pedidos.json"
 PEDIDOS_B2B_FILE = BASE_DIR / "data" / "pedidos_b2b.json"
 STATIC_DIR = BASE_DIR / "static"
+BASE_URL = os.environ.get('BASE_URL', 'http://localhost:8000')
 
 app = FastAPI(
     title="Farmacia & Droguería Torres API",
@@ -150,6 +151,11 @@ async def listar_productos_b2b(rubro: Optional[str] = None):
     if rubro and rubro.lower() != "todos":
         prods = [p for p in prods if p.get("rubro", "").lower() == rubro.lower()]
     return prods
+
+@app.get("/api/drogueria/pedidos")
+async def listar_pedidos_b2b():
+    """Lista las órdenes de compra B2B de farmacias."""
+    return load_pedidos_b2b()
 
 @app.post("/api/drogueria/pedidos")
 async def crear_pedido_b2b(pedido: PedidoB2BRequest):
@@ -497,7 +503,7 @@ async def webhook_whatsapp(payload: dict):
             respuesta = (
                 f"No pudimos encontrar medicamentos que coincidan con '{texto_usuario}'.\n"
                 f"¿Podrías verificar el nombre o consultar por el principio activo (ej. Paracetamol, Ibuprofeno)?\n"
-                f"También puedes ver nuestro catálogo completo aquí: http://localhost:8000"
+                f"También puedes ver nuestro catálogo completo aquí: {BASE_URL}"
             )
         else:
             top_3 = resultados[:3]

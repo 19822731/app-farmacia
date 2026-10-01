@@ -18,6 +18,7 @@ const logger = pino({ level: 'silent' });
 // Ruta para guardar la sesión del WhatsApp
 const AUTH_DIR = path.join(__dirname, 'auth_session');
 const BACKEND_URL = 'http://127.0.0.1:8000/api/webhook/whatsapp';
+const PUBLIC_URL = process.env.PUBLIC_URL || 'http://localhost:8000';
 const MEDICAMENTOS_PATH = path.join(__dirname, 'data', 'medicamentos.json');
 
 // Verificar y arrancar automáticamente el servidor Python si no está activo
@@ -213,7 +214,7 @@ async function startWhatsAppBot() {
           `¿En qué te podemos ayudar hoy?\n\n` +
           `1️⃣ 🔍 *Consultar precio o stock:* Escribe el nombre del medicamento o droga (ej: *Tafirol*, *Ibuprofeno*, *Amoxidal*).\n` +
           `2️⃣ 🌐 *Ver catálogo online y pedir:* Entra a armar tu carrito aquí:\n` +
-          `👉 http://localhost:8000\n` +
+          `👉 ${PUBLIC_URL}\n` +
           `3️⃣ 📸 *Enviar receta:* Mándanos la foto clara de tu orden médica.\n` +
           `4️⃣ ⏰ *Horarios:* Lunes a Sábado de 8:30 a 21:00 hs. (Atendemos urgencias de turno).\n` +
           `5️⃣ 👨‍⚕️ *Farmacéutico:* Si tienes una consulta clínica, escribe *"farmaceutico"* y te derivamos con un profesional.`;
@@ -287,7 +288,7 @@ async function startWhatsAppBot() {
           respuestaFinal = 
             `No encontramos medicamentos que coincidan con "${texto}".\n` +
             `Prueba escribiendo el nombre comercial o la droga (ej. *Tafirol*, *Ibuprofeno*).\n` +
-            `También puedes revisar el catálogo online en: http://localhost:8000`;
+            `También puedes revisar el catálogo online en: ${PUBLIC_URL}`;
         }
       }
 

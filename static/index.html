@@ -1137,7 +1137,7 @@
               `Hemos registrado tu pedido *#${data.pedido_id}* en el sistema de mostrador.\n` +
               `Total: *$${data.total_final.toLocaleString('es-AR')}*.\n\n` +
               (data.requiere_receta ? `⚠️ *Recuerda adjuntar la foto de la receta médica* por este chat.\n\n` : '') +
-              `Puedes ver tu pedido entrando al Panel de Mostrador: http://localhost:8000/admin`;
+              `Puedes ver tu pedido entrando al Panel de Mostrador: ${window.location.origin}/admin`;
 
             chatBox.innerHTML += `
               <div class="bg-white p-3 rounded-2xl shadow-sm max-w-[85%] text-slate-800 whitespace-pre-line leading-relaxed border border-slate-200/50">
