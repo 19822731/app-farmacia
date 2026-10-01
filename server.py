@@ -3,7 +3,7 @@ import os
 import random
 from datetime import datetime
 from pathlib import Path
-from typing import List, Optional
+from typing import List, Optional, Dict
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -249,11 +249,23 @@ async def listar_medicamentos(categoria: Optional[str] = None, solo_genericos: b
         meds = [m for m in meds if m.get("categoria", "").lower() == categoria.lower()]
     return meds
 
+STOPWORDS_MEDICAMENTOS = {
+    "hola", "buenas", "buen dia", "buenas tardes", "buenas noches",
+    "menu", "menú", "inicio", "ayuda", "si", "sí", "no", "ok", "gracias",
+    "muchas gracias", "chau", "adios", "adiós", "hasta luego",
+    "1", "2", "3", "4", "5", "6", "7", "8", "9",
+    "cancelar", "farmacia", "pedido", "orden"
+}
+
 @app.get("/api/medicamentos/buscar")
 async def buscar_medicamentos(q: str = Query(..., min_length=2), solo_genericos: bool = False):
     meds = load_medicamentos()
     q_clean = q.lower().strip()
     
+    # Si la consulta es una palabra conversacional común, no buscar como medicamento
+    if q_clean in STOPWORDS_MEDICAMENTOS:
+        return []
+
     # Si la consulta explícita es 'generico' o 'genericos'
     busca_genericos_explicito = "generico" in q_clean or "genericos" in q_clean
     if busca_genericos_explicito:
@@ -273,9 +285,17 @@ async def buscar_medicamentos(q: str = Query(..., min_length=2), solo_genericos:
         elif q_clean in texto_busqueda:
             score = 100
         else:
-            score_nombre = fuzz.partial_ratio(q_clean, med['nombre_comercial'].lower())
-            score_droga = fuzz.partial_ratio(q_clean, med['principio_activo'].lower())
-            score = max(score_nombre, score_droga)
+            # Para términos muy cortos (<=4 letras), evitar partial_ratio para no coincidir falsamente con subcadenas
+            if len(q_clean) <= 4:
+                score_nombre = fuzz.ratio(q_clean, med['nombre_comercial'].lower())
+                score_droga = fuzz.ratio(q_clean, med['principio_activo'].lower())
+                score = max(score_nombre, score_droga)
+                if score < 70:
+                    score = 0
+            else:
+                score_nombre = fuzz.partial_ratio(q_clean, med['nombre_comercial'].lower())
+                score_droga = fuzz.partial_ratio(q_clean, med['principio_activo'].lower())
+                score = max(score_nombre, score_droga)
 
         if score >= 55:
             item = med.copy()
@@ -479,6 +499,442 @@ async def actualizar_estado_pedido(pedido_id: str, data: ActualizarEstadoRequest
         "cliente_telefono": encontrado.get("cliente_telefono", "")
     }
 
+# --- MÁQUINA DE ESTADOS Y MOTOR CONVERSACIONAL DE CHATBOT ---
+
+SINTOMAS_CATALOGO = {
+    "1": {
+        "titulo": "Dolor de Cabeza / Fiebre / Dolores Musculares",
+        "sugeridos": ["Tafirol 1g", "Paracetamol 1g Genérico", "Ibupirac 400mg", "Ibuprofeno 400mg Genérico"]
+    },
+    "2": {
+        "titulo": "Acidez / Malestar Estomacal / Gastritis",
+        "sugeridos": ["Omeprazol 20mg Genérico", "Gastrotem 20mg"]
+    },
+    "3": {
+        "titulo": "Gripe / Resfrío / Congestión",
+        "sugeridos": ["Next Comprimidos", "Qura Plus", "Vitamina C 1g Efervescente Genérica"]
+    },
+    "4": {
+        "titulo": "Alergias y Rinitis",
+        "sugeridos": ["Loratadina 10mg Genérico", "Alermed Loratadina"]
+    },
+    "5": {
+        "titulo": "Falta de Sueño / Insomnio / Estrés",
+        "sugeridos": ["Melatol Plus Melatonina 3mg", "Melatonina 3mg Pura Genérica"]
+    },
+    "6": {
+        "titulo": "Vitaminas / Cansancio y Defensas",
+        "sugeridos": ["Redoxon Vitamina C 1g", "Total Magnesiano Vitalizante", "Magnesio Quelato 500mg Genérico"]
+    }
+}
+
+SESIONES_CHAT: Dict[str, dict] = {}
+
+def obtener_sesion(sender: str, push_name: str = "Cliente") -> dict:
+    if sender not in SESIONES_CHAT:
+        SESIONES_CHAT[sender] = {
+            "estado": "INICIO",
+            "nombre": push_name if push_name and push_name != "Cliente" else "Cliente",
+            "telefono": sender.replace("@s.whatsapp.net", "").replace("+", "") if sender else "",
+            "candidato_marca": None,
+            "candidato_generico": None,
+            "producto_elegido": None,
+            "sugeridos_sintoma": [],
+            "tipo_entrega": "Retiro en mostrador"
+        }
+    else:
+        if push_name and push_name != "Cliente" and SESIONES_CHAT[sender].get("nombre") in ("Cliente", ""):
+            SESIONES_CHAT[sender]["nombre"] = push_name
+    return SESIONES_CHAT[sender]
+
+async def realizar_busqueda_y_responder(sesion: dict, texto_busqueda: str) -> str:
+    q_clean = texto_busqueda.lower().strip()
+    if q_clean in STOPWORDS_MEDICAMENTOS or len(q_clean) < 2:
+        sesion["estado"] = "MENU_PRINCIPAL"
+        return (
+            f"👋 *Bienvenido a Farmacia Torres.* 🏥\n\n"
+            f"Por favor indica qué deseas hacer:\n\n"
+            f"1️⃣ 🔍 Buscar un medicamento (por marca o droga)\n"
+            f"2️⃣ 🤒 Consultar por síntomas o malestar\n"
+            f"3️⃣ 📸 Enviar receta médica\n"
+            f"4️⃣ 📍 Horarios, ubicación y envíos\n"
+            f"5️⃣ 👨‍⚕️ Hablar con un farmacéutico\n\n"
+            f"_Responde del 1 al 5 o escribe el nombre de lo que buscas._"
+        )
+
+    resultados = await buscar_medicamentos(q=texto_busqueda)
+    if not resultados:
+        sesion["estado"] = "BUSQUEDA_MEDICAMENTO"
+        return (
+            f"🔍 No pudimos encontrar medicamentos que coincidan con '*{texto_busqueda}*'.\n\n"
+            f"¿Podrías verificar el nombre o consultar por el principio activo (ej: Paracetamol, Ibuprofeno)?\n\n"
+            f"👉 También puedes ver nuestro catálogo completo aquí:\n{BASE_URL}\n\n"
+            f"_O escribe 'menu' para volver al inicio._"
+        )
+
+    top = resultados[0]
+    meds_todos = load_medicamentos()
+    
+    alternativa_generica = None
+    if not top.get("es_generico"):
+        genericos = [
+            m for m in meds_todos
+            if m.get("es_generico")
+            and m.get("principio_activo", "").lower() == top.get("principio_activo", "").lower()
+            and m.get("precio", 999999) < top.get("precio", 0)
+        ]
+        if genericos:
+            alternativa_generica = genericos[0]
+
+    if alternativa_generica:
+        marca = top
+        gen = alternativa_generica
+        ahorro = marca["precio"] - gen["precio"]
+        receta_txt = "⚠️ Requiere receta médica" if marca.get("requiere_receta") else "✅ Venta libre"
+
+        sesion["estado"] = "SELECCION_GENERICO"
+        sesion["candidato_marca"] = marca
+        sesion["candidato_generico"] = gen
+
+        return (
+            f"💊 *{marca['nombre_comercial']}* (🏷️ Marca Líder)\n"
+            f"   Droga: {marca['principio_activo']} ({marca.get('concentracion', '')})\n"
+            f"   Laboratorio: {marca.get('laboratorio', 'Comercial')}\n"
+            f"   Precio: *${marca['precio']:,.0f}* | Stock: {marca['stock']} unid.\n"
+            f"   {receta_txt}\n\n"
+            f"💡 *Opción Genérica de Ahorro Recomendada:*\n"
+            f"• *{gen['nombre_comercial']}* ({gen.get('laboratorio', 'Klonal')})\n"
+            f"  Misma droga y concentración por solo *${gen['precio']:,.0f}*\n"
+            f"  👉 *¡Ahorras ${ahorro:,.0f} llevando la opción genérica!*\n\n"
+            f"¿Cuál prefieres encargar?\n"
+            f"1️⃣ 🟢 Opción Genérica de Ahorro (*${gen['precio']:,.0f}*)\n"
+            f"2️⃣ 🏷️ Marca Líder (*${marca['precio']:,.0f}*)\n"
+            f"3️⃣ 🔍 Buscar otro medicamento\n"
+            f"4️⃣ 🏠 Volver al menú principal\n\n"
+            f"_Responde con el número de opción (1 al 4)._"
+        )
+    else:
+        med = top
+        receta_txt = "⚠️ Requiere receta médica" if med.get("requiere_receta") else "✅ Venta libre"
+        tipo_txt = "🟢 Genérico Económico" if med.get("es_generico") else "🏷️ Marca Comercial"
+
+        sesion["estado"] = "CONFIRMAR_ENCARGO_DIRECTO"
+        sesion["producto_elegido"] = med
+
+        return (
+            f"💊 *{med['nombre_comercial']}* ({tipo_txt})\n"
+            f"   Droga: {med['principio_activo']} ({med.get('concentracion', '')})\n"
+            f"   Laboratorio: {med.get('laboratorio', 'Nacional')}\n"
+            f"   Precio: *${med['precio']:,.0f}* | Stock: {med['stock']} unid.\n"
+            f"   {receta_txt}\n\n"
+            f"¿Deseas encargar este producto?\n"
+            f"1️⃣ ✅ Sí, encargar ahora\n"
+            f"2️⃣ 🔍 Buscar otro medicamento\n"
+            f"3️⃣ 🏠 Volver al menú principal\n\n"
+            f"_Responde con 1, 2 o 3._"
+        )
+
+async def procesar_mensaje_chatbot(sender: str, texto_usuario: str, push_name: str = "Cliente") -> str:
+    sesion = obtener_sesion(sender, push_name)
+    nombre = sesion.get("nombre", "Cliente")
+    texto_raw = texto_usuario.strip()
+    texto_lower = texto_raw.lower()
+
+    # 1. Reset / Saludos / Menú
+    es_saludo = any(s in texto_lower for s in ["hola", "buenas", "buen dia", "buen día", "buenas tardes", "buenas noches", "inicio", "empezar"])
+    es_menu = texto_lower in ["menu", "menú", "volver", "reiniciar", "opciones"]
+    
+    if es_saludo or es_menu or (sesion["estado"] == "INICIO" and texto_lower in STOPWORDS_MEDICAMENTOS):
+        sesion["estado"] = "MENU_PRINCIPAL"
+        sesion["producto_elegido"] = None
+        sesion["candidato_marca"] = None
+        sesion["candidato_generico"] = None
+        return (
+            f"👋 *¡Hola {nombre}! Bienvenido a Farmacia Torres.* 🏥\n\n"
+            f"¿En qué te podemos ayudar hoy?\n\n"
+            f"1️⃣ 🔍 *Buscar un medicamento* (precios, stock y genéricos)\n"
+            f"2️⃣ 🤒 *Consultar por síntoma o malestar*\n"
+            f"3️⃣ 📸 *Enviar receta médica*\n"
+            f"4️⃣ 📍 *Horarios, ubicación y formas de pago*\n"
+            f"5️⃣ 👨‍⚕️ *Hablar con un profesional farmacéutico*\n\n"
+            f"_Responde con el número de opción (1 al 5) o escribe directamente lo que buscas._"
+        )
+
+    # Agradecimiento / Despedida
+    if any(s == texto_lower or texto_lower.startswith(s) for s in ["gracias", "muchas gracias", "chau", "adios", "adiós", "hasta luego"]):
+        sesion["estado"] = "INICIO"
+        return f"🙏 ¡De nada, {nombre}! Un placer atenderte en *Farmacia Torres*. Quedamos a tu disposición para cuando nos necesites. ¡Que tengas un excelente día! 🌿"
+
+    estado = sesion.get("estado", "INICIO")
+
+    # --- ESTADO: MENU_PRINCIPAL ---
+    if estado == "MENU_PRINCIPAL":
+        if texto_lower in ["1", "buscar", "precio", "stock"]:
+            sesion["estado"] = "BUSQUEDA_MEDICAMENTO"
+            return (
+                f"🔍 *Búsqueda de Medicamentos*\n\n"
+                f"Por favor, escribe el nombre comercial o la droga que estás buscando (ej: *Tafirol*, *Ibuprofeno*, *Amoxidal*, *Vitamina C*).\n\n"
+                f"_O escribe 'menu' para volver._"
+            )
+        elif texto_lower in ["2", "sintoma", "sintomas", "malestar"]:
+            sesion["estado"] = "MENU_SINTOMAS"
+            return (
+                f"🤒 *¿Qué síntoma o malestar deseas tratar?*\n\n"
+                f"1️⃣ Dolor de cabeza o muscular / Fiebre\n"
+                f"2️⃣ Acidez o dolor de panza\n"
+                f"3️⃣ Gripe, resfrío o dolor de garganta\n"
+                f"4️⃣ Alergias y congestión\n"
+                f"5️⃣ Dificultad para dormir / Estrés\n"
+                f"6️⃣ Vitaminas y defensas\n\n"
+                f"_Responde con el número (1 al 6) o escribe 'menu' para volver._"
+            )
+        elif texto_lower in ["3", "receta", "orden"]:
+            return (
+                f"📸 *Envío y Validación de Receta Médica*\n\n"
+                f"Envíanos la foto clara de tu orden médica por este chat.\n"
+                f"Nuestro farmacéutico verificará la cobertura de tu obra social y dosis indicada.\n\n"
+                f"👉 También puedes ver nuestro catálogo completo aquí:\n{BASE_URL}\n\n"
+                f"_Escribe 'menu' para volver al menú principal._"
+            )
+        elif texto_lower in ["4", "horario", "horarios", "ubicacion", "ubicación", "direccion", "dirección", "donde"]:
+            return (
+                f"📍 *Farmacia Torres - Casa Central*\n"
+                f"Av. San Martín 1420 (frente a la plaza central)\n\n"
+                f"⏰ *Horarios:* Lunes a Sábados de 8:30 a 21:00 hs (Atendemos urgencias de turno).\n"
+                f"🛵 *Envíos a domicilio:* Sí, dentro del radio urbano.\n"
+                f"💳 *Medios de pago:* Efectivo, Débito, Transferencia y Obras Sociales.\n\n"
+                f"_Escribe 'menu' para realizar un pedido o consulta._"
+            )
+        elif texto_lower in ["5", "farmaceutico", "farmacéutico", "humano", "persona"]:
+            sesion["estado"] = "INICIO"
+            return (
+                f"👨‍⚕️ *Derivando a un profesional farmacéutico de Farmacia Torres...*\n\n"
+                f"Hemos notificado a nuestro equipo de mostrador. En breve un profesional te responderá por este mismo chat para asesorarte.\n\n"
+                f"_Escribe 'menu' si deseas realizar otra consulta mientras tanto._"
+            )
+        else:
+            return await realizar_busqueda_y_responder(sesion, texto_raw)
+
+    # --- ESTADO: BUSQUEDA_MEDICAMENTO ---
+    elif estado == "BUSQUEDA_MEDICAMENTO":
+        return await realizar_busqueda_y_responder(sesion, texto_raw)
+
+    # --- ESTADO: MENU_SINTOMAS ---
+    elif estado == "MENU_SINTOMAS":
+        if texto_lower in SINTOMAS_CATALOGO:
+            sint = SINTOMAS_CATALOGO[texto_lower]
+            meds_todos = load_medicamentos()
+            encontrados = []
+            for nom in sint["sugeridos"]:
+                for m in meds_todos:
+                    if nom.lower() in m["nombre_comercial"].lower():
+                        if m not in encontrados:
+                            encontrados.append(m)
+                            break
+            
+            if encontrados:
+                sesion["estado"] = "SELECCION_MEDICAMENTO_SINTOMA"
+                sesion["sugeridos_sintoma"] = encontrados
+                lineas = []
+                for idx, m in enumerate(encontrados, 1):
+                    tipo_txt = "🟢 Genérico Ahorro" if m.get("es_generico") else "🏷️ Marca"
+                    lineas.append(f"{idx}️⃣ *{m['nombre_comercial']}* (${m['precio']:,.0f}) - {tipo_txt}")
+                
+                return (
+                    f"🩺 *Opciones de venta libre para {sint['titulo']}:*\n\n" +
+                    "\n".join(lineas) +
+                    f"\n\n_Escribe el número del producto que deseas encargar (ej: 1) o 'menu' para volver._"
+                )
+            else:
+                return "No encontramos productos disponibles para ese síntoma en este momento. Escribe 'menu' para volver."
+        else:
+            return "Opción no válida. Por favor responde del 1 al 6 o escribe 'menu' para volver."
+
+    # --- ESTADO: SELECCION_MEDICAMENTO_SINTOMA ---
+    elif estado == "SELECCION_MEDICAMENTO_SINTOMA":
+        sugeridos = sesion.get("sugeridos_sintoma", [])
+        if texto_lower.isdigit() and 1 <= int(texto_lower) <= len(sugeridos):
+            elegido = sugeridos[int(texto_lower) - 1]
+            sesion["producto_elegido"] = elegido
+            sesion["estado"] = "SELECCION_ENTREGA"
+            return (
+                f"📦 Has seleccionado: *{elegido['nombre_comercial']}* (${elegido['precio']:,.0f}).\n\n"
+                f"¿Cómo deseas recibir tu pedido?\n"
+                f"1️⃣ Retiro en Mostrador (Av. San Martín 1420)\n"
+                f"2️⃣ Envío a Domicilio\n"
+                f"3️⃣ Cancelar y volver al menú\n\n"
+                f"_Responde con 1, 2 o 3._"
+            )
+        else:
+            return f"Por favor elige una opción del 1 al {len(sugeridos)} o escribe 'menu' para volver."
+
+    # --- ESTADO: SELECCION_GENERICO ---
+    elif estado == "SELECCION_GENERICO":
+        marca = sesion.get("candidato_marca")
+        gen = sesion.get("candidato_generico")
+        
+        if texto_lower in ["1", "generico", "genérico", "ahorro", "economico", "económico"]:
+            sesion["producto_elegido"] = gen
+            sesion["estado"] = "SELECCION_ENTREGA"
+            return (
+                f"✅ *Excelente elección de ahorro.*\n"
+                f"Vas a encargar: *{gen['nombre_comercial']}* por *${gen['precio']:,.0f}*.\n\n"
+                f"¿Cómo deseas recibir tu pedido?\n"
+                f"1️⃣ Retiro en Mostrador (Av. San Martín 1420)\n"
+                f"2️⃣ Envío a Domicilio\n"
+                f"3️⃣ Cancelar y volver al menú\n\n"
+                f"_Responde con 1, 2 o 3._"
+            )
+        elif texto_lower in ["2", "marca", "lider", "líder", "original"]:
+            sesion["producto_elegido"] = marca
+            sesion["estado"] = "SELECCION_ENTREGA"
+            return (
+                f"🏷️ Vas a encargar la marca líder: *{marca['nombre_comercial']}* por *${marca['precio']:,.0f}*.\n\n"
+                f"¿Cómo deseas recibir tu pedido?\n"
+                f"1️⃣ Retiro en Mostrador (Av. San Martín 1420)\n"
+                f"2️⃣ Envío a Domicilio\n"
+                f"3️⃣ Cancelar y volver al menú\n\n"
+                f"_Responde con 1, 2 o 3._"
+            )
+        elif texto_lower in ["3", "buscar", "otro"]:
+            sesion["estado"] = "BUSQUEDA_MEDICAMENTO"
+            return "🔍 Escribe el nombre del otro medicamento que deseas consultar:"
+        elif texto_lower in ["4", "cancelar", "menu"]:
+            sesion["estado"] = "MENU_PRINCIPAL"
+            return "Operación cancelada. Escribe 'menu' para ver las opciones disponibles."
+        else:
+            return "Por favor responde *1* para la opción genérica económica o *2* para la marca líder (o 'menu' para salir)."
+
+    # --- ESTADO: CONFIRMAR_ENCARGO_DIRECTO ---
+    elif estado == "CONFIRMAR_ENCARGO_DIRECTO":
+        elegido = sesion.get("producto_elegido")
+        if texto_lower in ["1", "si", "sí", "encargar", "pedir", "comprar", "quiero"]:
+            sesion["estado"] = "SELECCION_ENTREGA"
+            return (
+                f"📦 Vas a encargar: *{elegido['nombre_comercial']}* (${elegido['precio']:,.0f}).\n\n"
+                f"¿Cómo deseas recibir tu pedido?\n"
+                f"1️⃣ Retiro en Mostrador (Av. San Martín 1420)\n"
+                f"2️⃣ Envío a Domicilio\n"
+                f"3️⃣ Cancelar y volver al menú\n\n"
+                f"_Responde con 1, 2 o 3._"
+            )
+        elif texto_lower in ["2", "buscar", "otro"]:
+            sesion["estado"] = "BUSQUEDA_MEDICAMENTO"
+            return "🔍 Escribe el nombre del otro medicamento que buscas:"
+        else:
+            sesion["estado"] = "MENU_PRINCIPAL"
+            return "Operación finalizada. Escribe 'menu' para volver a comenzar."
+
+    # --- ESTADO: SELECCION_ENTREGA ---
+    elif estado == "SELECCION_ENTREGA":
+        if texto_lower in ["1", "retiro", "mostrador", "sucursal"]:
+            sesion["tipo_entrega"] = "Retiro en mostrador"
+        elif texto_lower in ["2", "envio", "envío", "domicilio", "delivery"]:
+            sesion["tipo_entrega"] = "Envío a domicilio"
+        elif texto_lower in ["3", "cancelar"]:
+            sesion["estado"] = "MENU_PRINCIPAL"
+            return "Pedido cancelado. Escribe 'menu' para volver a empezar."
+        else:
+            sesion["tipo_entrega"] = "Retiro en mostrador"
+
+        sesion["estado"] = "SELECCION_OBRA_SOCIAL"
+        return (
+            f"🏥 *¿Tenés Obra Social o Prepaga para aplicar cobertura?*\n\n"
+            f"1️⃣ Particular (Sin cobertura)\n"
+            f"2️⃣ PAMI (50% de cobertura)\n"
+            f"3️⃣ OSDE (40% de cobertura)\n"
+            f"4️⃣ Swiss Medical (40% de cobertura)\n"
+            f"5️⃣ Otra Obra Social (20% orientativo)\n\n"
+            f"_Responde con el número (1 al 5) o escribe el nombre de tu obra social._"
+        )
+
+    # --- ESTADO: SELECCION_OBRA_SOCIAL (CIERRE TRANSACCIONAL EN BACKEND) ---
+    elif estado == "SELECCION_OBRA_SOCIAL":
+        os_map = {
+            "1": ("Particular (Sin cobertura)", 0),
+            "2": ("PAMI", 50),
+            "3": ("OSDE", 40),
+            "4": ("Swiss Medical", 40),
+            "5": ("Otra Obra Social", 20)
+        }
+        
+        if texto_lower in os_map:
+            os_nombre, pct_desc = os_map[texto_lower]
+        elif "pami" in texto_lower:
+            os_nombre, pct_desc = "PAMI", 50
+        elif "osde" in texto_lower:
+            os_nombre, pct_desc = "OSDE", 40
+        elif "swiss" in texto_lower:
+            os_nombre, pct_desc = "Swiss Medical", 40
+        elif "particular" in texto_lower or "ninguna" in texto_lower or "no" in texto_lower:
+            os_nombre, pct_desc = "Particular (Sin cobertura)", 0
+        else:
+            os_nombre, pct_desc = texto_raw.capitalize(), 20
+
+        elegido = sesion.get("producto_elegido")
+        if not elegido:
+            sesion["estado"] = "MENU_PRINCIPAL"
+            return "Hubo un error al recuperar el producto. Por favor escribe 'menu' para iniciar nuevamente."
+
+        total_bruto = float(elegido["precio"])
+        descuento = 0.0
+        if pct_desc > 0:
+            descuento = total_bruto * (pct_desc / 100.0)
+        total_final = max(0.0, total_bruto - descuento)
+
+        pedido_id = f"PED-{random.randint(1000, 9999)}"
+        ahora_str = datetime.now().strftime("%Y-%m-%d %H:%M")
+        
+        nuevo_pedido = {
+            "id": pedido_id,
+            "cliente_nombre": nombre,
+            "cliente_telefono": sesion.get("telefono") or "WhatsApp",
+            "fecha": ahora_str,
+            "estado": "pendiente",
+            "obra_social": os_nombre,
+            "requiere_receta": bool(elegido.get("requiere_receta", False)),
+            "items": [{
+                "id": elegido["id"],
+                "nombre": elegido["nombre_comercial"],
+                "cantidad": 1,
+                "precio_unitario": elegido["precio"],
+                "subtotal": total_bruto,
+                "requiere_receta": bool(elegido.get("requiere_receta", False))
+            }],
+            "total_bruto": total_bruto,
+            "descuento_obra_social": descuento,
+            "total_final": total_final,
+            "observaciones": f"Generado vía Bot WhatsApp ({sesion.get('tipo_entrega', 'Mostrador')})"
+        }
+
+        # Guardar en data/pedidos.json (impacta inmediatamente en panel /admin)
+        pedidos = load_pedidos()
+        pedidos.append(nuevo_pedido)
+        save_pedidos(pedidos)
+
+        # Resetear sesión para futuras consultas
+        sesion["estado"] = "MENU_PRINCIPAL"
+        sesion["producto_elegido"] = None
+
+        aviso_receta = "\n⚠️ *Recordatorio:* Este medicamento requiere receta médica. Por favor preséntala al retirar o envía la foto por este chat." if elegido.get("requiere_receta") else ""
+        linea_desc = f"\nDescuento {os_nombre} ({pct_desc}%): -${descuento:,.0f}" if descuento > 0 else ""
+
+        return (
+            f"🎉 *¡Pedido #{pedido_id} Confirmado en Farmacia Torres!* 📦\n\n"
+            f"👤 *Cliente:* {nombre}\n"
+            f"💊 *Medicamento:* 1x {elegido['nombre_comercial']}\n"
+            f"🏥 *Cobertura:* {os_nombre}\n"
+            f"💰 *Total a abonar:* *${total_final:,.0f}*{linea_desc}\n"
+            f"📍 *Modalidad:* {sesion.get('tipo_entrega', 'Retiro en mostrador')}\n"
+            f"{aviso_receta}\n\n"
+            f"👨‍⚕️ *El equipo de mostrador ya tiene tu orden en el sistema y la está preparando.* "
+            f"Te notificaremos cuando esté lista.\n\n"
+            f"_¿Deseas consultar algo más? Escribe 'menu' en cualquier momento._"
+        )
+
+    else:
+        return await realizar_busqueda_y_responder(sesion, texto_raw)
+
 # --- WEBHOOK WHATSAPP ---
 
 @app.post("/api/webhook/whatsapp")
@@ -486,7 +942,8 @@ async def webhook_whatsapp(payload: dict):
     try:
         data = payload.get("data", {})
         message = data.get("message", {})
-        sender = data.get("key", {}).get("remoteJid", "")
+        sender = data.get("key", {}).get("remoteJid", "5491112345678@s.whatsapp.net")
+        push_name = data.get("pushName") or payload.get("pushName") or "Cliente"
         
         texto_usuario = (
             message.get("conversation") or 
@@ -497,55 +954,7 @@ async def webhook_whatsapp(payload: dict):
         if not texto_usuario:
             return {"status": "ignored", "reason": "No text content"}
 
-        resultados = await buscar_medicamentos(q=texto_usuario)
-        
-        if not resultados:
-            respuesta = (
-                f"No pudimos encontrar medicamentos que coincidan con '{texto_usuario}'.\n"
-                f"¿Podrías verificar el nombre o consultar por el principio activo (ej. Paracetamol, Ibuprofeno)?\n"
-                f"También puedes ver nuestro catálogo completo aquí: {BASE_URL}"
-            )
-        else:
-            top_3 = resultados[:3]
-            lineas = []
-            alternativa_generica = None
-            meds_todos = load_medicamentos()
-
-            for r in top_3:
-                receta_txt = "⚠️ Requiere receta" if r.get("requiere_receta") else "✅ Venta libre"
-                tipo_txt = "🟢 Genérico Económico" if r.get("es_generico") else "🏷️ Marca Líder"
-                lineas.append(
-                    f"💊 *{r['nombre_comercial']}* ({tipo_txt})\n"
-                    f"   Droga: {r['principio_activo']} ({r.get('concentracion', '')})\n"
-                    f"   Laboratorio: {r.get('laboratorio', 'Nacional')}\n"
-                    f"   Precio: *${r['precio']:,.0f}* | Stock: {r['stock']} unid.\n"
-                    f"   {receta_txt}"
-                )
-
-                # Si el producto consultado es de marca líder, buscar si tenemos el genérico equivalente más económico
-                if not r.get("es_generico") and not alternativa_generica:
-                    genericos_equivalentes = [
-                        m for m in meds_todos
-                        if m.get("es_generico")
-                        and m.get("principio_activo", "").lower() == r.get("principio_activo", "").lower()
-                        and m.get("precio", 999999) < r.get("precio", 0)
-                    ]
-                    if genericos_equivalentes:
-                        alternativa_generica = (r, genericos_equivalentes[0])
-
-            respuesta = f"🔍 *Resultados para '{texto_usuario}':*\n\n" + "\n\n".join(lineas)
-
-            if alternativa_generica:
-                marca, gen = alternativa_generica
-                ahorro = marca["precio"] - gen["precio"]
-                respuesta += (
-                    f"\n\n💡 *Opción Genérica de Ahorro Recomendada:*\n"
-                    f"• *{gen['nombre_comercial']}* ({gen.get('laboratorio', 'Klonal')})\n"
-                    f"  Misma droga ({gen['principio_activo']}) por solo *${gen['precio']:,.0f}*\n"
-                    f"  👉 *¡Ahorras ${ahorro:,.0f} llevando la opción genérica!*"
-                )
-
-            respuesta += "\n\n¿Deseas encargar la opción genérica económica o la marca líder?"
+        respuesta = await procesar_mensaje_chatbot(sender, texto_usuario, push_name)
 
         return {
             "status": "success",

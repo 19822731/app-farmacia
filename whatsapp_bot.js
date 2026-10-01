@@ -207,43 +207,6 @@ async function startWhatsAppBot() {
       console.log(`💬 Consulta procesada para ${pushName}: "${texto}"`);
       const textoLower = texto.toLowerCase();
 
-      // Saludos y Menú Principal
-      if (['hola', 'buenas', 'buen dia', 'buenas tardes', 'buenas noches', 'menu', 'inicio', 'ayuda'].some(s => textoLower.includes(s))) {
-        const menuPrincipal = 
-          `👋 *¡Hola ${pushName}! Bienvenido a Farmacia Torres.* 🏥\n\n` +
-          `¿En qué te podemos ayudar hoy?\n\n` +
-          `1️⃣ 🔍 *Consultar precio o stock:* Escribe el nombre del medicamento o droga (ej: *Tafirol*, *Ibuprofeno*, *Amoxidal*).\n` +
-          `2️⃣ 🌐 *Ver catálogo online y pedir:* Entra a armar tu carrito aquí:\n` +
-          `👉 ${PUBLIC_URL}\n` +
-          `3️⃣ 📸 *Enviar receta:* Mándanos la foto clara de tu orden médica.\n` +
-          `4️⃣ ⏰ *Horarios:* Lunes a Sábado de 8:30 a 21:00 hs. (Atendemos urgencias de turno).\n` +
-          `5️⃣ 👨‍⚕️ *Farmacéutico:* Si tienes una consulta clínica, escribe *"farmaceutico"* y te derivamos con un profesional.`;
-
-        await sock.sendMessage(remoteJid, { text: menuPrincipal }, quoteOpt);
-        continue;
-      }
-
-      // Consulta de farmacéutico humano
-      if (textoLower.includes('farmaceutico') || textoLower.includes('humano') || textoLower.includes('persona')) {
-        const respuestaHumano = 
-          `👨‍⚕️ *Derivando a un profesional farmacéutico de Farmacia Torres...*\n` +
-          `Tu consulta ha sido transferida a nuestro equipo de mostrador. Te responderán a la brevedad en este chat.`;
-        await sock.sendMessage(remoteJid, { text: respuestaHumano }, quoteOpt);
-        continue;
-      }
-
-      // Horarios y ubicación
-      if (textoLower.includes('horario') || textoLower.includes('direccion') || textoLower.includes('ubicacion') || textoLower.includes('donde estan')) {
-        const respuestaInfo = 
-          `📍 *Farmacia Torres*\n\n` +
-          `⏰ *Horarios:* Lunes a Sábados de 8:30 a 21:00 hs continuado.\n` +
-          `🏥 *Atención:* Mostrador y envíos a domicilio.\n` +
-          `💳 *Medios de pago:* Efectivo, Débito, Transferencia y Obras Sociales.\n` +
-          `🛵 *Envíos a domicilio:* Sí, dentro del radio urbano.`;
-        await sock.sendMessage(remoteJid, { text: respuestaInfo }, quoteOpt);
-        continue;
-      }
-
       // Si es un pedido generado desde la web (empieza con "👋 *Nuevo Pedido")
       if (texto.includes('Nuevo Pedido') || texto.includes('Detalle de medicamentos')) {
         const respuestaPedido = 
@@ -254,15 +217,16 @@ async function startWhatsAppBot() {
         continue;
       }
 
-      // Búsqueda de medicamento: Intentar primero vía backend Python FastAPI
+      // Procesar vía backend Python (Máquina de estados conversacional y registro de pedidos)
       let respuestaFinal = '';
       try {
         const response = await axios.post(BACKEND_URL, {
           data: {
             key: { remoteJid },
+            pushName: pushName,
             message: { conversation: texto }
           }
-        }, { timeout: 3000 });
+        }, { timeout: 4000 });
 
         if (response.data && response.data.response_text) {
           respuestaFinal = response.data.response_text;

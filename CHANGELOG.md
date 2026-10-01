@@ -3,6 +3,24 @@
 > Registro de todos los cambios realizados en el proyecto.  
 > Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [2.3.0] — 2026-10-01 (Chatbot Conversacional & Correlación de Mostrador)
+
+### 🤖 Chatbot Conversacional Gradual (State Machine)
+- **Máquina de estados conversacional:** Implementada en `server.py` (`SESIONES_CHAT`) con memoria por usuario.
+- **Flujo guiado paso a paso:**
+  - Paso 1: Saludo y Menú Principal interactivo (opciones 1 a 5).
+  - Paso 2: Búsqueda de medicamento (por nombre, droga o por catálogo de síntomas).
+  - Paso 3: Comparador inteligente de Genérico vs Marca Líder con cálculo de ahorro exacto.
+  - Paso 4: Selección de modalidad de entrega (Retiro en mostrador o Envío a domicilio).
+  - Paso 5: Selección de Obra Social (PAMI 50%, OSDE 40%, Swiss Medical 40%, Particular).
+- **Filtro de exclusión (Stopwords):** Eliminados los falsos positivos donde saludos como *"Hola"* arrojaban listas de medicamentos como Alcohol o Salbutamol.
+- **Consultas por malestar / síntomas:** Nuevo submenú con 6 categorías que recomienda medicamentos de venta libre.
+
+### 💾 Correlación Transaccional con el Mostrador (/admin)
+- **Creación automática de pedidos:** Al concluir la conversación por WhatsApp o simulador, el bot guarda automáticamente el pedido en `data/pedidos.json` con ID `#PED-XXXX`.
+- **Panel del operario en tiempo real:** En `http://localhost:8000/admin`, el pedido aparece inmediatamente en la columna de *Pendientes*.
+- **Auto-refresco acelerado:** El panel de mostrador ahora consulta cada 5 segundos (antes 10s) tanto para pedidos B2C como B2B.
+
 ---
 
 ## [2.2.0] — 2026-09-30 (Auditoría y Correcciones)

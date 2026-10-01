@@ -160,5 +160,28 @@
     "descuento_obra_social": 1360.0,
     "total_final": 2040.0,
     "observaciones": ""
+  },
+  {
+    "id": "PED-8661",
+    "cliente_nombre": "Arquímedes",
+    "cliente_telefono": "5491199887766",
+    "fecha": "2026-10-01 00:48",
+    "estado": "pendiente",
+    "obra_social": "OSDE",
+    "requiere_receta": false,
+    "items": [
+      {
+        "id": "MED-002",
+        "nombre": "Paracetamol 1g Genérico",
+        "cantidad": 1,
+        "precio_unitario": 1800.0,
+        "subtotal": 1800.0,
+        "requiere_receta": false
+      }
+    ],
+    "total_bruto": 1800.0,
+    "descuento_obra_social": 720.0,
+    "total_final": 1080.0,
+    "observaciones": "Generado vía Bot WhatsApp (Retiro en mostrador)"
   }
 ]

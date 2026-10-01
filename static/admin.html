@@ -634,8 +634,11 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       cargarTodo();
-      // Auto-refrescar cada 10 segundos
-      setInterval(cargarPedidos, 10000);
+      // Auto-refrescar cada 5 segundos para pedidos en tiempo real
+      setInterval(() => {
+        cargarPedidos();
+        cargarPedidosB2B();
+      }, 5000);
     });
   </script>
 </body>
