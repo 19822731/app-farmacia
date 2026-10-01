@@ -134,27 +134,29 @@ async function startWhatsAppBot() {
     }
   });
 
-  // Escuchar mensajes entrantes
+  // Registro anti-bucle y anti-flood
+  const ULTIMA_RESPUESTA = new Map();
+
+  // Escuchar mensajes entrantes (ÚNICAMENTE mensajes externos de clientes)
   sock.ev.on('messages.upsert', async (m) => {
-    // Permitir notify (mensajes externos) y append (mensajes propios sincronizados)
-    if (m.type !== 'notify' && m.type !== 'append') return;
+    // 🛡️ Ignorar cualquier mensaje que no sea notificación entrante externa
+    if (m.type !== 'notify') return;
 
     for (const msg of m.messages) {
-      // Si el mensaje es propio (enviado por ti mismo), permitirlo si incluye '#farmacia' o 'farmacia'
-      if (msg.key.fromMe) {
-        const textoSelf = (
-          msg.message?.conversation ||
-          msg.message?.extendedTextMessage?.text ||
-          ''
-        ).trim().toLowerCase();
-        if (!textoSelf.includes('#farmacia') && !textoSelf.includes('farmacia')) {
-          continue;
-        }
-      }
+      // 🛡️ REGLA DE ORO ANTI-BUCLE: Si el mensaje fue enviado por el bot mismo, IGNORAR SIEMPRE
+      if (msg.key.fromMe) continue;
       if (msg.key.remoteJid.endsWith('@broadcast')) continue; // Ignorar estados
       if (msg.key.remoteJid.endsWith('@g.us')) continue; // 🛡️ Ignorar SIEMPRE grupos de WhatsApp
 
       const remoteJid = msg.key.remoteJid;
+
+      // 🛡️ Protección anti-flood: no procesar mensajes repetidos del mismo usuario en menos de 1.5 segundos
+      const ahora = Date.now();
+      const ultimaVez = ULTIMA_RESPUESTA.get(remoteJid) || 0;
+      if (ahora - ultimaVez < 1500) {
+        continue;
+      }
+      ULTIMA_RESPUESTA.set(remoteJid, ahora);
       const pushName = msg.pushName || 'Cliente';
       const senderPhone = remoteJid.replace(/[^0-9]/g, '');
       const isWhitelisted = WHITELIST_NUMBERS.length > 0 && WHITELIST_NUMBERS.some(n => senderPhone.includes(n));
