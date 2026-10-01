@@ -2,6 +2,18 @@
 
 > Registro de todos los cambios realizados en el proyecto.  
 > Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
+## [2.4.0] — 2026-10-01 (WhatsApp Real + Deploy Vercel)
+
+### 📱 Botón Inteligente de WhatsApp
+- **Detección automática de dispositivo:** En celular, el botón abre directamente la app de WhatsApp real apuntando al número de Farmacia Torres (`543816858001`). En PC, muestra un modal con dos opciones: abrir WhatsApp Web o usar el simulador en pantalla.
+- **Links wa.me corregidos:** Todos los enlaces de WhatsApp (header, recetas, pedidos) ahora apuntan al número real `543816858001` en vez de quedar vacíos.
+- **Simulador como fallback:** El simulador en pantalla se mantiene para usuarios de PC que no tienen WhatsApp instalado. En deploy remoto (Vercel), si no hay backend disponible, el simulador redirige al WhatsApp real.
+
+### 🚀 Preparación para Deploy en Vercel
+- Creado `vercel.json` con rutas para servir los archivos estáticos del frontend.
+- Arquitectura híbrida: Frontend en Vercel (catálogo público) + Backend en Mac local (bot WhatsApp + API + panel admin).
+
+---
 
 ## [2.3.0] — 2026-10-01 (Chatbot Conversacional & Correlación de Mostrador)
 

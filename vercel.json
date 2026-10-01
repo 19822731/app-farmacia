@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "name": "farmacia-torres",
+  "builds": [
+    {
+      "src": "static/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    { "src": "/drogueria", "dest": "/static/drogueria.html" },
+    { "src": "/b2b", "dest": "/static/drogueria.html" },
+    { "src": "/admin", "dest": "/static/admin.html" },
+    { "src": "/(.*)", "dest": "/static/$1" },
+    { "src": "/", "dest": "/static/index.html" }
+  ]
+}

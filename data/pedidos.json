@@ -183,5 +183,28 @@
     "descuento_obra_social": 720.0,
     "total_final": 1080.0,
     "observaciones": "Generado vía Bot WhatsApp (Retiro en mostrador)"
+  },
+  {
+    "id": "PED-9486",
+    "cliente_nombre": "Cliente",
+    "cliente_telefono": "5491112345678",
+    "fecha": "2026-10-01 01:50",
+    "estado": "listo",
+    "obra_social": "Swiss Medical",
+    "requiere_receta": true,
+    "items": [
+      {
+        "id": "MED-010",
+        "nombre": "Amoxicilina 500mg Genérica",
+        "cantidad": 1,
+        "precio_unitario": 3400.0,
+        "subtotal": 3400.0,
+        "requiere_receta": true
+      }
+    ],
+    "total_bruto": 3400.0,
+    "descuento_obra_social": 1360.0,
+    "total_final": 2040.0,
+    "observaciones": "Generado vía Bot WhatsApp (Retiro en mostrador)"
   }
 ]
