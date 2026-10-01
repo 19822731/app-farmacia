@@ -73,6 +73,9 @@ const WHITELIST_NUMBERS = [
   '549381561354'
 ];
 
+// Registro en memoria de sesiones de chat activas con clientes
+const CHATS_ACTIVOS = new Set();
+
 async function startWhatsAppBot() {
   // Asegurar que el servidor web de la farmacia esté corriendo
   await checkAndStartServer();
@@ -137,15 +140,14 @@ async function startWhatsAppBot() {
     if (m.type !== 'notify' && m.type !== 'append') return;
 
     for (const msg of m.messages) {
-      // Si el mensaje es propio (enviado por ti mismo), permitirlo únicamente si incluye '#farmacia'
-      // Esto te permite probar el bot escribiéndote a ti mismo en WhatsApp ("Tú / Mensajes a mí mismo") sin bucles.
+      // Si el mensaje es propio (enviado por ti mismo), permitirlo si incluye '#farmacia' o 'farmacia'
       if (msg.key.fromMe) {
         const textoSelf = (
           msg.message?.conversation ||
           msg.message?.extendedTextMessage?.text ||
           ''
         ).trim().toLowerCase();
-        if (!textoSelf.includes('#farmacia')) {
+        if (!textoSelf.includes('#farmacia') && !textoSelf.includes('farmacia')) {
           continue;
         }
       }
@@ -165,13 +167,25 @@ async function startWhatsAppBot() {
         ''
       ).trim();
 
-      const tieneDisparador = textoOriginal.toLowerCase().includes('#farmacia') || 
-                             textoOriginal.toLowerCase().startsWith('farmacia') ||
+      const textoLower = textoOriginal.toLowerCase();
+
+      // Disparador: si incluye 'farmacia', 'torres', '#farmacia' o 'Nuevo Pedido'
+      const tieneDisparador = textoLower.includes('farmacia') || 
+                             textoLower.includes('torres') ||
+                             textoLower.includes('#farmacia') || 
                              textoOriginal.includes('Nuevo Pedido');
 
-      // 🛡️ Filtro de seguridad: Si no es número autorizado ni tiene la clave, ignorar silenciosamente
-      if (MODO_SEGURO && !isWhitelisted && !tieneDisparador) {
+      const estaEnConversacion = CHATS_ACTIVOS.has(remoteJid);
+
+      // 🛡️ Filtro de seguridad: Responder si está en whitelist, o tiene palabra clave, o ya está conversando
+      if (MODO_SEGURO && !isWhitelisted && !tieneDisparador && !estaEnConversacion) {
         continue; // No responder a amigos ni familiares
+      }
+
+      // Mantener conversación activa
+      CHATS_ACTIVOS.add(remoteJid);
+      if (['gracias', 'chau', 'adios', 'adiós', 'hasta luego'].some(d => textoLower === d || textoLower.startsWith(d))) {
+        CHATS_ACTIVOS.delete(remoteJid);
       }
 
       console.log(`📩 [WhatsApp ${m.type}] Mensaje detectado de ${pushName}: "${textoOriginal}"`);
@@ -206,7 +220,7 @@ async function startWhatsAppBot() {
       if (!texto) texto = 'hola';
 
       console.log(`💬 Consulta procesada para ${pushName}: "${texto}"`);
-      const textoLower = texto.toLowerCase();
+      const consultaLower = texto.toLowerCase();
 
       // Si es un pedido generado desde la web (empieza con "👋 *Nuevo Pedido")
       if (texto.includes('Nuevo Pedido') || texto.includes('Detalle de medicamentos')) {
