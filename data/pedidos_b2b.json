@@ -168,5 +168,173 @@
     ],
     "total_mayorista": 156000.0,
     "observaciones": "Generado desde el Portal B2B Droguería Torres"
+  },
+  {
+    "id": "B2B-2549",
+    "farmacia_nombre": "Farmacia Zavalia",
+    "cuit": "302065845568",
+    "director_tecnico": "Dr  Perez",
+    "telefono": "5493816858002",
+    "telefono_formato": "+54 9 381 685-8002",
+    "direccion": "",
+    "fecha": "2026-10-02 18:11",
+    "estado": "preparando",
+    "requiere_frio": false,
+    "items": [
+      {
+        "id": "B2B-ONC-001",
+        "nombre": "Ondansetrón 8mg/4ml Inyectable",
+        "rubro": "Oncológicos",
+        "lote": "L-ONC-2026-04",
+        "cantidad": 1,
+        "precio_unitario": 28500.0,
+        "subtotal": 28500.0,
+        "requiere_frio": false
+      },
+      {
+        "id": "B2B-ONC-002",
+        "nombre": "Anastrozol 1mg Comprimidos Recubiertos",
+        "rubro": "Oncológicos",
+        "lote": "L-ONC-2026-09",
+        "cantidad": 1,
+        "precio_unitario": 64000.0,
+        "subtotal": 64000.0,
+        "requiere_frio": false
+      },
+      {
+        "id": "B2B-ONC-003",
+        "nombre": "Solución Magistral para Mucositis Oral",
+        "rubro": "Oncológicos",
+        "lote": "L-MAG-2026-12",
+        "cantidad": 1,
+        "precio_unitario": 18200.0,
+        "subtotal": 18200.0,
+        "requiere_frio": false
+      },
+      {
+        "id": "B2B-COS-003",
+        "nombre": "Emulsión Corporal Reparadora con Urea 10% y Ceramidas",
+        "rubro": "Cosméticos",
+        "lote": "L-DERM-2026-11",
+        "cantidad": 1,
+        "precio_unitario": 29800.0,
+        "subtotal": 29800.0,
+        "requiere_frio": false
+      },
+      {
+        "id": "B2B-COS-002",
+        "nombre": "Crema Base Liposomal con Vitamina C 10%",
+        "rubro": "Cosméticos",
+        "lote": "L-DERM-2026-07",
+        "cantidad": 1,
+        "precio_unitario": 38500.0,
+        "subtotal": 38500.0,
+        "requiere_frio": false
+      },
+      {
+        "id": "B2B-COS-001",
+        "nombre": "Serum Ácido Hialurónico Puro 2% + B5",
+        "rubro": "Cosméticos",
+        "lote": "L-DERM-2026-03",
+        "cantidad": 1,
+        "precio_unitario": 42000.0,
+        "subtotal": 42000.0,
+        "requiere_frio": false
+      }
+    ],
+    "total_mayorista": 221000.0,
+    "observaciones": "Generado desde el Portal B2B Droguería Torres"
+  },
+  {
+    "id": "B2B-2259",
+    "farmacia_nombre": "Farmacia Zavalia",
+    "cuit": "302065845568",
+    "director_tecnico": "Dr  Perez1",
+    "telefono": "5493816858001",
+    "telefono_formato": "+54 9 381 685-8001",
+    "direccion": "",
+    "fecha": "2026-10-02 18:13",
+    "estado": "despachado",
+    "requiere_frio": false,
+    "items": [
+      {
+        "id": "B2B-ONC-002",
+        "nombre": "Anastrozol 1mg Comprimidos Recubiertos",
+        "rubro": "Oncológicos",
+        "lote": "L-ONC-2026-09",
+        "cantidad": 1,
+        "precio_unitario": 64000.0,
+        "subtotal": 64000.0,
+        "requiere_frio": false
+      },
+      {
+        "id": "B2B-ONC-003",
+        "nombre": "Solución Magistral para Mucositis Oral",
+        "rubro": "Oncológicos",
+        "lote": "L-MAG-2026-12",
+        "cantidad": 1,
+        "precio_unitario": 18200.0,
+        "subtotal": 18200.0,
+        "requiere_frio": false
+      },
+      {
+        "id": "B2B-ONC-001",
+        "nombre": "Ondansetrón 8mg/4ml Inyectable",
+        "rubro": "Oncológicos",
+        "lote": "L-ONC-2026-04",
+        "cantidad": 1,
+        "precio_unitario": 28500.0,
+        "subtotal": 28500.0,
+        "requiere_frio": false
+      }
+    ],
+    "total_mayorista": 110700.0,
+    "observaciones": "Generado desde el Portal B2B Droguería Torres"
+  },
+  {
+    "id": "B2B-3689",
+    "farmacia_nombre": "Farmacia Zavalia",
+    "cuit": "302065845568",
+    "director_tecnico": "Dr  Perez2",
+    "telefono": "5493816858001",
+    "telefono_formato": "+54 9 381 685-8001",
+    "direccion": "",
+    "fecha": "2026-10-02 18:58",
+    "estado": "preparando",
+    "requiere_frio": true,
+    "items": [
+      {
+        "id": "B2B-QUI-001",
+        "nombre": "Metotrexato 50mg/2ml Solución Inyectable Estéril",
+        "rubro": "Quimioterápicos",
+        "lote": "L-QUI-2026-01",
+        "cantidad": 1,
+        "precio_unitario": 52000.0,
+        "subtotal": 52000.0,
+        "requiere_frio": true
+      },
+      {
+        "id": "B2B-QUI-002",
+        "nombre": "Fluorouracilo (5-FU) 500mg/10ml Inyectable",
+        "rubro": "Quimioterápicos",
+        "lote": "L-QUI-2026-06",
+        "cantidad": 1,
+        "precio_unitario": 68000.0,
+        "subtotal": 68000.0,
+        "requiere_frio": false
+      },
+      {
+        "id": "B2B-QUI-003",
+        "nombre": "Ciclofosfamida 500mg Polvo Liofilizado Estéril",
+        "rubro": "Quimioterápicos",
+        "lote": "L-QUI-2026-10",
+        "cantidad": 1,
+        "precio_unitario": 74500.0,
+        "subtotal": 74500.0,
+        "requiere_frio": true
+      }
+    ],
+    "total_mayorista": 194500.0,
+    "observaciones": "Generado desde el Portal B2B Droguería Torres"
   }
 ]

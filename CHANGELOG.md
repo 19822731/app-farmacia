@@ -3,6 +3,16 @@
 > Registro de todos los cambios realizados en el proyecto.  
 > Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [2.7.1] — 2026-10-02 (Privacidad Total del Mostrador: Eliminación de Botones Internos en el Front de Clientes)
+
+### 🛡️ Blindaje de Privacidad en Catálogo Público
+- **Eliminación del botón "Mostrador" en Navbar:** Removido completamente el botón y los enlaces hacia `/admin` en la barra de navegación pública para evitar que clientes accedan o sospechen de la existencia del back office.
+- **Eliminación del botón "Bot":** Retirado el botón del simulador interno de desarrollo en la cabecera.
+- **Renombrado a "Atención WhatsApp":** El enlace de la barra superior cambió de *"Mostrador WhatsApp"* a *"Atención WhatsApp"* para ofrecer un tono 100% orientado al cliente.
+- **Limpieza de URLs internas en mensajes de respuesta:** Eliminada la referencia a `${origin}/admin` en los mensajes de confirmación de pedidos.
+
+---
+
 ## [2.7.0] — 2026-10-02 (Normalizador Inteligente de Celulares Argentinos y Verificación en Vivo de Cuentas WhatsApp)
 
 ### 🧠 Función Inteligente de Normalización Telefónica (Argentina)

@@ -86,7 +86,7 @@
         </a>
         <a href="https://wa.me/543816858001?text=Hola%20Farmacia%20Torres%2C%20quisiera%20hacer%20una%20consulta" target="_blank" class="text-white hover:text-emerald-400 flex items-center gap-1 transition">
           <i data-lucide="message-circle" class="w-3.5 h-3.5 text-emerald-400"></i>
-          <span>Mostrador WhatsApp</span>
+          <span>Atención WhatsApp</span>
         </a>
       </div>
     </div>
@@ -150,18 +150,6 @@
         <button onclick="toggleModalReceta()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200/80 px-3 py-2 rounded-xl text-xs font-bold flex items-center space-x-1.5 transition shadow-sm">
           <i data-lucide="camera" class="w-4 h-4 text-emerald-600"></i>
           <span class="hidden sm:inline">Subir Receta</span>
-        </button>
-
-        <!-- Botón Panel Mostrador (Solo visible en servidor local de la farmacia) -->
-        <a id="btn-nav-mostrador" href="/admin" target="_blank" class="hidden text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl font-semibold items-center space-x-1.5 transition" title="Panel de Mostrador Farmacéutico">
-          <i data-lucide="layout-dashboard" class="w-4 h-4 text-slate-500"></i>
-          <span class="hidden lg:inline">Mostrador</span>
-        </a>
-
-        <!-- Botón Simulador WhatsApp (Solo visible en servidor local) -->
-        <button id="btn-nav-bot" onclick="toggleModalSimulador()" class="hidden text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl font-semibold items-center space-x-1.5 transition" title="Probar bot de WhatsApp en pantalla">
-          <i data-lucide="bot" class="w-4 h-4 text-emerald-600"></i>
-          <span class="hidden lg:inline">Bot</span>
         </button>
 
         <!-- Botón Carrito / Pedido -->
@@ -902,20 +890,6 @@
        11. LÓGICA JAVASCRIPT ROBUSTA
        ========================================================================= -->
   <script>
-    // =========================================================================
-    // SEGURIDAD: Mostrador solo en entorno local (Mac de la farmacia)
-    // =========================================================================
-    const ES_ENTORNO_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-
-    function verificarSeguridadMostrador() {
-      if (ES_ENTORNO_LOCAL) {
-        const btnMostrador = document.getElementById('btn-nav-mostrador');
-        const btnBot = document.getElementById('btn-nav-bot');
-        if (btnMostrador) btnMostrador.classList.remove('hidden');
-        if (btnBot) btnBot.classList.remove('hidden');
-      }
-    }
-
     // =========================================================================
     // CRONOGRAMA OFICIAL DE FARMACIAS DE TURNO (San Miguel de Tucumán)
     // =========================================================================
@@ -1753,7 +1727,7 @@
               `Hemos registrado tu pedido *#${data.pedido_id}* en el sistema de mostrador.\n` +
               `Total: *$${data.total_final.toLocaleString('es-AR')}*.\n\n` +
               (data.requiere_receta ? `⚠️ *Recuerda adjuntar la foto de la receta médica* por este chat.\n\n` : '') +
-              `Puedes ver tu pedido entrando al Panel de Mostrador: ${window.location.origin}/admin`;
+              `Te avisaremos por este medio en cuanto tu pedido esté preparado. ¡Gracias por confiar en Farmacia Torres!`;
 
             chatBox.innerHTML += `
               <div class="bg-white p-3 rounded-2xl shadow-sm max-w-[85%] text-slate-800 whitespace-pre-line leading-relaxed border border-slate-200/50">
@@ -1875,7 +1849,6 @@
 
     // Inicializar
     window.addEventListener('DOMContentLoaded', () => {
-      verificarSeguridadMostrador();
       inicializarBarraTurno();
       cargarMedicamentos();
       if (window.lucide && typeof window.lucide.createIcons === 'function') {
