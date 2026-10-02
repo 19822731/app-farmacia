@@ -238,6 +238,64 @@ async def crear_pedido_b2b(pedido: PedidoB2BRequest):
         "mensaje_whatsapp": msg_wa
     }
 
+@app.patch("/api/drogueria/pedidos/{pedido_id}/estado")
+async def actualizar_estado_pedido_b2b(pedido_id: str, data: ActualizarEstadoRequest):
+    """Actualiza el estado operativo y comercial de un pedido B2B inter-farmacias."""
+    pedidos = load_pedidos_b2b()
+    encontrado = None
+    for p in pedidos:
+        if p["id"] == pedido_id:
+            p["estado"] = data.estado
+            encontrado = p
+            break
+    if not encontrado:
+        raise HTTPException(status_code=404, detail="Pedido B2B no encontrado")
+    
+    save_pedidos_b2b(pedidos)
+
+    mensaje_notificacion = ""
+    tel_raw = str(encontrado.get("telefono", ""))
+    tel_limpio = "".join(filter(str.isdigit, tel_raw))
+    if tel_limpio and not tel_limpio.startswith("54"):
+        tel_limpio = "54" + tel_limpio
+
+    if data.estado in ["aprobado", "preparando"]:
+        mensaje_notificacion = (
+            f"👋 ¡Hola Farmacia *{encontrado['farmacia_nombre']}*! "
+            f"Desde *Droguería Farmacia Torres* confirmamos que su Orden Mayorista *#{pedido_id}* "
+            f"ha sido *APROBADA* y se encuentra en etapa de preparación y armado de lotes."
+        )
+    elif data.estado in ["despachado", "listo"]:
+        frio_txt = "❄️ *Requiere Cadena de Frío (2°C - 8°C)*" if encontrado.get("requiere_frio") else "Condiciones estándar"
+        mensaje_notificacion = (
+            f"🚚 ¡Hola Farmacia *{encontrado['farmacia_nombre']}*! "
+            f"Su Orden Mayorista *#{pedido_id}* ya fue *DESPACHADA / LISTA PARA ENTREGA*.\n"
+            f"• *Total contra Remito:* ${encontrado.get('total_mayorista', 0):,.0f}\n"
+            f"• *Conservación:* {frio_txt}\n"
+            f"¡Muchas gracias por su confianza!"
+        )
+    elif data.estado == "entregado":
+        mensaje_notificacion = (
+            f"✅ ¡Hola Farmacia *{encontrado['farmacia_nombre']}*! "
+            f"Confirmamos la entrega y cobranza final de la Orden Mayorista *#{pedido_id}*. "
+            f"Remito oficial archivado. ¡Muchas gracias!"
+        )
+    elif data.estado == "cancelado":
+        mensaje_notificacion = (
+            f"⚠️ Estimados Farmacia *{encontrado['farmacia_nombre']}*, "
+            f"les informamos que la Orden Mayorista *#{pedido_id}* ha sido cancelada. "
+            f"Cualquier consulta comunicarse con Droguería Farmacia Torres."
+        )
+
+    return {
+        "status": "updated",
+        "pedido_id": pedido_id,
+        "nuevo_estado": data.estado,
+        "mensaje_notificacion": mensaje_notificacion,
+        "telefono": tel_limpio,
+        "farmacia_nombre": encontrado.get("farmacia_nombre", "")
+    }
+
 # --- ENDPOINTS MEDICAMENTOS ---
 
 @app.get("/api/medicamentos")

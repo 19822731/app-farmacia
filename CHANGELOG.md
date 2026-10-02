@@ -3,6 +3,23 @@
 > Registro de todos los cambios realizados en el proyecto.  
 > Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [2.6.0] — 2026-10-02 (Gestión Integral de Pedidos B2B Droguería & Flujo Completo B2C)
+
+### 🏢 Flujo Operativo y Comercial Completo B2B (Farmacia a Farmacia)
+- **Nuevo Endpoint API:** Implementado `PATCH /api/drogueria/pedidos/{pedido_id}/estado` en `server.py` para transicionar los pedidos mayoristas inter-farmacias.
+- **Ciclo de vida B2B interactivo:**
+  - `Pendiente Aprobación`: Botón **"Aprobar & Armar Lotes"** (pasa a preparación con aviso automático por WhatsApp al Director Técnico) y botón **"Rechazar"** (marca cancelado).
+  - `En Armado de Lotes`: Botón **"Marcar Despachado & Avisar WA"** (incluye control de cadena de frío 2°C - 8°C y monto a abonar).
+  - `Despachado / Listo`: Botón **"Confirmar Cobrado & Entregado"** (pasa a completado y genera confirmación final).
+  - `Entregado & Cobrado`: Badge de operación completada y botón para abrir el **Remito Comercial Digital**.
+- **Remito Comercial Oficial Imprimible:** Nuevo modal en el panel de mostrador con membrete oficial de Droguería Farmacia Torres, datos fiscales de la farmacia solicitante (CUIT, DT, Teléfono), detalle de lotes, condición comercial y sectores para firma y sello de recepción, con función directa de impresión / PDF (`window.print()`).
+- **Badge de Alertas B2B en Tiempo Real:** En la pestaña "Pedidos Droguería (B2B)" se agregó un contador dinámico ámbar que alerta de pedidos mayoristas entrantes pendientes de aprobación.
+
+### 🛒 Flujo Completo B2C Mostrador (Consumidor Final)
+- **Ciclo de vida integral reforzado:** Opciones de cancelación y reactivación para pedidos en mostrador, soporte para delivery y retiro, notificación directa por WhatsApp al tener el pedido listo, y registro del cobro y entrega final.
+
+---
+
 ## [2.5.2] — 2026-10-02 (Búsqueda por Enter, Botón Buscar y Scroll Automático a Resultados)
 
 ### ⌨️ Soporte Completo para Tecla Enter y Botón "Buscar"

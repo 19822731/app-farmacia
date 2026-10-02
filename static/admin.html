@@ -94,6 +94,7 @@
       <button onclick="cambiarTab('b2b')" id="tab-btn-b2b" class="px-5 py-3 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-800 flex items-center space-x-2">
         <i data-lucide="building-2" class="w-4 h-4"></i>
         <span>Pedidos Droguería (B2B)</span>
+        <span id="badge-b2b-count" class="bg-amber-500 text-white text-[10px] px-2 py-0.5 rounded-full font-black hidden">0</span>
       </button>
     </div>
 
@@ -229,6 +230,124 @@
     </div>
   </div>
 
+  <!-- Modal Remito Comercial Droguería B2B -->
+  <div id="modal-remito-b2b" class="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden border border-slate-200 animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Cabecera del Modal -->
+      <div class="p-4 sm:p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/80">
+        <div class="flex items-center space-x-2">
+          <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold">
+            <i data-lucide="file-check" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-base text-slate-900">Remito Comercial Mayorista Oficial</h3>
+            <p id="remito-id-fecha" class="text-xs text-slate-500 font-mono">B2B-XXXX • 2026-10-02</p>
+          </div>
+        </div>
+        <button onclick="cerrarModalRemitoB2B()" class="text-slate-400 hover:text-slate-700 p-2 rounded-xl hover:bg-slate-200/60 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Cuerpo Imprimible del Remito -->
+      <div id="remito-imprimible" class="p-5 sm:p-6 overflow-y-auto space-y-5 text-xs text-slate-700">
+        
+        <!-- Header de Droguería Emisora -->
+        <div class="border-b border-slate-200 pb-4 flex justify-between items-start">
+          <div>
+            <h2 class="text-lg font-black text-slate-900 tracking-tight">DROGUERÍA & LABORATORIO FARMACIA TORRES</h2>
+            <p class="text-slate-500 text-[11px]">División Mayorista de Distribución Farmacéutica y Magistrales</p>
+            <p class="text-slate-400 text-[10px] mt-0.5">San Miguel de Tucumán • Matrícula Prov. habilitada COFATUC</p>
+          </div>
+          <div class="text-right">
+            <span class="inline-block bg-slate-900 text-white font-mono font-bold px-2.5 py-1 rounded-md text-xs" id="remito-badge-id">REMITO #</span>
+            <p class="text-[10px] text-slate-400 mt-1" id="remito-fecha">Fecha: --/--/----</p>
+          </div>
+        </div>
+
+        <!-- Datos de la Farmacia Receptora -->
+        <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Farmacia Solicitante</span>
+            <p id="remito-farmacia" class="font-extrabold text-slate-900 text-sm">--</p>
+            <p id="remito-cuit" class="text-slate-600 font-mono text-[11px] mt-0.5">CUIT: --</p>
+          </div>
+          <div>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Director Técnico / Contacto</span>
+            <p id="remito-dt" class="font-bold text-slate-800">--</p>
+            <p id="remito-telefono" class="text-slate-600 font-mono text-[11px] mt-0.5">Tel: --</p>
+          </div>
+        </div>
+
+        <!-- Aviso Cadena de Frío si aplica -->
+        <div id="remito-frio-banner" class="hidden bg-cyan-50 border border-cyan-200 rounded-xl p-3 flex items-center space-x-2 text-cyan-900 font-semibold">
+          <i data-lucide="snowflake" class="w-5 h-5 text-cyan-600 shrink-0"></i>
+          <span><b>Aviso de Trazabilidad Térmica:</b> Este remito incluye productos con cadena de frío garantizada entre 2°C y 8°C. Verifique el termómetro testigo en el bulto al recepcionar.</span>
+        </div>
+
+        <!-- Tabla de Items de la Orden -->
+        <div>
+          <span class="text-[11px] font-bold uppercase text-slate-400 tracking-wider mb-2 block">Detalle de Lotes y Unidades Mayoristas</span>
+          <div class="border border-slate-200 rounded-xl overflow-hidden">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="bg-slate-100/80 text-slate-600 font-bold border-b border-slate-200">
+                  <th class="py-2.5 px-3">Lote</th>
+                  <th class="py-2.5 px-3">Rubro</th>
+                  <th class="py-2.5 px-3">Producto</th>
+                  <th class="py-2.5 px-3 text-center">Cant.</th>
+                  <th class="py-2.5 px-3 text-right">Unitario</th>
+                  <th class="py-2.5 px-3 text-right">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody id="remito-tbody" class="divide-y divide-slate-100">
+                <!-- Se llena dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Total y Condiciones -->
+        <div class="flex justify-between items-center bg-slate-900 text-white rounded-2xl p-4">
+          <div>
+            <span class="text-[10px] text-slate-400 font-semibold block uppercase">Condición Comercial</span>
+            <span class="text-xs font-bold text-emerald-400">Cuenta Corriente Farmacias / Contra-Remito</span>
+          </div>
+          <div class="text-right">
+            <span class="text-[10px] text-slate-400 font-semibold block uppercase">Importe Total Mayorista</span>
+            <span id="remito-total" class="text-xl font-black text-white">$0</span>
+          </div>
+        </div>
+
+        <!-- Firmas Legales -->
+        <div class="pt-6 grid grid-cols-2 gap-8 text-center text-slate-400 text-[10px]">
+          <div class="border-t border-dashed border-slate-300 pt-2">
+            <p class="font-bold text-slate-700">Droguería Farmacia Torres</p>
+            <p>Firma DT / Despacho Autorizado</p>
+          </div>
+          <div class="border-t border-dashed border-slate-300 pt-2">
+            <p id="remito-firma-farmacia" class="font-bold text-slate-700">Recepción Farmacia Cliente</p>
+            <p>Firma, Aclaración y Sello DT</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Pie con Botones de Acción -->
+      <div class="p-4 border-t border-slate-200 bg-slate-50 flex items-center justify-between">
+        <button onclick="cerrarModalRemitoB2B()" class="px-4 py-2 border border-slate-300 rounded-xl font-bold text-slate-600 hover:bg-slate-100 transition">
+          Cerrar
+        </button>
+        <button onclick="window.print()" class="px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold transition flex items-center space-x-1.5 shadow-sm active:scale-95">
+          <i data-lucide="printer" class="w-4 h-4"></i>
+          <span>Imprimir / Guardar PDF</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <script>
     let pedidos = [];
     let medicamentos = [];
@@ -247,6 +366,18 @@
         if (res.ok) {
           pedidosB2B = await res.json();
           renderPedidosB2B();
+          
+          // Actualizar contador badge en pestaña B2B
+          const pendientesB2B = pedidosB2B.filter(p => p.estado === 'pendiente_aprobacion' || p.estado === 'preparando');
+          const badgeB2B = document.getElementById('badge-b2b-count');
+          if (badgeB2B) {
+            if (pendientesB2B.length > 0) {
+              badgeB2B.innerText = pendientesB2B.length;
+              badgeB2B.classList.remove('hidden');
+            } else {
+              badgeB2B.classList.add('hidden');
+            }
+          }
         } else {
           renderPedidosB2BPlaceholder();
         }
@@ -297,15 +428,19 @@
         const estadoStyles = {
           'pendiente': 'bg-amber-100 text-amber-800 border-amber-200',
           'preparando': 'bg-blue-100 text-blue-800 border-blue-200',
-          'listo': 'bg-emerald-100 text-emerald-800 border-emerald-200',
-          'entregado': 'bg-slate-100 text-slate-600 border-slate-200'
+          'listo': 'bg-purple-100 text-purple-800 border-purple-200',
+          'en_camino': 'bg-indigo-100 text-indigo-800 border-indigo-200',
+          'entregado': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+          'cancelado': 'bg-red-100 text-red-800 border-red-200'
         }[p.estado] || 'bg-slate-100 text-slate-700';
 
         const estadoNombre = {
           'pendiente': '🟡 Pendiente',
           'preparando': '🟠 En Preparación',
-          'listo': '🟢 Listo p/ Retiro',
-          'entregado': '✅ Entregado'
+          'listo': '🟣 Listo p/ Retiro',
+          'en_camino': '🛵 En Camino',
+          'entregado': '✅ Entregado & Cobrado',
+          'cancelado': '❌ Cancelado'
         }[p.estado] || p.estado;
 
         return `
@@ -359,27 +494,47 @@
               ` : ''}
             </div>
 
-            <!-- Botones de Acción -->
-            <div class="pt-2 border-t grid grid-cols-2 gap-2 text-xs font-semibold">
+            <!-- Botones de Acción B2C -->
+            <div class="pt-2 border-t space-y-2 text-xs font-semibold">
               ${p.estado === 'pendiente' ? `
-                <button onclick="cambiarEstado('${p.id}', 'preparando')" class="col-span-2 bg-amber-500 hover:bg-amber-600 text-white py-2 rounded-xl transition flex items-center justify-center space-x-1">
-                  <i data-lucide="package" class="w-4 h-4"></i>
-                  <span>Preparar Medicamentos</span>
-                </button>
+                <div class="grid grid-cols-2 gap-2">
+                  <button onclick="cambiarEstado('${p.id}', 'preparando')" class="bg-amber-500 hover:bg-amber-600 text-white py-2 px-3 rounded-xl transition flex items-center justify-center space-x-1 shadow-sm active:scale-95 font-bold">
+                    <i data-lucide="package" class="w-4 h-4"></i>
+                    <span>Preparar</span>
+                  </button>
+                  <button onclick="cambiarEstado('${p.id}', 'cancelado')" class="bg-slate-100 hover:bg-red-50 text-slate-500 hover:text-red-600 py-2 px-3 rounded-xl transition flex items-center justify-center space-x-1 border border-slate-200">
+                    <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                    <span>Cancelar</span>
+                  </button>
+                </div>
               ` : ''}
 
               ${p.estado === 'preparando' ? `
-                <button onclick="cambiarEstadoYNotificar('${p.id}', 'listo', '${p.cliente_telefono}', '${p.cliente_nombre}', ${p.total_final})" class="col-span-2 bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-xl transition flex items-center justify-center space-x-1">
+                <button onclick="cambiarEstadoYNotificar('${p.id}', 'listo', '${p.cliente_telefono}', '${p.cliente_nombre}', ${p.total_final})" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold transition flex items-center justify-center space-x-1.5 shadow-sm active:scale-95">
                   <i data-lucide="send" class="w-4 h-4"></i>
                   <span>Marcar Listo & Avisar por WA</span>
                 </button>
               ` : ''}
 
               ${p.estado === 'listo' ? `
-                <button onclick="cambiarEstado('${p.id}', 'entregado')" class="col-span-2 bg-slate-800 hover:bg-slate-900 text-white py-2 rounded-xl transition flex items-center justify-center space-x-1">
-                  <i data-lucide="check" class="w-4 h-4"></i>
+                <button onclick="cambiarEstado('${p.id}', 'entregado')" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-2.5 rounded-xl font-bold transition flex items-center justify-center space-x-1.5 shadow-sm active:scale-95">
+                  <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
                   <span>Marcar Entregado & Cobrado</span>
                 </button>
+              ` : ''}
+
+              ${p.estado === 'entregado' ? `
+                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-center text-emerald-800 font-bold text-xs flex items-center justify-center gap-1.5">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
+                  <span>Entregado y Cobrado en Mostrador</span>
+                </div>
+              ` : ''}
+
+              ${p.estado === 'cancelado' ? `
+                <div class="bg-red-50 border border-red-200 rounded-xl p-2 text-center flex items-center justify-between">
+                  <span class="text-xs font-bold text-red-700">Pedido Cancelado</span>
+                  <button onclick="cambiarEstado('${p.id}', 'pendiente')" class="text-[11px] font-semibold text-slate-600 underline hover:text-slate-900">Reactivar</button>
+                </div>
               ` : ''}
             </div>
           </div>
@@ -545,14 +700,20 @@
       container.innerHTML = pedidosB2B.map(p => {
         const estadoStyles = {
           'pendiente_aprobacion': 'bg-amber-100 text-amber-800 border-amber-200',
-          'aprobado': 'bg-blue-100 text-blue-800 border-blue-200',
-          'despachado': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+          'preparando': 'bg-sky-100 text-sky-800 border-sky-200',
+          'aprobado': 'bg-sky-100 text-sky-800 border-sky-200',
+          'despachado': 'bg-indigo-100 text-indigo-800 border-indigo-200',
+          'entregado': 'bg-emerald-100 text-emerald-800 border-emerald-200',
+          'cancelado': 'bg-red-100 text-red-800 border-red-200'
         }[p.estado] || 'bg-slate-100 text-slate-700';
 
         const estadoNombre = {
           'pendiente_aprobacion': '🟡 Pendiente Aprobación',
-          'aprobado': '🟠 Aprobado',
-          'despachado': '🟢 Despachado',
+          'preparando': '🟠 En Armado de Lotes',
+          'aprobado': '🟠 En Armado de Lotes',
+          'despachado': '🚚 Despachado / Listo',
+          'entregado': '✅ Entregado & Cobrado',
+          'cancelado': '❌ Rechazado'
         }[p.estado] || p.estado;
 
         return `
@@ -569,6 +730,8 @@
               </div>
               <p class="text-[11px] text-slate-400 ml-5 font-mono">CUIT: ${p.cuit}</p>
               <p class="text-[11px] text-slate-400 ml-5">DT: ${p.director_tecnico}</p>
+              <p class="text-[11px] text-slate-400 ml-5 font-mono">📱 ${p.telefono || 'Sin teléfono'}</p>
+              ${p.direccion ? `<p class="text-[11px] text-slate-500 ml-5">📍 ${p.direccion}</p>` : ''}
               <p class="text-[10px] text-slate-400 ml-5">${p.fecha}</p>
 
               <!-- Detalle de medicamentos -->
@@ -589,7 +752,57 @@
               ${p.requiere_frio ? `
                 <div class="mt-2 bg-cyan-50 text-cyan-700 text-[10px] font-bold p-1.5 rounded-lg border border-cyan-100 flex items-center space-x-1">
                   <i data-lucide="snowflake" class="w-3.5 h-3.5"></i>
-                  <span>Requiere Cadena de Frío</span>
+                  <span>Requiere Cadena de Frío (2°C - 8°C)</span>
+                </div>
+              ` : ''}
+            </div>
+
+            <!-- Botones de Acción B2B -->
+            <div class="pt-3 border-t space-y-2">
+              ${p.estado === 'pendiente_aprobacion' ? `
+                <div class="grid grid-cols-2 gap-2 text-xs font-bold">
+                  <button onclick="cambiarEstadoB2BYNotificar('${p.id}', 'preparando', '${p.telefono}', '${p.farmacia_nombre}', ${p.total_mayorista})" class="bg-amber-500 hover:bg-amber-600 text-white py-2 px-3 rounded-xl transition flex items-center justify-center space-x-1.5 shadow-sm active:scale-95">
+                    <i data-lucide="package-check" class="w-4 h-4"></i>
+                    <span>Aprobar & Armar Lotes</span>
+                  </button>
+                  <button onclick="cambiarEstadoB2B('${p.id}', 'cancelado')" class="bg-slate-100 hover:bg-red-50 text-slate-600 hover:text-red-700 py-2 px-3 rounded-xl transition flex items-center justify-center space-x-1 border border-slate-200">
+                    <i data-lucide="x-circle" class="w-3.5 h-3.5"></i>
+                    <span>Rechazar</span>
+                  </button>
+                </div>
+              ` : ''}
+
+              ${p.estado === 'preparando' || p.estado === 'aprobado' ? `
+                <button onclick="cambiarEstadoB2BYNotificar('${p.id}', 'despachado', '${p.telefono}', '${p.farmacia_nombre}', ${p.total_mayorista})" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl font-bold text-xs transition flex items-center justify-center space-x-1.5 shadow-sm active:scale-95">
+                  <i data-lucide="truck" class="w-4 h-4"></i>
+                  <span>Marcar Despachado & Avisar WA</span>
+                </button>
+              ` : ''}
+
+              ${p.estado === 'despachado' ? `
+                <button onclick="cambiarEstadoB2BYNotificar('${p.id}', 'entregado', '${p.telefono}', '${p.farmacia_nombre}', ${p.total_mayorista})" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold text-xs transition flex items-center justify-center space-x-1.5 shadow-sm active:scale-95">
+                  <i data-lucide="badge-dollar-sign" class="w-4 h-4"></i>
+                  <span>Confirmar Cobrado & Entregado</span>
+                </button>
+              ` : ''}
+
+              ${p.estado === 'entregado' ? `
+                <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5 text-center space-y-1.5">
+                  <span class="text-xs font-black text-emerald-800 flex items-center justify-center gap-1">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
+                    Operación Completada y Facturada
+                  </span>
+                  <button onclick="abrirModalRemitoB2B('${p.id}')" class="text-[11px] font-bold text-slate-700 hover:text-emerald-700 bg-white border border-slate-200 hover:border-emerald-300 py-1.5 px-3 rounded-lg w-full transition flex items-center justify-center gap-1.5 shadow-xs">
+                    <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                    <span>Ver Remito Comercial Digital</span>
+                  </button>
+                </div>
+              ` : ''}
+
+              ${p.estado === 'cancelado' ? `
+                <div class="bg-red-50 border border-red-200 rounded-xl p-2 text-center flex items-center justify-between">
+                  <span class="text-xs font-bold text-red-700">Orden Rechazada</span>
+                  <button onclick="cambiarEstadoB2B('${p.id}', 'pendiente_aprobacion')" class="text-[11px] font-semibold text-slate-600 underline hover:text-slate-900">Reactivar</button>
                 </div>
               ` : ''}
             </div>
@@ -600,6 +813,73 @@
       if (window.lucide && typeof window.lucide.createIcons === 'function') {
         window.lucide.createIcons();
       }
+    }
+
+    async function cambiarEstadoB2B(id, nuevoEstado) {
+      await fetch(`/api/drogueria/pedidos/${id}/estado`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ estado: nuevoEstado })
+      });
+      cargarPedidosB2B();
+    }
+
+    async function cambiarEstadoB2BYNotificar(id, nuevoEstado, telefono, farmacia, total) {
+      const res = await fetch(`/api/drogueria/pedidos/${id}/estado`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ estado: nuevoEstado })
+      });
+      const data = await res.json();
+      
+      if (data.mensaje_notificacion) {
+        const textoEnc = encodeURIComponent(data.mensaje_notificacion);
+        const telEnc = data.telefono || (telefono ? telefono.replace(/[^0-9]/g, '') : '');
+        window.open(`https://wa.me/${telEnc}?text=${textoEnc}`, '_blank');
+      }
+      cargarPedidosB2B();
+    }
+
+    function abrirModalRemitoB2B(id) {
+      const pedido = pedidosB2B.find(p => p.id === id);
+      if (!pedido) return;
+
+      document.getElementById('remito-id-fecha').innerText = `${pedido.id} • ${pedido.fecha}`;
+      document.getElementById('remito-badge-id').innerText = `REMITO #${pedido.id}`;
+      document.getElementById('remito-fecha').innerText = `Fecha: ${pedido.fecha}`;
+      document.getElementById('remito-farmacia').innerText = pedido.farmacia_nombre || 'Farmacia Cliente';
+      document.getElementById('remito-cuit').innerText = `CUIT: ${pedido.cuit || 'S/D'}`;
+      document.getElementById('remito-dt').innerText = pedido.director_tecnico ? `Farm. ${pedido.director_tecnico}` : 'Director Técnico';
+      document.getElementById('remito-telefono').innerText = `Tel: ${pedido.telefono || 'S/D'} ${pedido.direccion ? `• Entrega: ${pedido.direccion}` : ''}`;
+      document.getElementById('remito-firma-farmacia').innerText = pedido.farmacia_nombre || 'Recepción Farmacia Cliente';
+      document.getElementById('remito-total').innerText = `$${(pedido.total_mayorista || 0).toLocaleString('es-AR')}`;
+
+      const bannerFrio = document.getElementById('remito-frio-banner');
+      if (bannerFrio) {
+        if (pedido.requiere_frio) bannerFrio.classList.remove('hidden');
+        else bannerFrio.classList.add('hidden');
+      }
+
+      const tbody = document.getElementById('remito-tbody');
+      tbody.innerHTML = (pedido.items || []).map(it => `
+        <tr class="hover:bg-slate-50">
+          <td class="py-2.5 px-3 font-mono font-bold text-slate-700">${it.lote || 'L-MAY-2026'}</td>
+          <td class="py-2.5 px-3 text-slate-500 font-medium">${it.rubro || 'General'}</td>
+          <td class="py-2.5 px-3 font-bold text-slate-900">${it.nombre}</td>
+          <td class="py-2.5 px-3 text-center font-bold text-slate-800">${it.cantidad}</td>
+          <td class="py-2.5 px-3 text-right font-mono text-slate-600">$${(it.precio_unitario || 0).toLocaleString('es-AR')}</td>
+          <td class="py-2.5 px-3 text-right font-mono font-bold text-slate-900">$${(it.subtotal || 0).toLocaleString('es-AR')}</td>
+        </tr>
+      `).join('');
+
+      document.getElementById('modal-remito-b2b').classList.remove('hidden');
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        window.lucide.createIcons();
+      }
+    }
+
+    function cerrarModalRemitoB2B() {
+      document.getElementById('modal-remito-b2b').classList.add('hidden');
     }
 
     // Modal nuevo medicamento

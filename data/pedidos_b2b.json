@@ -1,1 +1,47 @@
-[]
+[
+  {
+    "id": "B2B-5435",
+    "farmacia_nombre": "FARMACIA LUNA",
+    "cuit": "20296246658",
+    "director_tecnico": "Luna",
+    "telefono": "3816858020",
+    "direccion": "",
+    "fecha": "2026-10-02 15:54",
+    "estado": "pendiente_aprobacion",
+    "requiere_frio": false,
+    "items": [
+      {
+        "id": "B2B-ONC-001",
+        "nombre": "Ondansetrón 8mg/4ml Inyectable",
+        "rubro": "Oncológicos",
+        "lote": "L-ONC-2026-04",
+        "cantidad": 2,
+        "precio_unitario": 28500.0,
+        "subtotal": 57000.0,
+        "requiere_frio": false
+      },
+      {
+        "id": "B2B-ONC-002",
+        "nombre": "Anastrozol 1mg Comprimidos Recubiertos",
+        "rubro": "Oncológicos",
+        "lote": "L-ONC-2026-09",
+        "cantidad": 2,
+        "precio_unitario": 64000.0,
+        "subtotal": 128000.0,
+        "requiere_frio": false
+      },
+      {
+        "id": "B2B-ONC-003",
+        "nombre": "Solución Magistral para Mucositis Oral",
+        "rubro": "Oncológicos",
+        "lote": "L-MAG-2026-12",
+        "cantidad": 2,
+        "precio_unitario": 18200.0,
+        "subtotal": 36400.0,
+        "requiere_frio": false
+      }
+    ],
+    "total_mayorista": 221400.0,
+    "observaciones": "Generado desde el Portal B2B Droguería Torres"
+  }
+]
