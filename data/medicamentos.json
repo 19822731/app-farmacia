@@ -11,7 +11,8 @@
     "requiere_receta": false,
     "es_generico": false,
     "categoria": "Analgésicos y Antifebriles",
-    "indicacion": "Dolor de cabeza, estados febriles, dolores musculares."
+    "indicacion": "Dolor de cabeza, estados febriles, dolores musculares.",
+    "imagen": "/static/img/medicamentos/med-001.webp"
   },
   {
     "id": "MED-002",
@@ -25,7 +26,8 @@
     "requiere_receta": false,
     "es_generico": true,
     "categoria": "Analgésicos y Antifebriles",
-    "indicacion": "Equivalente genérico de Tafirol 1g. Mismo principio activo y dosis con 60% de ahorro."
+    "indicacion": "Equivalente genérico de Tafirol 1g. Mismo principio activo y dosis con 60% de ahorro.",
+    "imagen": "/static/img/medicamentos/med-002.webp"
   },
   {
     "id": "MED-003",
@@ -39,7 +41,8 @@
     "requiere_receta": false,
     "es_generico": false,
     "categoria": "Analgésicos y Antifebriles",
-    "indicacion": "Fiebre y dolor leve."
+    "indicacion": "Fiebre y dolor leve.",
+    "imagen": "/static/img/medicamentos/med-003.webp"
   },
   {
     "id": "MED-004",
@@ -53,7 +56,8 @@
     "requiere_receta": false,
     "es_generico": true,
     "categoria": "Analgésicos y Antifebriles",
-    "indicacion": "Alternativa genérica económica para fiebre y dolor."
+    "indicacion": "Alternativa genérica económica para fiebre y dolor.",
+    "imagen": "/static/img/medicamentos/med-004.webp"
   },
   {
     "id": "MED-005",
@@ -67,7 +71,8 @@
     "requiere_receta": false,
     "es_generico": false,
     "categoria": "Antiinflamatorios y Analgésicos",
-    "indicacion": "Dolores inflamatorios, dolor menstrual y dental."
+    "indicacion": "Dolores inflamatorios, dolor menstrual y dental.",
+    "imagen": "/static/img/medicamentos/med-005.webp"
   },
   {
     "id": "MED-006",
@@ -81,7 +86,8 @@
     "requiere_receta": false,
     "es_generico": true,
     "categoria": "Antiinflamatorios y Analgésicos",
-    "indicacion": "Equivalente genérico de Ibupirac 600mg. Mismo efecto terapéutico con 55% de ahorro."
+    "indicacion": "Equivalente genérico de Ibupirac 600mg. Mismo efecto terapéutico con 55% de ahorro.",
+    "imagen": "/static/img/medicamentos/med-006.webp"
   },
   {
     "id": "MED-007",
@@ -95,7 +101,8 @@
     "requiere_receta": false,
     "es_generico": false,
     "categoria": "Antiinflamatorios y Analgésicos",
-    "indicacion": "Alivio rápido de dolores agudos en cápsulas blandas."
+    "indicacion": "Alivio rápido de dolores agudos en cápsulas blandas.",
+    "imagen": "/static/img/medicamentos/med-007.webp"
   },
   {
     "id": "MED-008",
@@ -109,7 +116,8 @@
     "requiere_receta": false,
     "es_generico": true,
     "categoria": "Antiinflamatorios y Analgésicos",
-    "indicacion": "Antiinflamatorio genérico de venta libre."
+    "indicacion": "Antiinflamatorio genérico de venta libre.",
+    "imagen": "/static/img/medicamentos/med-008.webp"
   },
   {
     "id": "MED-009",
@@ -123,7 +131,8 @@
     "requiere_receta": true,
     "es_generico": false,
     "categoria": "Antibióticos",
-    "indicacion": "Infecciones bacterianas respiratorias y orales. Requiere receta."
+    "indicacion": "Infecciones bacterianas respiratorias y orales. Requiere receta.",
+    "imagen": "/static/img/medicamentos/med-009.webp"
   },
   {
     "id": "MED-010",
@@ -137,7 +146,8 @@
     "requiere_receta": true,
     "es_generico": true,
     "categoria": "Antibióticos",
-    "indicacion": "Equivalente genérico de Amoxidal 500mg. Mismo efecto antibacteriano a casi mitad de precio."
+    "indicacion": "Equivalente genérico de Amoxidal 500mg. Mismo efecto antibacteriano a casi mitad de precio.",
+    "imagen": "/static/img/medicamentos/med-010.webp"
   },
   {
     "id": "MED-011",
@@ -151,7 +161,8 @@
     "requiere_receta": true,
     "es_generico": false,
     "categoria": "Antibióticos",
-    "indicacion": "Antibiótico de amplio espectro. Requiere receta."
+    "indicacion": "Antibiótico de amplio espectro. Requiere receta.",
+    "imagen": "/static/img/medicamentos/med-011.webp"
   },
   {
     "id": "MED-012",
@@ -165,7 +176,8 @@
     "requiere_receta": true,
     "es_generico": true,
     "categoria": "Antibióticos",
-    "indicacion": "Equivalente genérico de Amoxidal Dúo 875mg con 46% de ahorro."
+    "indicacion": "Equivalente genérico de Amoxidal Dúo 875mg con 46% de ahorro.",
+    "imagen": "/static/img/medicamentos/med-012.webp"
   },
   {
     "id": "MED-013",
@@ -179,7 +191,8 @@
     "requiere_receta": true,
     "es_generico": false,
     "categoria": "Cardiovascular / Presión",
-    "indicacion": "Tratamiento de la hipertensión arterial."
+    "indicacion": "Tratamiento de la hipertensión arterial.",
+    "imagen": "/static/img/medicamentos/med-013.webp"
   },
   {
     "id": "MED-014",
@@ -193,7 +206,8 @@
     "requiere_receta": true,
     "es_generico": true,
     "categoria": "Cardiovascular / Presión",
-    "indicacion": "Equivalente genérico de Lotrial 10mg. Tratamiento accesible para la presión."
+    "indicacion": "Equivalente genérico de Lotrial 10mg. Tratamiento accesible para la presión.",
+    "imagen": "/static/img/medicamentos/med-014.webp"
   },
   {
     "id": "MED-015",
@@ -207,7 +221,8 @@
     "requiere_receta": true,
     "es_generico": false,
     "categoria": "Cardiovascular / Presión",
-    "indicacion": "Antihipertensivo de marca líder."
+    "indicacion": "Antihipertensivo de marca líder.",
+    "imagen": "/static/img/medicamentos/med-015.webp"
   },
   {
     "id": "MED-016",
@@ -221,7 +236,8 @@
     "requiere_receta": true,
     "es_generico": true,
     "categoria": "Cardiovascular / Presión",
-    "indicacion": "Equivalente genérico de Losacor 50mg con más del 50% de ahorro."
+    "indicacion": "Equivalente genérico de Losacor 50mg con más del 50% de ahorro.",
+    "imagen": "/static/img/medicamentos/med-016.webp"
   },
   {
     "id": "MED-017",
@@ -235,7 +251,8 @@
     "requiere_receta": false,
     "es_generico": false,
     "categoria": "Gastroenterología",
-    "indicacion": "Gastritis, acidez estomacal frecuente y reflujo."
+    "indicacion": "Gastritis, acidez estomacal frecuente y reflujo.",
+    "imagen": "/static/img/medicamentos/med-017.webp"
   },
   {
     "id": "MED-018",
@@ -249,7 +266,8 @@
     "requiere_receta": false,
     "es_generico": true,
     "categoria": "Gastroenterología",
-    "indicacion": "Equivalente genérico para acidez y gastritis a menos de mitad de precio."
+    "indicacion": "Equivalente genérico para acidez y gastritis a menos de mitad de precio.",
+    "imagen": "/static/img/medicamentos/med-018.webp"
   },
   {
     "id": "MED-019",
@@ -263,7 +281,8 @@
     "requiere_receta": false,
     "es_generico": false,
     "categoria": "Antialérgicos",
-    "indicacion": "Rinitis alérgica, picazón, urticaria."
+    "indicacion": "Rinitis alérgica, picazón, urticaria.",
+    "imagen": "/static/img/medicamentos/med-019.webp"
   },
   {
     "id": "MED-020",
@@ -277,7 +296,8 @@
     "requiere_receta": false,
     "es_generico": true,
     "categoria": "Antialérgicos",
-    "indicacion": "Antialérgico genérico económico para rinitis y picazón."
+    "indicacion": "Antialérgico genérico económico para rinitis y picazón.",
+    "imagen": "/static/img/medicamentos/med-020.webp"
   },
   {
     "id": "MED-021",
@@ -291,7 +311,8 @@
     "requiere_receta": true,
     "es_generico": false,
     "categoria": "Respiratorio",
-    "indicacion": "Broncoespasmo, asma. Requiere receta médica."
+    "indicacion": "Broncoespasmo, asma. Requiere receta médica.",
+    "imagen": "/static/img/medicamentos/med-021.webp"
   },
   {
     "id": "MED-022",
@@ -305,7 +326,8 @@
     "requiere_receta": true,
     "es_generico": true,
     "categoria": "Respiratorio",
-    "indicacion": "Equivalente genérico de Ventolin. Inhalador broncodilatador con más del 50% de ahorro."
+    "indicacion": "Equivalente genérico de Ventolin. Inhalador broncodilatador con más del 50% de ahorro.",
+    "imagen": "/static/img/medicamentos/med-022.webp"
   },
   {
     "id": "MED-023",
@@ -319,7 +341,8 @@
     "requiere_receta": false,
     "es_generico": false,
     "categoria": "Antiespasmódicos / Digestivos",
-    "indicacion": "Dolor abdominal, cólicos hepáticos o renales."
+    "indicacion": "Dolor abdominal, cólicos hepáticos o renales.",
+    "imagen": "/static/img/medicamentos/med-023.webp"
   },
   {
     "id": "MED-024",
@@ -333,7 +356,8 @@
     "requiere_receta": false,
     "es_generico": true,
     "categoria": "Primeros Auxilios e Higiene",
-    "indicacion": "Higiene y sanitización de manos."
+    "indicacion": "Higiene y sanitización de manos.",
+    "imagen": "/static/img/medicamentos/med-024.webp"
   },
   {
     "id": "MED-025",
@@ -347,7 +371,8 @@
     "requiere_receta": false,
     "es_generico": false,
     "categoria": "Vitaminas",
-    "indicacion": "Defensas del sistema inmune, aporte diario de Vitamina C y antioxidante."
+    "indicacion": "Defensas del sistema inmune, aporte diario de Vitamina C y antioxidante.",
+    "imagen": "/static/img/medicamentos/med-025.webp"
   },
   {
     "id": "MED-026",
@@ -361,7 +386,8 @@
     "requiere_receta": false,
     "es_generico": true,
     "categoria": "Vitaminas",
-    "indicacion": "Equivalente genérico de Redoxon 1g. Mismo principio activo con más del 50% de ahorro."
+    "indicacion": "Equivalente genérico de Redoxon 1g. Mismo principio activo con más del 50% de ahorro.",
+    "imagen": "/static/img/medicamentos/med-026.webp"
   },
   {
     "id": "MED-027",
@@ -375,7 +401,8 @@
     "requiere_receta": false,
     "es_generico": false,
     "categoria": "Suplementos",
-    "indicacion": "Aporte de magnesio contra la fatiga muscular, calambres y agotamiento físico o mental."
+    "indicacion": "Aporte de magnesio contra la fatiga muscular, calambres y agotamiento físico o mental.",
+    "imagen": "/static/img/medicamentos/med-027.webp"
   },
   {
     "id": "MED-028",
@@ -389,7 +416,8 @@
     "requiere_receta": false,
     "es_generico": true,
     "categoria": "Suplementos",
-    "indicacion": "Suplemento de magnesio de alta absorción con un 55% de ahorro frente a marcas líderes."
+    "indicacion": "Suplemento de magnesio de alta absorción con un 55% de ahorro frente a marcas líderes.",
+    "imagen": "/static/img/medicamentos/med-028.webp"
   },
   {
     "id": "MED-029",
@@ -403,7 +431,8 @@
     "requiere_receta": false,
     "es_generico": false,
     "categoria": "Falta de Sueño",
-    "indicacion": "Inductor natural del sueño, reduce el tiempo para conciliar el descanso y alivia el insomnio."
+    "indicacion": "Inductor natural del sueño, reduce el tiempo para conciliar el descanso y alivia el insomnio.",
+    "imagen": "/static/img/medicamentos/med-029.webp"
   },
   {
     "id": "MED-030",
@@ -417,6 +446,7 @@
     "requiere_receta": false,
     "es_generico": true,
     "categoria": "Falta de Sueño",
-    "indicacion": "Equivalente genérico para el descanso y conciliación del sueño con más de 50% de ahorro."
+    "indicacion": "Equivalente genérico para el descanso y conciliación del sueño con más de 50% de ahorro.",
+    "imagen": "/static/img/medicamentos/med-030.webp"
   }
 ]

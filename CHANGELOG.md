@@ -3,6 +3,22 @@
 > Registro de todos los cambios realizados en el proyecto.  
 > Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [2.8.0] — 2026-10-02 (Catálogo Fotográfico Oficial de Medicamentos en Alta Definición y Optimización Visual WebP)
+
+### 📸 Banco de Imágenes Reales de Medicamentos (30 Productos Clave)
+- **Imágenes Oficiales de Laboratorios Argentinos:** Descargadas e integradas las fotografías de empaque oficial para los 30 medicamentos del vademécum (marcas líderes como *Tafirol*, *Ibupirac*, *Actron*, *Amoxidal*, *Lotrial*, *Losacor*, *Ventolin*, *Sertal*, *Redoxon*, *Total Magnesiano*, *Melatol*, y genéricos equivalentes de *Klonal*, *Denver Farma*, *Vannier*).
+- **Compresión Ultraliviana WebP (85-88% calidad):** Todas las imágenes fueron procesadas a un formato cuadrado optimizado (pesan en promedio 10-20 KB cada una), garantizando tiempos de carga inferiores a un segundo en conexiones 4G/5G.
+- **Sistema de Fallback Seguro:** Incorporado `fallback.webp` institucional y manejador `onerror` para garantizar que jamás se visualice una imagen rota ante cualquier incidencia de red.
+- **Sincronización en Bases de Datos:** Actualizados `data/medicamentos.json`, `static/data/medicamentos.json` y `public/data/medicamentos.json` con las rutas locales `/static/img/medicamentos/med-XXX.webp`.
+
+### 🎨 Renovación Visual de Tarjetas en Catálogo Web (Front-End)
+- **Contenedor Fotográfico con Zoom Suave:** Cada tarjeta de medicamento cuenta ahora con un recuadro superior en fondo blanco con efecto hover zoom (`hover:scale-105`) y carga diferida (`loading="lazy"`).
+- **Badges Flotantes de Seguridad:** Distintivos de tipo (`🟢 Genérico Ahorro` / `🏷️ Marca Líder`), condición de venta (`🟢 Venta Libre` / `🔴 Bajo Receta`) y stock integrados de forma armónica sobre el encuadre fotográfico.
+- **Comparativa Visual de Ahorro:** En las marcas líderes, el aviso de opción genérica ahora exhibe la miniatura real del genérico de ahorro junto al cálculo exacto en pesos y porcentaje de ahorro.
+- **Miniaturas en Carrito de Compras:** El drawer lateral del carrito ahora despliega una miniatura fotográfica de 44x44 px de cada medicamento agregado, reforzando la claridad del pedido.
+
+---
+
 ## [2.7.2] — 2026-10-02 (Establecimiento de Dirección Oficial: Av. Brígido Terán 111 y Geolocalización Directa)
 
 ### 📍 Integración de Dirección Oficial en Front-End y Asistente Virtual

@@ -178,6 +178,7 @@ class MedicamentoInput(BaseModel):
     es_generico: Optional[bool] = False
     categoria: str
     indicacion: Optional[str] = ""
+    imagen: Optional[str] = ""
 
 class ActualizarStockPrecio(BaseModel):
     precio: Optional[float] = None
@@ -505,7 +506,8 @@ async def crear_medicamento(data: MedicamentoInput):
         "stock": data.stock,
         "requiere_receta": data.requiere_receta,
         "categoria": data.categoria,
-        "indicacion": data.indicacion or ""
+        "indicacion": data.indicacion or "",
+        "imagen": data.imagen or f"/static/img/medicamentos/{nuevo_id.lower()}.webp"
     }
     meds.append(nuevo_med)
     save_medicamentos(meds)

@@ -1297,20 +1297,24 @@
           ? `<span class="text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-900 border border-emerald-300">🟢 Genérico Ahorro</span>`
           : `<span class="text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">🏷️ Marca Líder</span>`;
 
-        // Comparativa inteligente de ahorro si es de marca
+        // Comparativa inteligente de ahorro si es de marca con miniatura visual
         let avisoGenerico = '';
         if (!m.es_generico) {
           const genEquiv = medicamentos.find(g => g.es_generico && g.principio_activo === m.principio_activo && g.precio < m.precio);
           if (genEquiv) {
             const ahorro = m.precio - genEquiv.precio;
             const pctAhorro = Math.round((ahorro / m.precio) * 100);
+            const imgGen = genEquiv.imagen || `/static/img/medicamentos/${genEquiv.id.toLowerCase()}.webp`;
             avisoGenerico = `
-              <div class="mt-2.5 bg-emerald-50/90 border border-emerald-200 rounded-xl p-2 sm:p-2.5 flex items-center justify-between text-[10px] sm:text-[11px] transition hover:bg-emerald-100/70">
-                <div class="leading-tight pr-1">
-                  <div class="flex items-center gap-1 text-emerald-900 font-extrabold">
-                    <span>💡 Opción Ahorro ${pctAhorro}%:</span>
+              <div class="mt-2.5 bg-emerald-50/90 border border-emerald-200 rounded-xl p-2 sm:p-2.5 flex items-center justify-between text-[10px] sm:text-[11px] transition hover:bg-emerald-100/70 gap-2">
+                <div class="flex items-center gap-2 min-w-0">
+                  <img src="${imgGen}" alt="${genEquiv.nombre_comercial}" class="w-8 h-8 object-contain rounded-lg bg-white border border-emerald-200 p-0.5 shrink-0" onerror="this.onerror=null; this.src='/static/img/medicamentos/fallback.webp';">
+                  <div class="leading-tight pr-1 min-w-0">
+                    <div class="flex items-center gap-1 text-emerald-900 font-extrabold">
+                      <span>💡 Opción Ahorro ${pctAhorro}%:</span>
+                    </div>
+                    <span class="text-slate-600 text-[10px] truncate block">${genEquiv.nombre_comercial} (Ahorrás $${ahorro.toLocaleString('es-AR')})</span>
                   </div>
-                  <span class="text-slate-600 text-[10px] line-clamp-1">${genEquiv.nombre_comercial} (Ahorrás $${ahorro.toLocaleString('es-AR')})</span>
                 </div>
                 <button onclick="agregarAlCarrito('${genEquiv.id}')" class="bg-emerald-700 hover:bg-emerald-800 text-white font-extrabold px-2.5 py-1.5 rounded-lg text-[10px] shadow-sm whitespace-nowrap transition flex-shrink-0">
                   Comprar $${genEquiv.precio.toLocaleString('es-AR')}
@@ -1320,17 +1324,32 @@
           }
         }
 
+        const imgSrc = m.imagen || `/static/img/medicamentos/${m.id.toLowerCase()}.webp`;
+
         return `
           <div class="bg-white border border-slate-200/90 rounded-2xl sm:rounded-3xl p-4 sm:p-5 shadow-sm hover:shadow-md hover:border-slate-300 transition-all flex flex-col justify-between group">
             <div>
-              <div class="flex items-center justify-between gap-1 mb-2.5 flex-wrap">
-                <div class="flex items-center gap-1">
+              <!-- Contenedor Visual de Producto Farmacéutico con Imagen Oficial -->
+              <div class="relative bg-white border border-slate-100 rounded-2xl p-3 mb-3.5 flex items-center justify-center h-44 sm:h-48 overflow-hidden group-hover:border-emerald-200 group-hover:shadow-sm transition-all">
+                <!-- Badges Flotantes sobre la Imagen -->
+                <div class="absolute top-2.5 left-2.5 flex flex-col gap-1 z-10 items-start">
                   ${badgeTipo}
-                  <span class="text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full ${badgeRecetaClass}">
+                  <span class="text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full ${badgeRecetaClass} shadow-xs">
                     ${badgeRecetaText}
                   </span>
                 </div>
-                ${stockBadge}
+                <div class="absolute top-2.5 right-2.5 z-10">
+                  ${stockBadge}
+                </div>
+                
+                <!-- Foto Real del Medicamento -->
+                <img 
+                  src="${imgSrc}" 
+                  alt="${m.nombre_comercial}" 
+                  loading="lazy"
+                  class="max-h-36 sm:max-h-40 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                  onerror="this.onerror=null; this.src='/static/img/medicamentos/fallback.webp';"
+                />
               </div>
 
               <h3 class="font-extrabold text-slate-900 text-sm sm:text-base leading-snug group-hover:text-emerald-800 transition-colors">
@@ -1637,16 +1656,18 @@
           }
         }
 
+        const imgItem = med.imagen || `/static/img/medicamentos/${med.id.toLowerCase()}.webp`;
         return `
-          <div class="p-3 bg-white border border-slate-200/80 rounded-2xl shadow-sm flex items-center justify-between">
-            <div class="flex-1 pr-3">
-              <h4 class="font-bold text-xs text-slate-900 leading-snug">${med.nombre_comercial}</h4>
+          <div class="p-3 bg-white border border-slate-200/80 rounded-2xl shadow-sm flex items-center justify-between gap-3">
+            <img src="${imgItem}" alt="${med.nombre_comercial}" class="w-11 h-11 object-contain rounded-xl bg-slate-50 border border-slate-100 p-1 shrink-0" onerror="this.onerror=null; this.src='/static/img/medicamentos/fallback.webp';">
+            <div class="flex-1 min-w-0 pr-1">
+              <h4 class="font-bold text-xs text-slate-900 leading-snug truncate">${med.nombre_comercial}</h4>
               <p class="text-[11px] text-slate-400 mt-0.5">
                 $${med.precio.toLocaleString('es-AR')} c/u 
                 ${med.requiere_receta ? '<span class="text-red-600 font-bold ml-1">(Receta)</span>' : ''}
               </p>
             </div>
-            <div class="flex items-center space-x-1.5 bg-slate-100 rounded-xl p-1">
+            <div class="flex items-center space-x-1 bg-slate-100 rounded-xl p-1 shrink-0">
               <button onclick="cambiarCantidad('${id}', -1)" class="w-6 h-6 rounded-lg bg-white border border-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs hover:bg-slate-50">-</button>
               <span class="text-xs font-black w-5 text-center text-slate-900">${carrito[id]}</span>
               <button onclick="cambiarCantidad('${id}', 1)" class="w-6 h-6 rounded-lg bg-white border border-slate-200 text-slate-700 flex items-center justify-center font-bold text-xs hover:bg-slate-50">+</button>
