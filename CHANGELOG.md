@@ -3,6 +3,18 @@
 > Registro de todos los cambios realizados en el proyecto.  
 > Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [2.7.2] — 2026-10-02 (Establecimiento de Dirección Oficial: Av. Brígido Terán 111 y Geolocalización Directa)
+
+### 📍 Integración de Dirección Oficial en Front-End y Asistente Virtual
+- **Barra Superior (Top Bar):** Incorporada la dirección `📍 Av. Brígido Terán 111, Tucumán` con hipervínculo directo a Google Maps para fácil geolocalización de los pacientes.
+- **Cabecera Principal (Header Brand):** Añadido subtítulo distintivo bajo el logotipo comercial de Farmacia Torres: `Av. Brígido Terán 111 • S. M. de Tucumán` con icono de mapa.
+- **Pie de Página (Footer Público):** Actualizada la dirección física oficial con enlace directo para abrir el mapa interactivo (`(Ver mapa)`).
+- **Cronograma de Turnos de Tucumán:** Actualizada la ficha de turno de Farmacia Torres con la dirección exacta `Av. Brígido Terán 111 (San Miguel de Tucumán)` y pie de modal institucional.
+- **Portal Droguería B2B:** Modificado el pie legal de droguería mayorista con la dirección oficial y eliminados accesos internos.
+- **Bot de WhatsApp y Pedidos (`server.py`):** Actualizados los mensajes automáticos de ubicación, horarios y la opción de `"1️⃣ Retiro en Mostrador (Av. Brígido Terán 111)"` en todo el flujo conversacional.
+
+---
+
 ## [2.7.1] — 2026-10-02 (Privacidad Total del Mostrador: Eliminación de Botones Internos en el Front de Clientes)
 
 ### 🛡️ Blindaje de Privacidad en Catálogo Público

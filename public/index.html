@@ -68,13 +68,13 @@
           <i data-lucide="calendar" class="w-3 h-3 opacity-70 group-hover:opacity-100 transition"></i>
         </button>
         <span class="hidden sm:inline text-slate-600">|</span>
-        <span class="hidden sm:inline flex items-center gap-1 text-slate-300">
-          <i data-lucide="truck" class="w-3.5 h-3.5 text-slate-400"></i>
-          Envíos urbanos en el día
-        </span>
+        <a href="https://maps.google.com/?q=Av.+Br%C3%ADgido+Ter%C3%A1n+111,+San+Miguel+de+Tucum%C3%A1n" target="_blank" class="hover:text-emerald-400 text-slate-300 flex items-center gap-1 transition" title="Ver ubicación en Google Maps">
+          <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>Av. Brígido Terán 111, Tucumán</span>
+        </a>
         <span class="hidden md:inline text-slate-600">|</span>
         <span class="hidden md:inline text-slate-300">
-          🛡️ Dirección Técnica Farmacéutica • MP 14.820
+          🛡️ MP 14.820
         </span>
       </div>
 
@@ -108,7 +108,10 @@
             <span class="text-xl font-extrabold tracking-tight text-slate-900 leading-none">FARMACIA</span>
             <span class="text-xl font-black tracking-tight text-emerald-700 leading-none">TORRES</span>
           </div>
-          <p class="text-[10px] font-semibold text-slate-400 tracking-wider uppercase mt-0.5">Salud • Genéricos • Obras Sociales</p>
+          <p class="text-[10px] font-semibold text-slate-500 flex items-center gap-1 mt-0.5">
+            <i data-lucide="map-pin" class="w-3 h-3 text-emerald-600 shrink-0"></i>
+            <span>Av. Brígido Terán 111 • S. M. de Tucumán</span>
+          </p>
         </div>
       </a>
 
@@ -504,7 +507,7 @@
         <ul class="space-y-2 text-[11px]">
           <li>⏰ Lunes a Sábados: 8:30 a 21:00 hs continuado</li>
           <li>🚨 Urgencias de Turno: Guardia 24 hs según cronograma</li>
-          <li>📍 Av. San Martín 1420 (frente a la plaza central)</li>
+          <li><a href="https://maps.google.com/?q=Av.+Br%C3%ADgido+Ter%C3%A1n+111,+San+Miguel+de+Tucum%C3%A1n" target="_blank" class="hover:text-emerald-400 transition flex items-center gap-1.5" title="Abrir en Google Maps"><span>📍 Av. Brígido Terán 111, S. M. de Tucumán</span> <span class="text-[10px] text-emerald-400 font-bold underline">(Ver mapa)</span></a></li>
           <li>🛵 Envíos a domicilio en 45 minutos</li>
         </ul>
       </div>
@@ -793,7 +796,7 @@
       <div class="p-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-500">
         <div class="flex items-center gap-1.5 font-medium">
           <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-          <span>Farmacia Torres • Av. San Martín 1420</span>
+          <span>Farmacia Torres • Av. Brígido Terán 111</span>
         </div>
         <button onclick="toggleModalTurnos()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-4 py-1.5 rounded-xl transition">
           Cerrar
@@ -938,7 +941,7 @@
         diaIndex: 6, // Sábado
         diaNombre: 'Sábado',
         farmacia: 'Farmacia Torres (Esta Farmacia)',
-        direccion: 'Av. San Martín 1420 (Frente a Plaza Central)',
+        direccion: 'Av. Brígido Terán 111 (San Miguel de Tucumán)',
         telefono: '(0381) 685-8001',
         esNuestra: true
       },

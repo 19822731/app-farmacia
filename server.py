@@ -890,7 +890,7 @@ async def procesar_mensaje_chatbot(sender: str, texto_usuario: str, push_name: s
         elif texto_lower in ["4", "horario", "horarios", "ubicacion", "ubicación", "direccion", "dirección", "donde"]:
             return (
                 f"📍 *Farmacia Torres - Casa Central*\n"
-                f"Av. San Martín 1420 (frente a la plaza central)\n\n"
+                f"Av. Brígido Terán 111, San Miguel de Tucumán\n\n"
                 f"⏰ *Horarios:* Lunes a Sábados de 8:30 a 21:00 hs (Atendemos urgencias de turno).\n"
                 f"🛵 *Envíos a domicilio:* Sí, dentro del radio urbano.\n"
                 f"💳 *Medios de pago:* Efectivo, Débito, Transferencia y Obras Sociales.\n\n"
@@ -951,7 +951,7 @@ async def procesar_mensaje_chatbot(sender: str, texto_usuario: str, push_name: s
             return (
                 f"📦 Has seleccionado: *{elegido['nombre_comercial']}* (${elegido['precio']:,.0f}).\n\n"
                 f"¿Cómo deseas recibir tu pedido?\n"
-                f"1️⃣ Retiro en Mostrador (Av. San Martín 1420)\n"
+                f"1️⃣ Retiro en Mostrador (Av. Brígido Terán 111)\n"
                 f"2️⃣ Envío a Domicilio\n"
                 f"3️⃣ Cancelar y volver al menú\n\n"
                 f"_Responde con 1, 2 o 3._"
@@ -971,7 +971,7 @@ async def procesar_mensaje_chatbot(sender: str, texto_usuario: str, push_name: s
                 f"✅ *Excelente elección de ahorro.*\n"
                 f"Vas a encargar: *{gen['nombre_comercial']}* por *${gen['precio']:,.0f}*.\n\n"
                 f"¿Cómo deseas recibir tu pedido?\n"
-                f"1️⃣ Retiro en Mostrador (Av. San Martín 1420)\n"
+                f"1️⃣ Retiro en Mostrador (Av. Brígido Terán 111)\n"
                 f"2️⃣ Envío a Domicilio\n"
                 f"3️⃣ Cancelar y volver al menú\n\n"
                 f"_Responde con 1, 2 o 3._"
@@ -982,7 +982,7 @@ async def procesar_mensaje_chatbot(sender: str, texto_usuario: str, push_name: s
             return (
                 f"🏷️ Vas a encargar la marca líder: *{marca['nombre_comercial']}* por *${marca['precio']:,.0f}*.\n\n"
                 f"¿Cómo deseas recibir tu pedido?\n"
-                f"1️⃣ Retiro en Mostrador (Av. San Martín 1420)\n"
+                f"1️⃣ Retiro en Mostrador (Av. Brígido Terán 111)\n"
                 f"2️⃣ Envío a Domicilio\n"
                 f"3️⃣ Cancelar y volver al menú\n\n"
                 f"_Responde con 1, 2 o 3._"
@@ -1004,7 +1004,7 @@ async def procesar_mensaje_chatbot(sender: str, texto_usuario: str, push_name: s
             return (
                 f"📦 Vas a encargar: *{elegido['nombre_comercial']}* (${elegido['precio']:,.0f}).\n\n"
                 f"¿Cómo deseas recibir tu pedido?\n"
-                f"1️⃣ Retiro en Mostrador (Av. San Martín 1420)\n"
+                f"1️⃣ Retiro en Mostrador (Av. Brígido Terán 111)\n"
                 f"2️⃣ Envío a Domicilio\n"
                 f"3️⃣ Cancelar y volver al menú\n\n"
                 f"_Responde con 1, 2 o 3._"
