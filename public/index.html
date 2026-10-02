@@ -183,17 +183,17 @@
     <!-- Sub-Navbar de Categorías (Estilo Farmacity / Cruz Verde) -->
     <div class="border-t border-slate-100 bg-slate-50/80">
       <div class="max-w-7xl mx-auto px-4 flex items-center gap-1 overflow-x-auto py-2 text-xs font-semibold text-slate-600">
-        <button onclick="filtrarCategoria('todas')" class="cat-btn px-3 py-1.5 rounded-xl bg-slate-900 text-white whitespace-nowrap shadow-sm">Todos los Medicamentos</button>
-        <button onclick="filtrarCategoria('genericos')" class="cat-btn px-3 py-1.5 rounded-xl bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold whitespace-nowrap hover:bg-emerald-200">🟢 Genéricos de Ahorro</button>
-        <button onclick="filtrarCategoria('Vitaminas')" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 whitespace-nowrap">Vitaminas</button>
-        <button onclick="filtrarCategoria('Suplementos')" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 whitespace-nowrap">Suplementos</button>
-        <button onclick="filtrarCategoria('Falta de Sueño')" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 whitespace-nowrap">Sueño & Descanso</button>
-        <button onclick="filtrarCategoria('Analgésicos y Antifebriles')" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 whitespace-nowrap">Analgésicos</button>
-        <button onclick="filtrarCategoria('Antiinflamatorios y Analgésicos')" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 whitespace-nowrap">Antiinflamatorios</button>
-        <button onclick="filtrarCategoria('Antiespasmódicos / Digestivos')" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 whitespace-nowrap">Digestivos</button>
-        <button onclick="filtrarCategoria('Respiratorio')" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 whitespace-nowrap">Respiratorio</button>
-        <button onclick="filtrarCategoria('Antibióticos')" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 whitespace-nowrap">Antibióticos</button>
-        <button onclick="filtrarCategoria('Cardiovascular / Presión')" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 whitespace-nowrap">Cardiovascular</button>
+        <button onclick="filtrarCategoria('todas', this)" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 whitespace-nowrap shadow-sm transition active:scale-95">Todos los Medicamentos</button>
+        <button onclick="filtrarCategoria('genericos', this)" class="cat-btn px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-900 border border-emerald-300 font-bold whitespace-nowrap hover:bg-emerald-100 transition active:scale-95">🟢 Genéricos de Ahorro</button>
+        <button onclick="filtrarCategoria('Vitaminas', this)" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 whitespace-nowrap transition active:scale-95">Vitaminas</button>
+        <button onclick="filtrarCategoria('Suplementos', this)" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 whitespace-nowrap transition active:scale-95">Suplementos</button>
+        <button onclick="filtrarCategoria('Falta de Sueño', this)" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 whitespace-nowrap transition active:scale-95">Sueño & Descanso</button>
+        <button onclick="filtrarCategoria('Analgésicos y Antifebriles', this)" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 whitespace-nowrap transition active:scale-95">Analgésicos</button>
+        <button onclick="filtrarCategoria('Antiinflamatorios y Analgésicos', this)" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 whitespace-nowrap transition active:scale-95">Antiinflamatorios</button>
+        <button onclick="filtrarCategoria('Antiespasmódicos / Digestivos', this)" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 whitespace-nowrap transition active:scale-95">Digestivos</button>
+        <button onclick="filtrarCategoria('Respiratorio', this)" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 whitespace-nowrap transition active:scale-95">Respiratorio</button>
+        <button onclick="filtrarCategoria('Antibióticos', this)" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 whitespace-nowrap transition active:scale-95">Antibióticos</button>
+        <button onclick="filtrarCategoria('Cardiovascular / Presión', this)" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 whitespace-nowrap transition active:scale-95">Cardiovascular</button>
       </div>
     </div>
   </header>
@@ -434,23 +434,29 @@
           Usá el buscador de arriba o seleccioná una categoría para ver nuestro catálogo con precios, genéricos de ahorro y stock disponible.
         </p>
         <div class="flex flex-wrap items-center justify-center gap-2 pt-2">
-          <span class="text-[10px] sm:text-[11px] font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full">💊 Paracetamol</span>
-          <span class="text-[10px] sm:text-[11px] font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full">💉 Ibuprofeno</span>
-          <span class="text-[10px] sm:text-[11px] font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full">🧬 Amoxicilina</span>
-          <span class="text-[10px] sm:text-[11px] font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200">🟢 Genéricos</span>
+          <button onclick="buscarDesdeChip('Paracetamol')" class="text-[11px] sm:text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200/80 px-3.5 py-1.5 rounded-full transition active:scale-95 shadow-sm flex items-center gap-1">💊 <span>Paracetamol</span></button>
+          <button onclick="buscarDesdeChip('Ibuprofeno')" class="text-[11px] sm:text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200/80 px-3.5 py-1.5 rounded-full transition active:scale-95 shadow-sm flex items-center gap-1">💉 <span>Ibuprofeno</span></button>
+          <button onclick="buscarDesdeChip('Amoxicilina')" class="text-[11px] sm:text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-200/80 px-3.5 py-1.5 rounded-full transition active:scale-95 shadow-sm flex items-center gap-1">🧬 <span>Amoxicilina</span></button>
+          <button onclick="buscarDesdeChip('genericos')" class="text-[11px] sm:text-xs font-black text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 px-3.5 py-1.5 rounded-full transition active:scale-95 shadow-sm flex items-center gap-1">🟢 <span>Genéricos Ahorro</span></button>
         </div>
       </div>
 
       <!-- Contenedor del catálogo (oculto por defecto, se muestra al buscar o filtrar) -->
       <div id="catalogo-contenido" class="hidden space-y-4">
-        <div class="flex items-center justify-between border-b border-slate-200/80 pb-3">
+        <div class="flex items-center justify-between border-b border-slate-200/80 pb-3 flex-wrap gap-2">
           <div>
             <h3 id="titulo-seccion-catalogo" class="text-base sm:text-lg font-black text-slate-900">Catálogo Farmacéutico</h3>
             <p id="subtitulo-seccion-catalogo" class="text-[11px] sm:text-xs text-slate-500 font-medium">Listado oficial de medicamentos con stock verificado en mostrador</p>
           </div>
-          <span id="contador-productos" class="text-[11px] sm:text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-full whitespace-nowrap">
-            Cargando catálogo...
-          </span>
+          <div class="flex items-center gap-2">
+            <span id="contador-productos" class="text-[11px] sm:text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-full whitespace-nowrap">
+              Cargando catálogo...
+            </span>
+            <button onclick="ocultarCatalogo()" class="text-[11px] sm:text-xs font-bold text-slate-500 hover:text-slate-800 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-2.5 py-1 rounded-xl transition flex items-center gap-1 active:scale-95" title="Ocultar listado para limpiar la pantalla">
+              <i data-lucide="eye-off" class="w-3.5 h-3.5"></i>
+              <span>Ocultar</span>
+            </button>
+          </div>
         </div>
 
         <!-- Grilla de Medicamentos (Responsive optimizado para móviles) -->
@@ -726,14 +732,18 @@
     }
   </script>
 
-  <!-- Botón Flotante Principal (FAB) -->
+  <!-- Botón Flotante Principal (FAB) WhatsApp Ultra-Visible -->
   <button 
     onclick="manejarClickWhatsApp()" 
-    class="fixed bottom-6 right-6 bg-emerald-600 hover:bg-emerald-700 text-white p-3.5 rounded-full shadow-2xl hover:scale-105 transition-all z-40 flex items-center space-x-2 border-2 border-white group"
+    class="fixed bottom-5 right-4 sm:bottom-6 sm:right-6 bg-[#25D366] hover:bg-[#20ba5a] text-slate-950 font-black px-4 py-3 rounded-full shadow-2xl shadow-emerald-950/40 hover:scale-105 transition-all z-50 flex items-center space-x-2 border-2 border-white ring-4 ring-emerald-500/20 active:scale-95 group"
     title="Hablar con Farmacia Torres por WhatsApp"
   >
-    <i data-lucide="message-circle" class="w-6 h-6"></i>
-    <span class="text-xs font-extrabold pr-1 hidden sm:inline">WhatsApp</span>
+    <span class="relative flex h-3 w-3">
+      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-slate-950 opacity-40"></span>
+      <span class="relative inline-flex rounded-full h-3 w-3 bg-slate-950"></span>
+    </span>
+    <i data-lucide="message-circle" class="w-5 h-5 text-slate-950 fill-slate-950"></i>
+    <span class="text-xs font-black tracking-wide pr-0.5 text-slate-950">WhatsApp</span>
   </button>
 
   <!-- =========================================================================
@@ -1091,12 +1101,77 @@
     let carrito = {};
     let catalogoVisible = false;
 
-    function mostrarCatalogo() {
+    // Normalizador de texto para búsquedas insensibles a mayúsculas y tildes
+    function normalizarTexto(txt) {
+      if (!txt) return '';
+      return String(txt)
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim();
+    }
+
+    // Buscador local inteligente y multi-criterio (0ms de latencia, 100% compatible con Vercel)
+    function buscarMedicamentosLocal(query) {
+      const qNorm = normalizarTexto(query);
+      if (!qNorm) return [];
+
+      // Filtros rápidos directos
+      if (qNorm === 'generico' || qNorm === 'genericos') {
+        return medicamentos.filter(m => m.es_generico);
+      }
+      if (qNorm === 'receta' || qNorm === 'bajo receta') {
+        return medicamentos.filter(m => m.requiere_receta);
+      }
+      if (qNorm === 'venta libre' || qNorm === 'libre') {
+        return medicamentos.filter(m => !m.requiere_receta);
+      }
+
+      // Expansión semántica para malestares comunes
+      let terminosExtra = [];
+      if (qNorm.includes('gripe') || qNorm.includes('resfr') || qNorm.includes('fiebre') || qNorm.includes('congestion')) {
+        terminosExtra.push('paracetamol', 'antifebril', 'respiratorio', 'salbutamol');
+      }
+      if (qNorm.includes('dolor') || qNorm.includes('cabeza') || qNorm.includes('migran')) {
+        terminosExtra.push('analgesico', 'paracetamol', 'ibuprofeno', 'antifebril');
+      }
+      if (qNorm.includes('panza') || qNorm.includes('estomago') || qNorm.includes('acidez') || qNorm.includes('gastrit')) {
+        terminosExtra.push('digestivo', 'omeprazol', 'gastro', 'antiespasmodico');
+      }
+      if (qNorm.includes('sueno') || qNorm.includes('dormir') || qNorm.includes('insomnio') || qNorm.includes('descanso')) {
+        terminosExtra.push('melatonina', 'sueno');
+      }
+
+      const palabras = qNorm.split(/\s+/).filter(Boolean);
+
+      return medicamentos.filter(m => {
+        const textoCompleto = normalizarTexto([
+          m.nombre_comercial,
+          m.principio_activo,
+          m.categoria,
+          m.indicacion,
+          m.laboratorio,
+          m.concentracion
+        ].join(' '));
+
+        const coincidePalabras = palabras.every(p => textoCompleto.includes(p));
+        if (coincidePalabras) return true;
+
+        return terminosExtra.some(t => textoCompleto.includes(t));
+      });
+    }
+
+    function mostrarCatalogo(hacerScroll = false) {
       const placeholder = document.getElementById('catalogo-placeholder');
       const contenido = document.getElementById('catalogo-contenido');
       if (placeholder) placeholder.classList.add('hidden');
       if (contenido) contenido.classList.remove('hidden');
       catalogoVisible = true;
+      if (hacerScroll && contenido) {
+        setTimeout(() => {
+          contenido.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 50);
+      }
     }
 
     function ocultarCatalogo() {
@@ -1105,27 +1180,58 @@
       if (placeholder) placeholder.classList.remove('hidden');
       if (contenido) contenido.classList.add('hidden');
       catalogoVisible = false;
+
+      // Desmarcar categorías
+      document.querySelectorAll('.cat-btn').forEach(b => {
+        b.classList.remove('bg-slate-900', 'text-white', 'border-slate-900');
+        b.classList.add('bg-white', 'text-slate-700', 'border-slate-200');
+      });
+
+      // Desmarcar tarjetas de síntoma
+      document.querySelectorAll('.sintoma-card').forEach(c => {
+        c.classList.remove('ring-2', 'ring-emerald-600', 'border-emerald-600', 'bg-emerald-50/50');
+      });
+
+      // Limpiar inputs
+      const inDesk = document.getElementById('input-busqueda');
+      const inMob = document.getElementById('input-busqueda-mob');
+      if (inDesk) inDesk.value = '';
+      if (inMob) inMob.value = '';
+    }
+
+    function buscarDesdeChip(termino) {
+      const inDesk = document.getElementById('input-busqueda');
+      const inMob = document.getElementById('input-busqueda-mob');
+      if (inDesk) inDesk.value = termino;
+      if (inMob) inMob.value = termino;
+      ejecutarBusqueda(termino);
+      mostrarCatalogo(true);
     }
 
     // Cargar catálogo inicial (con fallback estático para Vercel)
-    // Solo precarga los datos en memoria — NO muestra el catálogo aún
     async function cargarMedicamentos() {
       try {
         const res = await fetch('/api/medicamentos');
         if (!res.ok) throw new Error('API no disponible');
         medicamentos = await res.json();
-        // Actualizar contador sin mostrar catálogo
-        const contador = document.getElementById('contador-productos');
-        if (contador) contador.innerText = `${medicamentos.length} disponibles`;
       } catch (err) {
         try {
           const resFallback = await fetch('/data/medicamentos.json');
+          if (!resFallback.ok) throw new Error('Fallback no disponible');
           medicamentos = await resFallback.json();
-          const contador = document.getElementById('contador-productos');
-          if (contador) contador.innerText = `${medicamentos.length} disponibles`;
         } catch (e2) {
           console.error('Error cargando medicamentos:', e2);
         }
+      }
+      const contador = document.getElementById('contador-productos');
+      if (contador && medicamentos.length > 0) {
+        contador.innerText = `${medicamentos.length} disponibles`;
+      }
+    }
+
+    async function asegurarMedicamentosCargados() {
+      if (!medicamentos || medicamentos.length === 0) {
+        await cargarMedicamentos();
       }
     }
 
@@ -1268,60 +1374,77 @@
       }
     }
 
-    // Buscador con debounce
+    // Buscador instantáneo con sincronización desktop/móvil
     let timerBusqueda;
-    function ejecutarBusqueda(query) {
+    async function ejecutarBusqueda(query) {
       clearTimeout(timerBusqueda);
-      if (!query || query.length < 2) {
+      
+      const inDesk = document.getElementById('input-busqueda');
+      const inMob = document.getElementById('input-busqueda-mob');
+      if (inDesk && inDesk.value !== query) inDesk.value = query;
+      if (inMob && inMob.value !== query) inMob.value = query;
+
+      const qLimpio = normalizarTexto(query);
+
+      if (!qLimpio) {
         ocultarCatalogo();
         return;
       }
-      timerBusqueda = setTimeout(async () => {
-        try {
-          const res = await fetch(`/api/medicamentos/buscar?q=${encodeURIComponent(query)}`);
-          const data = await res.json();
-          mostrarCatalogo();
-          renderMedicamentos(data);
-        } catch (e) {
-          // Fallback: filtrar localmente
-          const q = query.toLowerCase();
-          const filtrados = medicamentos.filter(m =>
-            m.nombre_comercial.toLowerCase().includes(q) ||
-            m.principio_activo.toLowerCase().includes(q) ||
-            (m.indicacion && m.indicacion.toLowerCase().includes(q))
-          );
-          mostrarCatalogo();
-          renderMedicamentos(filtrados);
-        }
-      }, 200);
+
+      await asegurarMedicamentosCargados();
+      mostrarCatalogo(false);
+
+      // Desmarcar categorías
+      document.querySelectorAll('.cat-btn').forEach(b => {
+        b.classList.remove('bg-slate-900', 'text-white', 'border-slate-900');
+        b.classList.add('bg-white', 'text-slate-700', 'border-slate-200');
+      });
+
+      // Búsqueda local instantánea (0ms, 100% confiable y sin 404s en Vercel)
+      const filtrados = buscarMedicamentosLocal(qLimpio);
+      renderMedicamentos(filtrados);
     }
 
     // Filtros de categoría del Navbar
-    function filtrarCategoria(cat) {
+    async function filtrarCategoria(cat, btnEl) {
+      await asegurarMedicamentosCargados();
       limpiarFiltrosSintomas(false);
-      mostrarCatalogo();
+      mostrarCatalogo(true);
+
       document.querySelectorAll('.cat-btn').forEach(b => {
-        b.classList.remove('bg-slate-900', 'text-white');
-        b.classList.add('bg-white', 'text-slate-600');
+        b.classList.remove('bg-slate-900', 'text-white', 'border-slate-900');
+        b.classList.add('bg-white', 'text-slate-700', 'border-slate-200');
       });
-      if (event && event.target) {
-        event.target.classList.remove('bg-white', 'text-slate-600');
-        event.target.classList.add('bg-slate-900', 'text-white');
+      if (btnEl) {
+        btnEl.classList.remove('bg-white', 'text-slate-700', 'border-slate-200');
+        btnEl.classList.add('bg-slate-900', 'text-white', 'border-slate-900');
       }
 
+      // Limpiar inputs de búsqueda
+      const inDesk = document.getElementById('input-busqueda');
+      const inMob = document.getElementById('input-busqueda-mob');
+      if (inDesk) inDesk.value = '';
+      if (inMob) inMob.value = '';
+
+      let filtrados = [];
       if (cat === 'todas') {
-        renderMedicamentos(medicamentos);
+        filtrados = medicamentos;
       } else if (cat === 'genericos') {
-        const filtrados = medicamentos.filter(m => m.es_generico);
-        renderMedicamentos(filtrados);
+        filtrados = medicamentos.filter(m => m.es_generico);
       } else {
-        const filtrados = medicamentos.filter(m => m.categoria === cat);
-        renderMedicamentos(filtrados);
+        const catNorm = normalizarTexto(cat);
+        filtrados = medicamentos.filter(m => normalizarTexto(m.categoria).includes(catNorm));
       }
+      renderMedicamentos(filtrados);
     }
 
     // Filtrar por Síntoma / Necesidad (Sección Farmacity)
-    function filtrarPorSintoma(tipo) {
+    async function filtrarPorSintoma(tipo) {
+      await asegurarMedicamentosCargados();
+      document.querySelectorAll('.cat-btn').forEach(b => {
+        b.classList.remove('bg-slate-900', 'text-white', 'border-slate-900');
+        b.classList.add('bg-white', 'text-slate-700', 'border-slate-200');
+      });
       document.querySelectorAll('.sintoma-card').forEach(c => {
         c.classList.remove('ring-2', 'ring-emerald-600', 'border-emerald-600', 'bg-emerald-50/50');
       });
@@ -1336,58 +1459,54 @@
         btnVerTodos.classList.add('inline-flex');
       }
 
-      mostrarCatalogo();
+      mostrarCatalogo(true);
 
       let filtrados = [];
       if (tipo === 'gripe') {
         filtrados = medicamentos.filter(m => 
-          m.categoria.includes('Respiratorio') || 
-          (m.indicacion && (m.indicacion.toLowerCase().includes('resfr') || m.indicacion.toLowerCase().includes('gripe'))) ||
-          m.nombre_comercial.toLowerCase().includes('paracetamol')
+          normalizarTexto(m.categoria).includes('respiratorio') || 
+          (m.indicacion && (normalizarTexto(m.indicacion).includes('resfr') || normalizarTexto(m.indicacion).includes('gripe') || normalizarTexto(m.indicacion).includes('febril') || normalizarTexto(m.indicacion).includes('fiebre'))) ||
+          normalizarTexto(m.nombre_comercial).includes('paracetamol') ||
+          normalizarTexto(m.principio_activo).includes('paracetamol')
         );
       } else if (tipo === 'cabeza') {
         filtrados = medicamentos.filter(m => 
-          m.categoria.includes('Analgésicos') || 
-          m.categoria.includes('Antiinflamatorios') ||
-          (m.indicacion && m.indicacion.toLowerCase().includes('cabeza'))
+          normalizarTexto(m.categoria).includes('analgesico') || 
+          normalizarTexto(m.categoria).includes('antiinflamatorio') ||
+          (m.indicacion && normalizarTexto(m.indicacion).includes('cabeza'))
         );
       } else if (tipo === 'panza') {
         filtrados = medicamentos.filter(m => 
-          m.categoria.includes('Digestivos') || 
-          m.categoria.includes('Gastroenterología') ||
-          (m.indicacion && (m.indicacion.toLowerCase().includes('panza') || m.indicacion.toLowerCase().includes('cólic') || m.indicacion.toLowerCase().includes('gástrico') || m.indicacion.toLowerCase().includes('acidez')))
+          normalizarTexto(m.categoria).includes('digestivo') || 
+          normalizarTexto(m.categoria).includes('gastro') || 
+          (m.indicacion && (normalizarTexto(m.indicacion).includes('panza') || normalizarTexto(m.indicacion).includes('colic') || normalizarTexto(m.indicacion).includes('gastric') || normalizarTexto(m.indicacion).includes('acidez') || normalizarTexto(m.indicacion).includes('digestiv')))
         );
       } else if (tipo === 'alergias') {
         filtrados = medicamentos.filter(m => 
-          m.categoria.includes('Antialérgicos') || 
-          (m.indicacion && m.indicacion.toLowerCase().includes('alerg'))
+          normalizarTexto(m.categoria).includes('antialerg') || 
+          (m.indicacion && normalizarTexto(m.indicacion).includes('alerg'))
         );
       } else if (tipo === 'sueno') {
         filtrados = medicamentos.filter(m => 
-          m.categoria.includes('Sueño') || 
-          (m.indicacion && (m.indicacion.toLowerCase().includes('sueño') || m.indicacion.toLowerCase().includes('insomnio') || m.indicacion.toLowerCase().includes('descanso')))
+          normalizarTexto(m.categoria).includes('sueno') || 
+          (m.indicacion && (normalizarTexto(m.indicacion).includes('sueno') || normalizarTexto(m.indicacion).includes('insomnio') || normalizarTexto(m.indicacion).includes('descanso')))
         );
       } else if (tipo === 'vitaminas') {
         filtrados = medicamentos.filter(m => 
-          m.categoria.includes('Vitaminas') || 
-          m.nombre_comercial.toLowerCase().includes('vitamina') ||
-          m.principio_activo.toLowerCase().includes('vitamina') ||
-          m.principio_activo.toLowerCase().includes('ascórbico')
+          normalizarTexto(m.categoria).includes('vitamina') || 
+          normalizarTexto(m.nombre_comercial).includes('vitamina') ||
+          normalizarTexto(m.principio_activo).includes('vitamina') ||
+          normalizarTexto(m.principio_activo).includes('ascorbico')
         );
       } else if (tipo === 'suplementos') {
         filtrados = medicamentos.filter(m => 
-          m.categoria.includes('Suplementos') || 
-          m.nombre_comercial.toLowerCase().includes('magnes') ||
-          m.principio_activo.toLowerCase().includes('magnes')
+          normalizarTexto(m.categoria).includes('suplemento') || 
+          normalizarTexto(m.nombre_comercial).includes('magnes') ||
+          normalizarTexto(m.principio_activo).includes('magnes')
         );
       }
 
       renderMedicamentos(filtrados.length > 0 ? filtrados : medicamentos);
-
-      const grid = document.getElementById('grid-medicamentos');
-      if (grid) {
-        grid.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
     }
 
     function limpiarFiltrosSintomas(reRender = true) {
@@ -1400,7 +1519,8 @@
         btnVerTodos.classList.remove('inline-flex');
       }
       if (reRender) {
-        ocultarCatalogo();
+        mostrarCatalogo(true);
+        renderMedicamentos(medicamentos);
       }
     }
 

@@ -3,6 +3,25 @@
 > Registro de todos los cambios realizados en el proyecto.  
 > Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [2.5.1] — 2026-10-02 (Buscador Multi-Criterio, Filtros Cross-Browser y Botón WhatsApp Ultra-Visible)
+
+### 🔍 Buscador Inteligente Local (0ms de latencia, 100% Vercel)
+- **Normalización de acentos y tildes:** Búsquedas insensibles a mayúsculas, minúsculas y tildes (`analgésico` = `analgesico`, `sueño` = `sueno`).
+- **Búsqueda multi-palabra y multi-campo:** Busca simultáneamente por nombre comercial, principio activo, categoría, indicación médica, laboratorio y concentración.
+- **Sinónimos y malestares clínicos integrados:** Búsquedas como `"gripe"`, `"dolor de cabeza"`, `"panza"`, `"acidez"`, `"dormir"` mapean con precisión a medicamentos relevantes.
+- **Filtros rápidos directos:** `"generico"`, `"receta"`, `"venta libre"`.
+- **Chips sugeridos interactivos:** Los botones de sugerencia (`💊 Paracetamol`, `💉 Ibuprofeno`, `🧬 Amoxicilina`, `🟢 Genéricos Ahorro`) ahora son botones interactivos que lanzan la búsqueda instantáneamente con scroll automático.
+
+### 🛡️ Compatibilidad Total Cross-Browser (Safari, iOS, Firefox, Chrome)
+- **Eliminado ReferenceError de `window.event`:** Las funciones de filtrado ahora reciben `this` directamente (`filtrarCategoria(cat, this)`), eliminando el fallo en Safari/iOS y Firefox que congelaba los botones al hacer clic.
+- **Scroll suave automático:** Al seleccionar cualquier categoría o síntoma, la página realiza un scroll suave hacia el catálogo, asegurando que en pantallas móviles el usuario vea los medicamentos de inmediato.
+- **Botón "Ocultar listado":** Permite al usuario colapsar el catálogo en cualquier momento con un solo toque.
+
+### 📱 Responsividad y Botón Flotante de WhatsApp
+- **Botón WhatsApp Ultra-Visible:** Estilizado con verde oficial `#25D366`, pulso animado de disponibilidad 24hs, contraste elevado, etiqueta legible en móviles y escritorio, y capa superior `z-50` para evitar solapamientos con barras de navegación móviles.
+
+---
+
 ## [2.5.0] — 2026-10-02 (Catálogo Bajo Demanda + Correcciones Críticas)
 
 ### 🎯 Catálogo Bajo Demanda (UX Limpia)
