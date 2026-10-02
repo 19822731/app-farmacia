@@ -424,30 +424,46 @@
         </button>
       </div>
 
-      <div class="flex items-center justify-between border-b border-slate-200/80 pb-3">
-        <div>
-          <h3 id="titulo-seccion-catalogo" class="text-base sm:text-lg font-black text-slate-900">Catálogo Farmacéutico</h3>
-          <p id="subtitulo-seccion-catalogo" class="text-[11px] sm:text-xs text-slate-500 font-medium">Listado oficial de medicamentos con stock verificado en mostrador</p>
+      <!-- Mensaje invitación a buscar (visible cuando el catálogo está oculto) -->
+      <div id="catalogo-placeholder" class="bg-white border border-slate-200/80 rounded-3xl text-center py-12 sm:py-16 px-6 space-y-4">
+        <div class="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center mx-auto">
+          <i data-lucide="search" class="w-8 h-8 text-emerald-600"></i>
         </div>
-        <span id="contador-productos" class="text-[11px] sm:text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-full whitespace-nowrap">
-          Cargando catálogo...
-        </span>
+        <h4 class="font-extrabold text-slate-800 text-base sm:text-lg">Buscá tu medicamento</h4>
+        <p class="text-xs sm:text-sm text-slate-500 max-w-md mx-auto leading-relaxed">
+          Usá el buscador de arriba o seleccioná una categoría para ver nuestro catálogo con precios, genéricos de ahorro y stock disponible.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-2 pt-2">
+          <span class="text-[10px] sm:text-[11px] font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full">💊 Paracetamol</span>
+          <span class="text-[10px] sm:text-[11px] font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full">💉 Ibuprofeno</span>
+          <span class="text-[10px] sm:text-[11px] font-bold text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full">🧬 Amoxicilina</span>
+          <span class="text-[10px] sm:text-[11px] font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-full border border-emerald-200">🟢 Genéricos</span>
+        </div>
       </div>
 
-      <!-- Grilla de Medicamentos (Responsive optimizado para móviles) -->
-      <div id="grid-medicamentos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-        <div class="col-span-full text-center py-16 text-slate-400">
-          <i data-lucide="loader-2" class="w-8 h-8 animate-spin mx-auto mb-2 text-emerald-600"></i>
-          Cargando medicamentos en mostrador...
+      <!-- Contenedor del catálogo (oculto por defecto, se muestra al buscar o filtrar) -->
+      <div id="catalogo-contenido" class="hidden space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-200/80 pb-3">
+          <div>
+            <h3 id="titulo-seccion-catalogo" class="text-base sm:text-lg font-black text-slate-900">Catálogo Farmacéutico</h3>
+            <p id="subtitulo-seccion-catalogo" class="text-[11px] sm:text-xs text-slate-500 font-medium">Listado oficial de medicamentos con stock verificado en mostrador</p>
+          </div>
+          <span id="contador-productos" class="text-[11px] sm:text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1 rounded-full whitespace-nowrap">
+            Cargando catálogo...
+          </span>
         </div>
-      </div>
 
-      <!-- Botón Cargar Más Productos (Evita scroll infinito en móviles) -->
-      <div id="container-cargar-mas" class="mt-6 text-center hidden">
-        <button onclick="cargarMasMedicamentos()" class="w-full sm:w-auto bg-white hover:bg-slate-50 text-slate-800 font-extrabold px-8 py-3.5 rounded-2xl border border-slate-200 shadow-sm hover:shadow transition text-xs sm:text-sm inline-flex items-center justify-center space-x-2 active:scale-95">
-          <span>Ver más medicamentos</span>
-          <span id="badge-quedan" class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full font-black"></span>
-        </button>
+        <!-- Grilla de Medicamentos (Responsive optimizado para móviles) -->
+        <div id="grid-medicamentos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        </div>
+
+        <!-- Botón Cargar Más Productos (Evita scroll infinito en móviles) -->
+        <div id="container-cargar-mas" class="mt-6 text-center hidden">
+          <button onclick="cargarMasMedicamentos()" class="w-full sm:w-auto bg-white hover:bg-slate-50 text-slate-800 font-extrabold px-8 py-3.5 rounded-2xl border border-slate-200 shadow-sm hover:shadow transition text-xs sm:text-sm inline-flex items-center justify-center space-x-2 active:scale-95">
+            <span>Ver más medicamentos</span>
+            <span id="badge-quedan" class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded-full font-black"></span>
+          </button>
+        </div>
       </div>
     </section>
 
@@ -1073,26 +1089,42 @@
 
     let medicamentos = [];
     let carrito = {};
+    let catalogoVisible = false;
+
+    function mostrarCatalogo() {
+      const placeholder = document.getElementById('catalogo-placeholder');
+      const contenido = document.getElementById('catalogo-contenido');
+      if (placeholder) placeholder.classList.add('hidden');
+      if (contenido) contenido.classList.remove('hidden');
+      catalogoVisible = true;
+    }
+
+    function ocultarCatalogo() {
+      const placeholder = document.getElementById('catalogo-placeholder');
+      const contenido = document.getElementById('catalogo-contenido');
+      if (placeholder) placeholder.classList.remove('hidden');
+      if (contenido) contenido.classList.add('hidden');
+      catalogoVisible = false;
+    }
 
     // Cargar catálogo inicial (con fallback estático para Vercel)
+    // Solo precarga los datos en memoria — NO muestra el catálogo aún
     async function cargarMedicamentos() {
       try {
         const res = await fetch('/api/medicamentos');
         if (!res.ok) throw new Error('API no disponible');
         medicamentos = await res.json();
-        renderMedicamentos(medicamentos);
+        // Actualizar contador sin mostrar catálogo
+        const contador = document.getElementById('contador-productos');
+        if (contador) contador.innerText = `${medicamentos.length} disponibles`;
       } catch (err) {
         try {
           const resFallback = await fetch('/data/medicamentos.json');
           medicamentos = await resFallback.json();
-          renderMedicamentos(medicamentos);
+          const contador = document.getElementById('contador-productos');
+          if (contador) contador.innerText = `${medicamentos.length} disponibles`;
         } catch (e2) {
           console.error('Error cargando medicamentos:', e2);
-          document.getElementById('grid-medicamentos').innerHTML = `
-            <div class="col-span-full text-center py-10 text-red-500">
-              Error al conectar con la base de medicamentos.
-            </div>
-          `;
         }
       }
     }
@@ -1241,16 +1273,25 @@
     function ejecutarBusqueda(query) {
       clearTimeout(timerBusqueda);
       if (!query || query.length < 2) {
-        renderMedicamentos(medicamentos);
+        ocultarCatalogo();
         return;
       }
       timerBusqueda = setTimeout(async () => {
         try {
           const res = await fetch(`/api/medicamentos/buscar?q=${encodeURIComponent(query)}`);
           const data = await res.json();
+          mostrarCatalogo();
           renderMedicamentos(data);
         } catch (e) {
-          console.error(e);
+          // Fallback: filtrar localmente
+          const q = query.toLowerCase();
+          const filtrados = medicamentos.filter(m =>
+            m.nombre_comercial.toLowerCase().includes(q) ||
+            m.principio_activo.toLowerCase().includes(q) ||
+            (m.indicacion && m.indicacion.toLowerCase().includes(q))
+          );
+          mostrarCatalogo();
+          renderMedicamentos(filtrados);
         }
       }, 200);
     }
@@ -1258,6 +1299,7 @@
     // Filtros de categoría del Navbar
     function filtrarCategoria(cat) {
       limpiarFiltrosSintomas(false);
+      mostrarCatalogo();
       document.querySelectorAll('.cat-btn').forEach(b => {
         b.classList.remove('bg-slate-900', 'text-white');
         b.classList.add('bg-white', 'text-slate-600');
@@ -1293,6 +1335,8 @@
         btnVerTodos.classList.remove('hidden');
         btnVerTodos.classList.add('inline-flex');
       }
+
+      mostrarCatalogo();
 
       let filtrados = [];
       if (tipo === 'gripe') {
@@ -1355,7 +1399,9 @@
         btnVerTodos.classList.add('hidden');
         btnVerTodos.classList.remove('inline-flex');
       }
-      if (reRender) renderMedicamentos(medicamentos);
+      if (reRender) {
+        ocultarCatalogo();
+      }
     }
 
     // Modal de Receta

@@ -2,6 +2,25 @@
 
 > Registro de todos los cambios realizados en el proyecto.  
 > Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
+
+## [2.5.0] — 2026-10-02 (Catálogo Bajo Demanda + Correcciones Críticas)
+
+### 🎯 Catálogo Bajo Demanda (UX Limpia)
+- **Catálogo oculto por defecto:** La grilla de medicamentos ya NO se muestra al cargar la página, dejando la pantalla limpia y profesional.
+- **Placeholder informativo:** En lugar del listado, se muestra un mensaje invitando al usuario a buscar o seleccionar una categoría, con ejemplos de búsquedas populares.
+- **Se muestra al interactuar:** El catálogo aparece automáticamente cuando:
+  - El usuario escribe ≥2 caracteres en el buscador (desktop o móvil)
+  - El usuario hace clic en una categoría (Todos, Genéricos, Vitaminas, etc.)
+  - El usuario hace clic en una tarjeta de síntoma (Gripe, Dolor de cabeza, etc.)
+- **Se oculta al limpiar:** Al borrar la búsqueda o hacer clic en "Ver todos los productos", vuelve al estado limpio con el placeholder.
+
+### 🔧 Correcciones Críticas
+- **Fix tag `<script>` faltante:** Se restauró el tag `<script>` de apertura que fue eliminado accidentalmente durante la inserción del código de turnos/seguridad. Esto causaba que TODA la funcionalidad JavaScript fuera interpretada como texto.
+- **Buscador con fallback local:** Cuando la API de búsqueda no está disponible (Vercel), filtra localmente por nombre comercial, principio activo e indicación.
+- **Cierre `</section>` restaurado:** Se reparó el cierre de sección HTML del catálogo que se perdió durante la reestructuración.
+
+---
+
 ## [2.4.0] — 2026-10-01 (WhatsApp Real + Deploy Vercel)
 
 ### 📱 Botón Inteligente de WhatsApp
