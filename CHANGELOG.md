@@ -3,6 +3,16 @@
 > Registro de todos los cambios realizados en el proyecto.  
 > Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [2.5.2] — 2026-10-02 (Búsqueda por Enter, Botón Buscar y Scroll Automático a Resultados)
+
+### ⌨️ Soporte Completo para Tecla Enter y Botón "Buscar"
+- **Acción Enter en Desktop y Móvil:** Al presionar la tecla Enter (`onkeydown` y `onsubmit`), la búsqueda se ejecuta de inmediato y la página realiza un **scroll suave directo hacia los resultados del catálogo**, evitando que el usuario sienta que no ocurrió nada.
+- **Botón visual "Buscar":** Incorporado dentro de la barra de búsqueda tanto en versión de escritorio como en smartphones para usuarios que prefieren hacer clic o tocar con el dedo.
+- **Cierre del teclado en móviles (`this.blur()`):** Al presionar Enter o Buscar en smartphones, el teclado virtual se oculta automáticamente para que la pantalla quede despejada mostrando los medicamentos encontrados.
+- **Títulos dinámicos de sección:** Al buscar, el título del catálogo cambia en tiempo real a `Resultados para "[nombre]"` con el conteo exacto de medicamentos encontrados.
+
+---
+
 ## [2.5.1] — 2026-10-02 (Buscador Multi-Criterio, Filtros Cross-Browser y Botón WhatsApp Ultra-Visible)
 
 ### 🔍 Buscador Inteligente Local (0ms de latencia, 100% Vercel)
