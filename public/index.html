@@ -62,11 +62,11 @@
        ========================================================================= -->
   <div class="bg-slate-900 text-slate-300 text-[11px] font-medium border-b border-slate-800">
     <div class="max-w-7xl mx-auto px-4 py-2 flex flex-wrap items-center justify-between gap-2">
-      <div class="flex items-center space-x-4">
-        <span class="flex items-center gap-1.5 text-emerald-400 font-semibold">
+        <button onclick="toggleModalTurnos()" class="flex items-center gap-1.5 text-emerald-400 hover:text-emerald-300 font-bold bg-emerald-950/70 hover:bg-emerald-900 border border-emerald-700/60 px-3 py-1 rounded-full transition cursor-pointer group active:scale-95 shadow-sm" title="Ver cronograma oficial de farmacias de turno en San Miguel de Tucumán">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          Farmacia de Turno Abierta Hoy
-        </span>
+          <span id="texto-barra-turno">🚨 Farmacias de Turno (Ver Cronograma)</span>
+          <i data-lucide="calendar" class="w-3 h-3 opacity-70 group-hover:opacity-100 transition"></i>
+        </button>
         <span class="hidden sm:inline text-slate-600">|</span>
         <span class="hidden sm:inline flex items-center gap-1 text-slate-300">
           <i data-lucide="truck" class="w-3.5 h-3.5 text-slate-400"></i>
@@ -144,14 +144,14 @@
           <span class="hidden sm:inline">Subir Receta</span>
         </button>
 
-        <!-- Botón Panel Mostrador -->
-        <a href="/admin" target="_blank" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl font-semibold flex items-center space-x-1.5 transition" title="Panel de Mostrador Farmacéutico">
+        <!-- Botón Panel Mostrador (Solo visible en servidor local de la farmacia) -->
+        <a id="btn-nav-mostrador" href="/admin" target="_blank" class="hidden text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl font-semibold items-center space-x-1.5 transition" title="Panel de Mostrador Farmacéutico">
           <i data-lucide="layout-dashboard" class="w-4 h-4 text-slate-500"></i>
           <span class="hidden lg:inline">Mostrador</span>
         </a>
 
-        <!-- Botón Simulador WhatsApp -->
-        <button onclick="toggleModalSimulador()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl font-semibold flex items-center space-x-1.5 transition" title="Probar bot de WhatsApp en pantalla">
+        <!-- Botón Simulador WhatsApp (Solo visible en servidor local) -->
+        <button id="btn-nav-bot" onclick="toggleModalSimulador()" class="hidden text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl font-semibold items-center space-x-1.5 transition" title="Probar bot de WhatsApp en pantalla">
           <i data-lucide="bot" class="w-4 h-4 text-emerald-600"></i>
           <span class="hidden lg:inline">Bot</span>
         </button>
@@ -720,6 +720,58 @@
     <span class="text-xs font-extrabold pr-1 hidden sm:inline">WhatsApp</span>
   </button>
 
+  <!-- =========================================================================
+       10.1. MODAL CRONOGRAMA SEMANAL DE FARMACIAS DE TURNO (San Miguel de Tucumán)
+       ========================================================================= -->
+  <div id="modal-turnos" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+    <div class="bg-white rounded-3xl w-full max-w-xl max-h-[90vh] shadow-2xl flex flex-col overflow-hidden border border-slate-100 animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Encabezado del Modal -->
+      <div class="bg-gradient-to-r from-emerald-800 via-teal-900 to-slate-900 text-white p-4 sm:p-5 flex items-center justify-between border-b border-emerald-700/40">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-2xl bg-white/10 flex items-center justify-center text-xl shadow-inner border border-white/10">
+            🚨
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 class="font-extrabold text-sm sm:text-base leading-tight">Farmacias de Turno</h3>
+              <span class="bg-emerald-400/20 text-emerald-300 text-[10px] font-black px-2 py-0.5 rounded-full border border-emerald-400/30">
+                Guardia 24hs
+              </span>
+            </div>
+            <p class="text-[11px] sm:text-xs text-emerald-200/90 mt-0.5">San Miguel de Tucumán • Turnos oficiales COFATUC</p>
+          </div>
+        </div>
+        <button onclick="toggleModalTurnos()" class="text-white/80 hover:text-white p-2 rounded-xl hover:bg-white/10 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Aviso Horario Oficial COFATUC -->
+      <div class="bg-amber-50/90 border-b border-amber-200/80 px-4 py-2.5 flex items-center gap-2 text-amber-900 text-xs font-semibold">
+        <i data-lucide="clock" class="w-4 h-4 text-amber-700 flex-shrink-0"></i>
+        <span>Los turnos cubren de <b>08:00 hs</b> a <b>08:00 hs</b> del día siguiente para urgencias y recetas.</span>
+      </div>
+
+      <!-- Lista del Cronograma Semanal (Renderizado dinámico con día actual) -->
+      <div id="lista-turnos-semana" class="flex-1 overflow-y-auto p-4 space-y-2.5 bg-slate-50/50">
+        <!-- Renderizado por JS -->
+      </div>
+
+      <!-- Pie del Modal -->
+      <div class="p-3.5 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-500">
+        <div class="flex items-center gap-1.5 font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+          <span>Farmacia Torres • Av. San Martín 1420</span>
+        </div>
+        <button onclick="toggleModalTurnos()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-4 py-1.5 rounded-xl transition">
+          Cerrar
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Modal Selector: ¿WhatsApp Real o Simulador? (Solo aparece en PC) -->
   <div id="modal-selector-wa" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-3xl w-full max-w-xs shadow-2xl overflow-hidden border border-slate-100 p-6 space-y-4">
@@ -806,7 +858,218 @@
   <!-- =========================================================================
        11. LÓGICA JAVASCRIPT ROBUSTA
        ========================================================================= -->
-  <script>
+    // =========================================================================
+    // SEGURIDAD: Mostrador solo en entorno local (Mac de la farmacia)
+    // =========================================================================
+    const ES_ENTORNO_LOCAL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+    function verificarSeguridadMostrador() {
+      if (ES_ENTORNO_LOCAL) {
+        const btnMostrador = document.getElementById('btn-nav-mostrador');
+        const btnBot = document.getElementById('btn-nav-bot');
+        if (btnMostrador) btnMostrador.classList.remove('hidden');
+        if (btnBot) btnBot.classList.remove('hidden');
+      }
+    }
+
+    // =========================================================================
+    // CRONOGRAMA OFICIAL DE FARMACIAS DE TURNO (San Miguel de Tucumán)
+    // =========================================================================
+    const CRONOGRAMA_TURNOS_TUCUMAN = [
+      {
+        diaIndex: 1, // Lunes
+        diaNombre: 'Lunes',
+        farmacia: 'Farmacia La Unión',
+        direccion: 'San Martín 623 (Microcentro)',
+        telefono: '(0381) 421-4567',
+        esNuestra: false
+      },
+      {
+        diaIndex: 2, // Martes
+        diaNombre: 'Martes',
+        farmacia: 'Farmacia Del Pueblo',
+        direccion: 'Av. Alem 568 (Barrio Sur)',
+        telefono: '(0381) 424-8899',
+        esNuestra: false
+      },
+      {
+        diaIndex: 3, // Miércoles
+        diaNombre: 'Miércoles',
+        farmacia: 'Farmacia Molina',
+        direccion: 'Maipú 174 (Microcentro)',
+        telefono: '(0381) 430-1122',
+        esNuestra: false
+      },
+      {
+        diaIndex: 4, // Jueves
+        diaNombre: 'Jueves',
+        farmacia: 'Farmacia Paris',
+        direccion: 'Balcarce 473 (Barrio Norte)',
+        telefono: '(0381) 422-3344',
+        esNuestra: false
+      },
+      {
+        diaIndex: 5, // Viernes
+        diaNombre: 'Viernes',
+        farmacia: 'Farmacia Cristo Rey',
+        direccion: 'Av. Mate de Luna 3798 (Oeste)',
+        telefono: '(0381) 435-9900',
+        esNuestra: false
+      },
+      {
+        diaIndex: 6, // Sábado
+        diaNombre: 'Sábado',
+        farmacia: 'Farmacia Torres (Esta Farmacia)',
+        direccion: 'Av. San Martín 1420 (Frente a Plaza Central)',
+        telefono: '(0381) 685-8001',
+        esNuestra: true
+      },
+      {
+        diaIndex: 0, // Domingo
+        diaNombre: 'Domingo',
+        farmacia: 'Farmacia 2001',
+        direccion: 'Monteagudo 501 (Centro)',
+        telefono: '(0381) 431-7788',
+        esNuestra: false
+      }
+    ];
+
+    function toggleModalTurnos() {
+      const modal = document.getElementById('modal-turnos');
+      if (!modal) return;
+      const estaOculto = modal.classList.contains('hidden');
+      if (estaOculto) {
+        renderizarCronogramaTurnos();
+        modal.classList.remove('hidden');
+      } else {
+        modal.classList.add('hidden');
+      }
+    }
+
+    function renderizarCronogramaTurnos() {
+      const contenedor = document.getElementById('lista-turnos-semana');
+      if (!contenedor) return;
+
+      const hoyIndex = new Date().getDay(); // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
+
+      contenedor.innerHTML = CRONOGRAMA_TURNOS_TUCUMAN.map(t => {
+        const esHoy = (t.diaIndex === hoyIndex);
+        
+        if (t.esNuestra) {
+          // Tarjeta destacada de Farmacia Torres con gradiente y estilo de alta jerarquía
+          return `
+            <div class="relative rounded-2xl p-4 sm:p-5 transition-all shadow-md ${
+              esHoy 
+                ? 'bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-900 border-2 border-emerald-400 text-white ring-4 ring-emerald-500/20 shadow-emerald-950/40' 
+                : 'bg-emerald-50 border-2 border-emerald-300/80 text-emerald-950'
+            }">
+              <div class="flex items-start justify-between gap-2 flex-wrap">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-black px-2.5 py-1 rounded-lg ${
+                    esHoy ? 'bg-emerald-400 text-slate-950' : 'bg-emerald-200 text-emerald-900'
+                  }">
+                    ${t.diaNombre.toUpperCase()}
+                  </span>
+                  ${
+                    esHoy 
+                      ? `<span class="bg-amber-400 text-slate-950 text-[10px] font-black px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
+                          ⭐ ¡HOY DE GUARDIA 24 HS!
+                         </span>` 
+                      : `<span class="bg-emerald-200 text-emerald-900 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                          ⭐ Nuestra Farmacia
+                         </span>`
+                  }
+                </div>
+                <span class="text-[11px] font-extrabold ${esHoy ? 'text-emerald-200' : 'text-emerald-700'}">
+                  08:00 a 08:00 hs (24h)
+                </span>
+              </div>
+
+              <div class="mt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h4 class="font-black text-sm sm:text-base ${esHoy ? 'text-white' : 'text-emerald-950'} flex items-center gap-1.5">
+                    <span>🏥</span>
+                    <span>${t.farmacia}</span>
+                  </h4>
+                  <p class="text-xs ${esHoy ? 'text-emerald-100/90' : 'text-emerald-800'} mt-0.5">
+                    📍 ${t.direccion}
+                  </p>
+                  <p class="text-xs ${esHoy ? 'text-emerald-300 font-bold' : 'text-emerald-700 font-bold'} mt-0.5">
+                    📞 Urgencias & WhatsApp: ${t.telefono}
+                  </p>
+                </div>
+
+                <div class="flex items-center gap-2 flex-wrap">
+                  <a href="https://wa.me/543816858001?text=${encodeURIComponent('Hola Farmacia Torres, me comunico por la farmacia de turno.')}" target="_blank" class="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black px-4 py-2 rounded-xl text-xs flex items-center justify-center space-x-1.5 shadow-sm transition active:scale-95">
+                    <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
+                    <span>Pedir por WhatsApp</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // Tarjetas estándar de las demás farmacias de turno de Tucumán
+        return `
+          <div class="rounded-2xl p-3.5 sm:p-4 border transition-all ${
+            esHoy 
+              ? 'bg-amber-50/90 border-amber-300 ring-2 ring-amber-400/40 shadow-sm' 
+              : 'bg-white border-slate-200/90 hover:border-slate-300'
+          }">
+            <div class="flex items-start justify-between gap-2 flex-wrap">
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold px-2 py-0.5 rounded-md ${
+                  esHoy ? 'bg-amber-200 text-amber-900 font-black' : 'bg-slate-100 text-slate-700'
+                }">
+                  ${t.diaNombre}
+                </span>
+                ${
+                  esHoy 
+                    ? `<span class="bg-amber-400 text-slate-950 text-[10px] font-black px-2 py-0.5 rounded-full">
+                        ✨ HOY DE GUARDIA
+                       </span>` 
+                    : ''
+                }
+              </div>
+              <span class="text-[10px] text-slate-400 font-medium">08:00 a 08:00 hs</span>
+            </div>
+
+            <div class="mt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h4 class="font-extrabold text-sm text-slate-800">
+                  ${t.farmacia}
+                </h4>
+                <p class="text-xs text-slate-500 mt-0.5">
+                  📍 ${t.direccion}
+                </p>
+              </div>
+              <div class="text-xs text-slate-600 font-semibold flex items-center gap-1">
+                <span>📞 ${t.telefono}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        window.lucide.createIcons();
+      }
+    }
+
+    function inicializarBarraTurno() {
+      const hoyIndex = new Date().getDay();
+      const turnoHoy = CRONOGRAMA_TURNOS_TUCUMAN.find(t => t.diaIndex === hoyIndex);
+      const textoBarra = document.getElementById('texto-barra-turno');
+      if (textoBarra && turnoHoy) {
+        if (turnoHoy.esNuestra) {
+          textoBarra.innerHTML = `🌙 ¡HOY DE GUARDIA 24 HS: Farmacia Torres! (Ver)`;
+        } else {
+          textoBarra.innerHTML = `🚨 Turno Hoy: ${turnoHoy.farmacia} (Ver Cronograma)`;
+        }
+      }
+    }
+
     let medicamentos = [];
     let carrito = {};
 
@@ -1398,6 +1661,8 @@
 
     // Inicializar
     window.addEventListener('DOMContentLoaded', () => {
+      verificarSeguridadMostrador();
+      inicializarBarraTurno();
       cargarMedicamentos();
       if (window.lucide && typeof window.lucide.createIcons === 'function') {
         window.lucide.createIcons();
