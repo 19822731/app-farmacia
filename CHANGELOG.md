@@ -3,6 +3,20 @@
 > Registro de todos los cambios realizados en el proyecto.  
 > Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 
+## [2.7.0] — 2026-10-02 (Normalizador Inteligente de Celulares Argentinos y Verificación en Vivo de Cuentas WhatsApp)
+
+### 🧠 Función Inteligente de Normalización Telefónica (Argentina)
+- **Adaptabilidad Total de Formatos:** Normaliza automáticamente cualquier entrada de teléfono móvil de Argentina (`381...`, `0381 15...`, `+54 9 ...`, `54...`, con o sin guiones y espacios) a la estructura internacional que exige WhatsApp: **`549 + código de área + número`** (`549381XXXXXXX`).
+- **Inyección del prefijo móvil obligatorio `9`:** Resuelve la causa por la cual WhatsApp rechazaba números argentinos tratándolos como líneas fijas cuando faltaba el `9`.
+- **Previsualización en tiempo real en Droguería B2B:** Al ingresar el WhatsApp en el formulario mayorista, se despliega una vista previa formateada y validada en vivo (`📱 WhatsApp: +54 9 381 685-8020`).
+
+### 📡 Verificación en Tiempo Real de Existencia en WhatsApp
+- **Microservicio Baileys Integrado (`:8001`):** Implementado servicio HTTP interno que consulta con los servidores de WhatsApp (`sock.onWhatsApp`) si el número efectivamente tiene cuenta registrada y activa.
+- **Endpoint API:** `GET /api/whatsapp/verificar-numero?telefono=...` en `server.py` que combina normalización sintáctica y consulta en tiempo real al bot.
+- **Botón "Verificar WA" en Panel de Mostrador:** Presente en cada tarjeta de pedido (B2B y B2C) para que el operador verifique con un solo clic si el cliente o farmacia receptora tiene WhatsApp activo (`🟢 WA Activo`, `🔴 Sin cuenta WA` o `⚠️ Formato inválido`).
+
+---
+
 ## [2.6.0] — 2026-10-02 (Gestión Integral de Pedidos B2B Droguería & Flujo Completo B2C)
 
 ### 🏢 Flujo Operativo y Comercial Completo B2B (Farmacia a Farmacia)

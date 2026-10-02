@@ -10,6 +10,8 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 import uvicorn
 from rapidfuzz import fuzz, process
+import re
+import httpx
 
 # Rutas base
 BASE_DIR = Path(__file__).resolve().parent
@@ -67,6 +69,72 @@ def load_pedidos_b2b() -> List[dict]:
 def save_pedidos_b2b(pedidos: List[dict]):
     with open(PEDIDOS_B2B_FILE, "w", encoding="utf-8") as f:
         json.dump(pedidos, f, indent=2, ensure_ascii=False)
+
+def normalizar_telefono_argentina(raw: str) -> dict:
+    """
+    Función Inteligente para normalizar teléfonos de Argentina a formato internacional WhatsApp (549...).
+    Elimina caracteres no numéricos, gestiona prefijos 0, 15 y prefijos internacionales.
+    """
+    if not raw:
+        return {"valido": False, "numero": "", "formato_amigable": "", "error": "Teléfono vacío"}
+    
+    digits = re.sub(r"\D", "", str(raw))
+    
+    # Si ya empieza con 549
+    if digits.startswith("549"):
+        digits = digits[3:]
+    elif digits.startswith("54"):
+        digits = digits[2:]
+        
+    # Si empieza con 0 (código de área con prefijo nacional 0)
+    if digits.startswith("0"):
+        digits = digits[1:]
+        
+    # Si empieza con 15 directo (sin código de área, asume Tucumán 381)
+    if digits.startswith("15") and len(digits) == 9:
+        digits = "381" + digits[2:]
+        
+    # Si tiene 15 intercalado tras código de área de 2 dígitos (ej: 11 15 xxxxxxxx = 12 dígitos)
+    if len(digits) == 12 and digits[2:4] == "15":
+        digits = digits[:2] + digits[4:]
+    # Si tiene 15 intercalado tras código de área de 3 dígitos (ej: 381 15 xxxxxxx = 12 dígitos)
+    elif len(digits) == 12 and digits[3:5] == "15":
+        digits = digits[:3] + digits[5:]
+    # Si tiene 15 intercalado tras código de área de 4 dígitos (ej: 3865 15 xxxxxx = 12 dígitos)
+    elif len(digits) == 12 and digits[4:6] == "15":
+        digits = digits[:4] + digits[6:]
+        
+    # En Argentina los números celulares tienen 10 dígitos (código de área + abonado)
+    if len(digits) != 10:
+        # Permitir número especial de pruebas si tiene 9 dígitos con 381
+        if len(digits) == 9 and digits.startswith("381"):
+            pass
+        else:
+            return {
+                "valido": False, 
+                "numero": digits, 
+                "formato_amigable": digits, 
+                "error": f"Longitud inválida ({len(digits)} dígitos, se esperan 10)"
+            }
+            
+    num_wa = "549" + digits
+    
+    # Formato amigable para mostrar en pantalla
+    if len(digits) == 10:
+        if digits.startswith("11"):
+            amigable = f"+54 9 11 {digits[2:6]}-{digits[6:]}"
+        else:
+            amigable = f"+54 9 {digits[:3]} {digits[3:6]}-{digits[6:]}"
+    else:
+        amigable = f"+54 9 {digits}"
+        
+    return {
+        "valido": True,
+        "numero": num_wa,
+        "numero_nacional": digits,
+        "formato_amigable": amigable,
+        "error": None
+    }
 
 # --- MODELOS PYDANTIC ---
 
@@ -192,12 +260,17 @@ async def crear_pedido_b2b(pedido: PedidoB2BRequest):
             "requiere_frio": prod.get("requiere_frio", False)
         })
         
+    norm_tel = normalizar_telefono_argentina(pedido.telefono)
+    tel_guardado = norm_tel["numero"] if norm_tel["valido"] else "".join(filter(str.isdigit, str(pedido.telefono)))
+    tel_formato = norm_tel["formato_amigable"] if norm_tel["valido"] else pedido.telefono
+
     nuevo_pedido = {
         "id": pedido_id,
         "farmacia_nombre": pedido.farmacia_nombre,
         "cuit": pedido.cuit,
         "director_tecnico": pedido.director_tecnico,
-        "telefono": pedido.telefono,
+        "telefono": tel_guardado,
+        "telefono_formato": tel_formato,
         "direccion": pedido.direccion,
         "fecha": datetime.now().strftime("%Y-%m-%d %H:%M"),
         "estado": "pendiente_aprobacion",
@@ -217,7 +290,7 @@ async def crear_pedido_b2b(pedido: PedidoB2BRequest):
         f"🏥 *Farmacia Solicitante:* {pedido.farmacia_nombre}\n"
         f"📄 *CUIT:* {pedido.cuit}\n"
         f"👨‍⚕️ *Director Técnico:* {pedido.director_tecnico}\n"
-        f"📱 *Tel:* {pedido.telefono}\n"
+        f"📱 *Tel:* {tel_formato}\n"
     )
     if pedido.direccion:
         msg_wa += f"📍 *Entrega:* {pedido.direccion}\n"
@@ -235,6 +308,8 @@ async def crear_pedido_b2b(pedido: PedidoB2BRequest):
         "pedido_id": pedido_id,
         "total_mayorista": total_bruto,
         "requiere_frio": requiere_frio_global,
+        "telefono": tel_guardado,
+        "telefono_formato": tel_formato,
         "mensaje_whatsapp": msg_wa
     }
 
@@ -254,10 +329,9 @@ async def actualizar_estado_pedido_b2b(pedido_id: str, data: ActualizarEstadoReq
     save_pedidos_b2b(pedidos)
 
     mensaje_notificacion = ""
-    tel_raw = str(encontrado.get("telefono", ""))
-    tel_limpio = "".join(filter(str.isdigit, tel_raw))
-    if tel_limpio and not tel_limpio.startswith("54"):
-        tel_limpio = "54" + tel_limpio
+    norm_tel = normalizar_telefono_argentina(encontrado.get("telefono", ""))
+    tel_limpio = norm_tel["numero"] if norm_tel["valido"] else "".join(filter(str.isdigit, str(encontrado.get("telefono", ""))))
+    tel_formato = norm_tel["formato_amigable"] if norm_tel["valido"] else tel_limpio
 
     if data.estado in ["aprobado", "preparando"]:
         mensaje_notificacion = (
@@ -293,7 +367,61 @@ async def actualizar_estado_pedido_b2b(pedido_id: str, data: ActualizarEstadoReq
         "nuevo_estado": data.estado,
         "mensaje_notificacion": mensaje_notificacion,
         "telefono": tel_limpio,
+        "telefono_formato": tel_formato,
         "farmacia_nombre": encontrado.get("farmacia_nombre", "")
+    }
+
+@app.get("/api/whatsapp/verificar-numero")
+async def api_verificar_numero_whatsapp(telefono: str = Query(..., description="Teléfono a normalizar y verificar")):
+    """
+    Función Inteligente: Normaliza el número telefónico argentino a formato internacional WhatsApp (549...)
+    y consulta en tiempo real al servicio Baileys si la cuenta está registrada y activa en WhatsApp.
+    """
+    norm = normalizar_telefono_argentina(telefono)
+    if not norm["valido"]:
+        return {
+            "valido": False,
+            "existe": False,
+            "telefono_original": telefono,
+            "error": norm["error"],
+            "mensaje": f"Formato inválido: {norm['error']}"
+        }
+    
+    num_wa = norm["numero"]
+    
+    # Consultar al microservicio Baileys en puerto 8001
+    existe_en_wa = None
+    jid = None
+    bot_conectado = False
+    detalle = ""
+    try:
+        async with httpx.AsyncClient(timeout=2.0) as client:
+            resp = await client.get(f"http://127.0.0.1:8001/api/check-phone?phone={num_wa}")
+            if resp.status_code == 200:
+                data = resp.json()
+                bot_conectado = data.get("connected", False)
+                existe_en_wa = data.get("exists")
+                jid = data.get("jid")
+                if existe_en_wa is True:
+                    detalle = "Cuenta de WhatsApp activa y verificada."
+                elif existe_en_wa is False:
+                    detalle = "Número con formato celular válido, pero NO posee cuenta en WhatsApp."
+                else:
+                    detalle = "Formato celular válido (bot sin sesión activa para verificación en vivo)."
+            else:
+                detalle = "Servicio de verificación en vivo temporalmente no disponible."
+    except Exception as e:
+        detalle = f"Formato de celular argentino válido (verificación en vivo: {str(e)})."
+
+    return {
+        "valido": True,
+        "existe": existe_en_wa,
+        "bot_conectado": bot_conectado,
+        "jid": jid,
+        "telefono_original": telefono,
+        "telefono_normalizado": num_wa,
+        "formato_amigable": norm["formato_amigable"],
+        "mensaje": detalle
     }
 
 # --- ENDPOINTS MEDICAMENTOS ---
@@ -549,12 +677,17 @@ async def actualizar_estado_pedido(pedido_id: str, data: ActualizarEstadoRequest
             f"Ten a mano el pago de *${encontrado['total_final']:,.0f}*. ¡Muchas gracias!"
         )
 
+    norm_tel = normalizar_telefono_argentina(encontrado.get("cliente_telefono", ""))
+    tel_limpio = norm_tel["numero"] if norm_tel["valido"] else "".join(filter(str.isdigit, str(encontrado.get("cliente_telefono", ""))))
+    tel_formato = norm_tel["formato_amigable"] if norm_tel["valido"] else tel_limpio
+
     return {
         "status": "updated",
         "pedido_id": pedido_id,
         "nuevo_estado": data.estado,
         "mensaje_notificacion": mensaje_notificacion,
-        "cliente_telefono": encontrado.get("cliente_telefono", "")
+        "cliente_telefono": tel_limpio,
+        "cliente_telefono_formato": tel_formato
     }
 
 # --- MÁQUINA DE ESTADOS Y MOTOR CONVERSACIONAL DE CHATBOT ---

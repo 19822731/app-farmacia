@@ -244,8 +244,9 @@
             <input id="b2b-dt" type="text" placeholder="Dra. Gómez (MP 5420)" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white" />
           </div>
           <div>
-            <label class="text-[10px] text-slate-400 block mb-0.5">WhatsApp Droguería *</label>
-            <input id="b2b-tel" type="tel" placeholder="54911..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white" />
+            <label class="text-[10px] text-slate-400 block mb-0.5">WhatsApp Farmacia Compradora *</label>
+            <input id="b2b-tel" type="tel" placeholder="Ej: 381 685-8020" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-2 text-xs text-white" oninput="previsualizarTelefonoB2B(this.value)" />
+            <div id="b2b-tel-preview" class="text-[10px] mt-1 text-slate-400 font-mono hidden"></div>
           </div>
         </div>
 
@@ -572,6 +573,45 @@
       drawer.classList.toggle('translate-x-full');
     }
 
+    function normalizarTelefonoArgentina(raw) {
+      if (!raw) return { valido: false, numero: '', formato_amigable: '', error: 'Teléfono vacío' };
+      let digits = String(raw).replace(/\D/g, '');
+      if (digits.startsWith('549')) digits = digits.slice(3);
+      else if (digits.startsWith('54')) digits = digits.slice(2);
+      if (digits.startsWith('0')) digits = digits.slice(1);
+      if (digits.startsWith('15') && digits.length === 9) digits = '381' + digits.slice(2);
+      if (digits.length === 12 && digits.slice(2, 4) === '15') digits = digits.slice(0, 2) + digits.slice(4);
+      else if (digits.length === 12 && digits.slice(3, 5) === '15') digits = digits.slice(0, 3) + digits.slice(5);
+      else if (digits.length === 12 && digits.slice(4, 6) === '15') digits = digits.slice(0, 4) + digits.slice(6);
+
+      if (digits.length !== 10 && !(digits.length === 9 && digits.startsWith('381'))) {
+        return { valido: false, numero: digits, formato_amigable: digits, error: 'Debe contener 10 dígitos (ej: 381 685-8020)' };
+      }
+
+      const numWa = '549' + digits;
+      const amigable = digits.length === 10
+        ? (digits.startsWith('11') ? `+54 9 11 ${digits.slice(2,6)}-${digits.slice(6)}` : `+54 9 ${digits.slice(0,3)} ${digits.slice(3,6)}-${digits.slice(6)}`)
+        : `+54 9 ${digits}`;
+
+      return { valido: true, numero: numWa, formato_amigable: amigable, error: null };
+    }
+
+    function previsualizarTelefonoB2B(val) {
+      const preview = document.getElementById('b2b-tel-preview');
+      if (!preview) return;
+      if (!val.trim()) {
+        preview.classList.add('hidden');
+        return;
+      }
+      const norm = normalizarTelefonoArgentina(val);
+      preview.classList.remove('hidden');
+      if (norm.valido) {
+        preview.innerHTML = `<span class="text-emerald-400 font-semibold">📱 WhatsApp: ${norm.formato_amigable}</span>`;
+      } else {
+        preview.innerHTML = `<span class="text-amber-400 text-[10px]">Ingresá código de área y número (ej. 381 685-8020)</span>`;
+      }
+    }
+
     async function enviarOrdenB2BWhatsApp() {
       const keys = Object.keys(ordenB2B);
       if (keys.length === 0) return alert('No hay preparados en la orden');
@@ -586,6 +626,9 @@
         return alert('Por favor, ingresá el Nombre de la Farmacia, CUIT y Director Técnico para emitir el remito oficial.');
       }
 
+      const normTel = normalizarTelefonoArgentina(tel);
+      const telFinal = normTel.valido ? normTel.numero : tel;
+
       const items = keys.map(id => ({ id, cantidad: ordenB2B[id] }));
 
       try {
@@ -596,7 +639,7 @@
             farmacia_nombre: farmacia,
             cuit: cuit,
             director_tecnico: dt,
-            telefono: tel,
+            telefono: telFinal,
             direccion: dir,
             items: items,
             observaciones: 'Generado desde el Portal B2B Droguería Torres'

@@ -7,7 +7,7 @@
     "telefono": "3816858020",
     "direccion": "",
     "fecha": "2026-10-02 15:54",
-    "estado": "pendiente_aprobacion",
+    "estado": "despachado",
     "requiere_frio": false,
     "items": [
       {
@@ -42,6 +42,131 @@
       }
     ],
     "total_mayorista": 221400.0,
+    "observaciones": "Generado desde el Portal B2B Droguería Torres"
+  },
+  {
+    "id": "B2B-2140",
+    "farmacia_nombre": "Farmacia Zavalia",
+    "cuit": "302065845568",
+    "director_tecnico": "Dr  Perez",
+    "telefono": "381685858",
+    "direccion": "",
+    "fecha": "2026-10-02 17:13",
+    "estado": "preparando",
+    "requiere_frio": false,
+    "items": [
+      {
+        "id": "B2B-COS-001",
+        "nombre": "Serum Ácido Hialurónico Puro 2% + B5",
+        "rubro": "Cosméticos",
+        "lote": "L-DERM-2026-03",
+        "cantidad": 2,
+        "precio_unitario": 42000.0,
+        "subtotal": 84000.0,
+        "requiere_frio": false
+      },
+      {
+        "id": "B2B-COS-002",
+        "nombre": "Crema Base Liposomal con Vitamina C 10%",
+        "rubro": "Cosméticos",
+        "lote": "L-DERM-2026-07",
+        "cantidad": 2,
+        "precio_unitario": 38500.0,
+        "subtotal": 77000.0,
+        "requiere_frio": false
+      }
+    ],
+    "total_mayorista": 161000.0,
+    "observaciones": "Generado desde el Portal B2B Droguería Torres"
+  },
+  {
+    "id": "B2B-7508",
+    "farmacia_nombre": "Farmacia Zavalia",
+    "cuit": "302065845568",
+    "director_tecnico": "Dr  Perez",
+    "telefono": "381685858",
+    "direccion": "",
+    "fecha": "2026-10-02 17:20",
+    "estado": "pendiente_aprobacion",
+    "requiere_frio": false,
+    "items": [
+      {
+        "id": "B2B-COS-002",
+        "nombre": "Crema Base Liposomal con Vitamina C 10%",
+        "rubro": "Cosméticos",
+        "lote": "L-DERM-2026-07",
+        "cantidad": 2,
+        "precio_unitario": 38500.0,
+        "subtotal": 77000.0,
+        "requiere_frio": false
+      },
+      {
+        "id": "B2B-COS-003",
+        "nombre": "Emulsión Corporal Reparadora con Urea 10% y Ceramidas",
+        "rubro": "Cosméticos",
+        "lote": "L-DERM-2026-11",
+        "cantidad": 3,
+        "precio_unitario": 29800.0,
+        "subtotal": 89400.0,
+        "requiere_frio": false
+      }
+    ],
+    "total_mayorista": 166400.0,
+    "observaciones": "Generado desde el Portal B2B Droguería Torres"
+  },
+  {
+    "id": "B2B-9681",
+    "farmacia_nombre": "Farmacia Zavalia",
+    "cuit": "302065845568",
+    "director_tecnico": "Dr  Perez",
+    "telefono": "3816858002",
+    "direccion": "",
+    "fecha": "2026-10-02 17:20",
+    "estado": "preparando",
+    "requiere_frio": false,
+    "items": [
+      {
+        "id": "B2B-COS-002",
+        "nombre": "Crema Base Liposomal con Vitamina C 10%",
+        "rubro": "Cosméticos",
+        "lote": "L-DERM-2026-07",
+        "cantidad": 1,
+        "precio_unitario": 38500.0,
+        "subtotal": 38500.0,
+        "requiere_frio": false
+      },
+      {
+        "id": "B2B-COS-001",
+        "nombre": "Serum Ácido Hialurónico Puro 2% + B5",
+        "rubro": "Cosméticos",
+        "lote": "L-DERM-2026-03",
+        "cantidad": 1,
+        "precio_unitario": 42000.0,
+        "subtotal": 42000.0,
+        "requiere_frio": false
+      },
+      {
+        "id": "B2B-ANA-001",
+        "nombre": "Gel Tópico Compuesto Ketoprofeno + Lidocaína + Mentol",
+        "rubro": "Analgésicos",
+        "lote": "L-ANA-2026-02",
+        "cantidad": 1,
+        "precio_unitario": 26500.0,
+        "subtotal": 26500.0,
+        "requiere_frio": false
+      },
+      {
+        "id": "B2B-ANA-002",
+        "nombre": "Morfina Sulfato 20mg/ml Gotas Magistral",
+        "rubro": "Analgésicos",
+        "lote": "L-EST-2026-05",
+        "cantidad": 1,
+        "precio_unitario": 49000.0,
+        "subtotal": 49000.0,
+        "requiere_frio": false
+      }
+    ],
+    "total_mayorista": 156000.0,
     "observaciones": "Generado desde el Portal B2B Droguería Torres"
   }
 ]

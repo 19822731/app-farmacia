@@ -455,7 +455,15 @@
                 <i data-lucide="user" class="w-3.5 h-3.5 text-slate-400"></i>
                 <span>${p.cliente_nombre}</span>
               </div>
-              ${p.cliente_telefono ? `<p class="text-[11px] text-slate-400 ml-5 font-mono">📱 ${p.cliente_telefono}</p>` : ''}
+              ${p.cliente_telefono ? `
+                <div class="ml-5 flex items-center gap-1.5 flex-wrap text-[11px] font-mono">
+                  <span class="text-slate-600 font-semibold">📱 ${p.cliente_telefono_formato || normalizarTelefonoArgentina(p.cliente_telefono).formato_amigable || p.cliente_telefono}</span>
+                  <button type="button" onclick="verificarTelefonoWhatsApp('${p.id}', '${p.cliente_telefono}', this)" class="text-[10px] bg-slate-100 hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 px-2 py-0.5 rounded-md border border-slate-200 hover:border-emerald-300 font-sans font-bold transition flex items-center gap-1 shadow-xs active:scale-95">
+                    <i data-lucide="shield-check" class="w-3 h-3"></i>
+                    <span>Verificar WA</span>
+                  </button>
+                </div>
+              ` : ''}
               <p class="text-[10px] text-slate-400 ml-5">${p.fecha}</p>
 
               ${p.obra_social && !p.obra_social.includes('Particular') ? `
@@ -563,7 +571,8 @@
       
       if (data.mensaje_notificacion) {
         const textoEnc = encodeURIComponent(data.mensaje_notificacion);
-        const telEnc = telefono ? telefono.replace(/[^0-9]/g, '') : '';
+        const norm = normalizarTelefonoArgentina(data.cliente_telefono || telefono);
+        const telEnc = norm.valido ? norm.numero : (data.cliente_telefono || telefono || '').replace(/[^0-9]/g, '');
         window.open(`https://wa.me/${telEnc}?text=${textoEnc}`, '_blank');
       }
       cargarPedidos();
@@ -729,8 +738,15 @@
                 <span>${p.farmacia_nombre}</span>
               </div>
               <p class="text-[11px] text-slate-400 ml-5 font-mono">CUIT: ${p.cuit}</p>
-              <p class="text-[11px] text-slate-400 ml-5">DT: ${p.director_tecnico}</p>
-              <p class="text-[11px] text-slate-400 ml-5 font-mono">📱 ${p.telefono || 'Sin teléfono'}</p>
+              <div class="ml-5 flex items-center gap-1.5 flex-wrap text-[11px] font-mono">
+                <span class="text-slate-600 font-semibold">📱 ${p.telefono_formato || normalizarTelefonoArgentina(p.telefono).formato_amigable || (p.telefono || 'Sin teléfono')}</span>
+                ${p.telefono ? `
+                  <button type="button" onclick="verificarTelefonoWhatsApp('${p.id}', '${p.telefono}', this)" class="text-[10px] bg-slate-100 hover:bg-emerald-50 text-slate-600 hover:text-emerald-700 px-2 py-0.5 rounded-md border border-slate-200 hover:border-emerald-300 font-sans font-bold transition flex items-center gap-1 shadow-xs active:scale-95">
+                    <i data-lucide="shield-check" class="w-3 h-3"></i>
+                    <span>Verificar WA</span>
+                  </button>
+                ` : ''}
+              </div>
               ${p.direccion ? `<p class="text-[11px] text-slate-500 ml-5">📍 ${p.direccion}</p>` : ''}
               <p class="text-[10px] text-slate-400 ml-5">${p.fecha}</p>
 
@@ -824,6 +840,55 @@
       cargarPedidosB2B();
     }
 
+    function normalizarTelefonoArgentina(raw) {
+      if (!raw) return { valido: false, numero: '', formato_amigable: '', error: 'Teléfono vacío' };
+      let digits = String(raw).replace(/\D/g, '');
+      if (digits.startsWith('549')) digits = digits.slice(3);
+      else if (digits.startsWith('54')) digits = digits.slice(2);
+      if (digits.startsWith('0')) digits = digits.slice(1);
+      if (digits.startsWith('15') && digits.length === 9) digits = '381' + digits.slice(2);
+      if (digits.length === 12 && digits.slice(2, 4) === '15') digits = digits.slice(0, 2) + digits.slice(4);
+      else if (digits.length === 12 && digits.slice(3, 5) === '15') digits = digits.slice(0, 3) + digits.slice(5);
+      else if (digits.length === 12 && digits.slice(4, 6) === '15') digits = digits.slice(0, 4) + digits.slice(6);
+
+      if (digits.length !== 10 && !(digits.length === 9 && digits.startsWith('381'))) {
+        return { valido: false, numero: digits, formato_amigable: digits, error: 'Debe contener 10 dígitos (ej: 381 685-8020)' };
+      }
+
+      const numWa = '549' + digits;
+      const amigable = digits.length === 10
+        ? (digits.startsWith('11') ? `+54 9 11 ${digits.slice(2,6)}-${digits.slice(6)}` : `+54 9 ${digits.slice(0,3)} ${digits.slice(3,6)}-${digits.slice(6)}`)
+        : `+54 9 ${digits}`;
+
+      return { valido: true, numero: numWa, formato_amigable: amigable, error: null };
+    }
+
+    async function verificarTelefonoWhatsApp(pedidoId, telefono, btnEl) {
+      if (!telefono) return;
+      const originalHtml = btnEl.innerHTML;
+      btnEl.innerHTML = `<span class="animate-pulse">Consultando...</span>`;
+      btnEl.disabled = true;
+
+      try {
+        const res = await fetch(`/api/whatsapp/verificar-numero?telefono=${encodeURIComponent(telefono)}`);
+        const data = await res.json();
+
+        if (!data.valido) {
+          btnEl.outerHTML = `<span class="bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1" title="${data.mensaje}">⚠️ Formato dudoso</span>`;
+        } else if (data.existe === true) {
+          btnEl.outerHTML = `<span class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1 shadow-xs" title="WhatsApp verificado en vivo con éxito">🟢 WA Activo</span>`;
+        } else if (data.existe === false) {
+          btnEl.outerHTML = `<span class="bg-red-50 text-red-700 border border-red-200 text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1" title="${data.mensaje}">🔴 Sin cuenta WA</span>`;
+        } else {
+          btnEl.outerHTML = `<span class="bg-sky-50 text-sky-700 border border-sky-200 text-[10px] font-bold px-2 py-0.5 rounded-md flex items-center gap-1" title="${data.mensaje}">📱 Celular Válido</span>`;
+        }
+      } catch (e) {
+        btnEl.innerHTML = originalHtml;
+        btnEl.disabled = false;
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+
     async function cambiarEstadoB2BYNotificar(id, nuevoEstado, telefono, farmacia, total) {
       const res = await fetch(`/api/drogueria/pedidos/${id}/estado`, {
         method: 'PATCH',
@@ -834,7 +899,8 @@
       
       if (data.mensaje_notificacion) {
         const textoEnc = encodeURIComponent(data.mensaje_notificacion);
-        const telEnc = data.telefono || (telefono ? telefono.replace(/[^0-9]/g, '') : '');
+        const norm = normalizarTelefonoArgentina(data.telefono || telefono);
+        const telEnc = norm.valido ? norm.numero : (data.telefono || telefono || '').replace(/[^0-9]/g, '');
         window.open(`https://wa.me/${telEnc}?text=${textoEnc}`, '_blank');
       }
       cargarPedidosB2B();

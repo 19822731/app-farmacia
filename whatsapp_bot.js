@@ -9,11 +9,15 @@ const pino = require('pino');
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const http = require('http');
 const net = require('net');
 const { spawn } = require('child_process');
 
 // Logger silencioso para que no ensucie la terminal
 const logger = pino({ level: 'silent' });
+
+// Referencia global al socket activo para consultas de verificación
+let currentSock = null;
 
 // Ruta para guardar la sesión del WhatsApp
 const AUTH_DIR = path.join(__dirname, 'auth_session');
@@ -104,6 +108,7 @@ async function startWhatsAppBot() {
     }
 
     if (connection === 'close') {
+      currentSock = null;
       const statusCode = lastDisconnect?.error?.output?.statusCode;
       const errorMsg = lastDisconnect?.error?.message || '';
       const shouldReconnect = statusCode !== DisconnectReason.loggedOut;
@@ -120,6 +125,7 @@ async function startWhatsAppBot() {
         console.log('❌ Sesión cerrada por el usuario. Elimina la carpeta auth_session para volver a escanear un nuevo QR.');
       }
     } else if (connection === 'open') {
+      currentSock = sock;
       console.log('\n======================================================');
       console.log('✅ ¡WHATSAPP CONECTADO EXITOSAMENTE A LA FARMACIA!');
       if (MODO_SEGURO) {
@@ -281,7 +287,67 @@ async function startWhatsAppBot() {
   });
 }
 
+// ============================================================================
+// 📡 MICROSERVICIO INTERNO DE VERIFICACIÓN DE NÚMEROS WHATSAPP (Puerto 8001)
+// ============================================================================
+const checkServer = http.createServer(async (req, res) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    res.writeHead(204);
+    return res.end();
+  }
+
+  try {
+    const parsedUrl = new URL(req.url, 'http://127.0.0.1:8001');
+    if (parsedUrl.pathname === '/api/check-phone') {
+      const rawPhone = parsedUrl.searchParams.get('phone') || '';
+      const phone = rawPhone.replace(/[^0-9]/g, '');
+
+      if (!phone) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ error: 'Falta parametro phone' }));
+      }
+
+      if (!currentSock) {
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({
+          exists: null,
+          connected: false,
+          phone,
+          detail: 'Bot de WhatsApp sin sesión activa en este momento'
+        }));
+      }
+
+      // Consultar a WhatsApp si el número posee cuenta activa (Baileys onWhatsApp)
+      const results = await currentSock.onWhatsApp(phone);
+      const match = results && results.length > 0 ? results[0] : null;
+
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      return res.end(JSON.stringify({
+        exists: match ? Boolean(match.exists) : false,
+        jid: match ? match.jid : null,
+        phone,
+        connected: true
+      }));
+    }
+
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Ruta no encontrada' }));
+  } catch (err) {
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ exists: null, error: err.message, connected: Boolean(currentSock) }));
+  }
+});
+
+checkServer.listen(8001, '127.0.0.1', () => {
+  console.log('📡 Servicio interno de verificación de WhatsApp activo en http://127.0.0.1:8001');
+});
+
 // Ejecutar
 startWhatsAppBot().catch(err => {
   console.error('Error fatal al iniciar bot de WhatsApp:', err);
 });
+
